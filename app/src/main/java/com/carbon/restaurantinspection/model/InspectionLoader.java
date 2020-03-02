@@ -28,6 +28,9 @@ public class InspectionLoader {
         );
         String line = "";
         try {
+            // Step over headers
+            reader.readLine();
+
             while ((line = reader.readLine()) != null) {
                 // Split by ','
                 String[] tokens = line.split(",");
