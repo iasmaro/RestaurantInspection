@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class CSVReader {
+public class RestaurantLoader {
     final String CSV_NAME = "restaurants_itr1.csv";
     final String DELIMITER = ",";
 
@@ -42,4 +42,3 @@ public class CSVReader {
         return new Restaurant(trackingNumber, name, physicalAddress, city, factype, latitude, longitude);
     }
 }
-
