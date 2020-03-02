@@ -48,12 +48,5 @@ public class Restaurant {
     public double getLongitude() {
         return longitude;
     }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "trackingNumber='" + trackingNumber + '\'' +
-                '}';
-    }
 }
 
