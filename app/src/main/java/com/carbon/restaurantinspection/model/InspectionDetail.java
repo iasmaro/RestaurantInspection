@@ -12,9 +12,9 @@ public class InspectionDetail {
     private int numCritical;
     private int numNonCritical;
     private String hazardLevel;
-    private String violations;
+    private String[] violations;
 
-    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String violations) {
+    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
         this.inspectionDate = inspectionDate;
         this.inspectionType = inspectionType;
@@ -39,7 +39,7 @@ public class InspectionDetail {
     public void setInspectionDate(String inspectionDate) {
         this.inspectionDate = inspectionDate;
     }
-    
+
     public String getInspectionType() {
         return inspectionType;
     }
@@ -72,11 +72,11 @@ public class InspectionDetail {
         this.hazardLevel = hazardLevel;
     }
 
-    public String getViolations() {
+    public String[] getViolations() {
         return violations;
     }
 
-    public void setViolations(String violations) {
+    public void setViolations(String[] violations) {
         this.violations = violations;
     }
 }
