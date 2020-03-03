@@ -43,16 +43,19 @@ public class InspectionLoader {
         }
     }
 
-    private void addInspectionDetail(String[] components) {
-        InspectionDetail inspection = new InspectionDetail(components[0], components[1], components[2], components[3],
-                                                            components[4], components[5], components[6]);
-        if (inspections.containsKey(components[0])) {
-            inspections.get(components[0]).add(inspection);
+    private void addInspectionDetail(String[] tokens) {
+        int criticalIssues = Integer.parseInt(tokens[3]);
+        int nonCriticalIssues = Integer.parseInt(tokens[4]);
+        String[] violationsArray = tokens[6].split("|");
+        InspectionDetail inspection = new InspectionDetail(tokens[0], tokens[1], tokens[2],
+                criticalIssues, nonCriticalIssues, tokens[5], violationsArray);
+        if (inspections.containsKey(tokens[0])) {
+            inspections.get(tokens[0]).add(inspection);
         }
         else {
             ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
             inspectionList.add(inspection);
-            inspections.put(components[0], inspectionList);
+            inspections.put(tokens[0], inspectionList);
         }
     }
 }
