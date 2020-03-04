@@ -37,7 +37,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginTop="18dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Date: May 3rd"
+            android:text="Date: May 3rd, 2019"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -64,6 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
+            android:drawableLeft="@drawable/red_skull_size"
+            android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
             android:text="Critical issues: 4"
             android:textColor="#000000"
@@ -73,11 +75,13 @@
             app:layout_constraintTop_toBottomOf="@+id/inspectionTypeText" />
 
         <TextView
-            android:id="@+id/inspectionNonCriticalText3"
+            android:id="@+id/inspectionNonCriticalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
+            android:drawableLeft="@drawable/caution_size"
+            android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
             android:text="Non-Critical issues: 2"
             android:textColor="#000000"
@@ -90,11 +94,36 @@
             android:id="@+id/inspectionRedSkull"
             android:layout_width="165dp"
             android:layout_height="109dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="9dp"
             android:layout_marginEnd="100dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionNonCriticalText3"
+            app:layout_constraintTop_toBottomOf="@+id/inspectionHazardText"
             app:srcCompat="@drawable/red_skull_crossbones" />
+
+        <TextView
+            android:id="@+id/inspectionHazardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="21dp"
+            android:fontFamily="@font/athiti_extralight"
+            android:text="Hazard Level: Danger"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inspectionNonCriticalText" />
+
+        <ListView
+            android:id="@+id/inspectionListView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inspectionDateText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
