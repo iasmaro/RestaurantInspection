@@ -39,7 +39,7 @@ public class InspectionDetail extends AppCompatActivity {
     private void extractDataFromIntent() {
         Intent intent = getIntent();
         inspectionPosition = intent.getIntExtra(EXTRA_POSITION, 0);
-        //adjust arrayList
+        //adjust arrayList by calling singleton method
     }
 
     public static Intent makeIntent(Context context, int position) {
@@ -119,7 +119,7 @@ public class InspectionDetail extends AppCompatActivity {
 
         public inspectionArrayTest() {
             this.violationList.add(new violations(101, "non critical", "Plans/construction/alterations not in accordance with the Regulation [s. 3; s. 4],Not Repeat", "Pest", R.drawable.pest));
-            this.violationList.add(new violations(102, "non critical", "Operation of an unapproved food premises [s. 6(1)],Not Repeat", "Food", R.drawable.ic_launcher_background));
+            this.violationList.add(new violations(102, "non critical", "Operation of an unapproved food premises [s. 6(1)],Not Repeat", "Equipment", R.drawable.hygiene));
         }
     }
 
