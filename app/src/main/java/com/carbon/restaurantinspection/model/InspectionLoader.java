@@ -46,7 +46,12 @@ public class InspectionLoader {
     private void addInspectionDetail(String[] tokens) {
         int criticalIssues = Integer.parseInt(tokens[3]);
         int nonCriticalIssues = Integer.parseInt(tokens[4]);
-        String[] violationsArray = tokens[6].split("|");
+        String[] violationsArray;
+        try {
+            violationsArray = tokens[6].split("|");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            violationsArray = null;
+        }
         InspectionDetail inspection = new InspectionDetail(tokens[0], tokens[1], tokens[2],
                 criticalIssues, nonCriticalIssues, tokens[5], violationsArray);
         if (inspections.containsKey(tokens[0])) {

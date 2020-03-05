@@ -79,4 +79,9 @@ public class InspectionDetail {
     public void setViolations(String[] violations) {
         this.violations = violations;
     }
+
+    public String returnInsDetails(){
+        String str = inspectionDate+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
+        return str;
+    }
 }
