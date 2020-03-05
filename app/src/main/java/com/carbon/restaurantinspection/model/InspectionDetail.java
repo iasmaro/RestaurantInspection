@@ -14,7 +14,8 @@ public class InspectionDetail {
     private String hazardLevel;
     private String[] violations;
 
-    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
+    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, 
+    int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
         this.inspectionDate = inspectionDate;
         this.inspectionType = inspectionType;
