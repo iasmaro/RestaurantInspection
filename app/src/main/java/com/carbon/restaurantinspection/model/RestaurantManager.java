@@ -8,9 +8,9 @@ import java.util.Iterator;
 public class RestaurantManager implements Iterable<Restaurant>{
     private ArrayList<Restaurant> restaurantList;
 
-    private RestaurantManager instance;
+    private static RestaurantManager instance;
 
-    public RestaurantManager getInstance(Context context) {
+    public static RestaurantManager getInstance(Context context) {
         if (instance == null) {
             instance = new RestaurantManager(context);
         }
