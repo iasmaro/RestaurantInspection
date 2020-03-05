@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ public class InspectionDetail extends AppCompatActivity {
 
     private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetail.position";
     private int inspectionPosition;
-
     inspectionArrayTest inspection = new inspectionArrayTest();
     private ArrayList<violations> vList = inspection.getViolationList();
 
@@ -118,6 +116,7 @@ public class InspectionDetail extends AppCompatActivity {
         }
 
         public inspectionArrayTest() {
+            this.violationList.add(new violations(101, "non critical", "Plans/construction/alterations not in accordance with the Regulation [s. 3; s. 4],Not Repeat", "Pest", R.drawable.pest));
             this.violationList.add(new violations(101, "non critical", "Plans/construction/alterations not in accordance with the Regulation [s. 3; s. 4],Not Repeat", "Pest", R.drawable.pest));
             this.violationList.add(new violations(102, "non critical", "Operation of an unapproved food premises [s. 6(1)],Not Repeat", "Equipment", R.drawable.hygiene));
         }
