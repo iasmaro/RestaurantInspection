@@ -13,6 +13,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+/**
+ * InspectionLoader class loads inspection information from a csv file,
+ * and creates an InspectionDetail object for each line from the csv file.
+ * It adds the InspectionDetail objects to a hashtable that has trackingNumber
+ * as its key, and ArrayList of IssueDetails as its value.
+ */
 public class InspectionLoader {
     private Hashtable<String, ArrayList<InspectionDetail>> inspections = new Hashtable<>();
 
