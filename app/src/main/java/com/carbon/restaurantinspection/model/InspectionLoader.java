@@ -31,12 +31,14 @@ public class InspectionLoader {
             // Step over headers
             reader.readLine();
 
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while (line != null) {
                 // Split by ','
                 String[] tokens = line.split(",");
 
                 // Read the data
                 addInspectionDetail(tokens);
+                line = reader.readLine();
             }
         } catch (IOException e) {
             Log.wtf("InspectionLoader", "Error reading data file on line " + line, e);
