@@ -1,13 +1,16 @@
 package com.carbon.restaurantinspection.model;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +18,6 @@ import com.carbon.restaurantinspection.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 class myInspections{
     private String details;
@@ -44,19 +46,28 @@ class myInspections{
 }
 public class RestaurantDetails extends AppCompatActivity {
     private int index;
+    private static RestaurantDetails instance;
     private InspectionManger InsManager;
-    private List<myInspections> inspectionList = new ArrayList<>();
+    private List<myInspections> inspectionList = new ArrayList<myInspections>();
     private Restaurant restaurant;
     ArrayAdapter<myInspections> adapter;
+
+
+    public static RestaurantDetails getInstance(Context context) {
+        if (instance == null) {
+            instance = new RestaurantDetails();
+        }
+        return instance;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getIntents();
         RestaurantManager restManager = RestaurantManager.getInstance(this);
         InsManager =  InspectionManger.getInstance(this);
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_rest_dets);
         updateAddress();
-        getIntents();
         populateStringList();
         populateListView();
 
@@ -78,24 +89,26 @@ public class RestaurantDetails extends AppCompatActivity {
             ins[i] = new myInspections();
             ins[i].setDetails(str);
             String string = inspections.get(i).getHazardLevel();
-            if(Objects.equals(string, "High")){
-                ins[i].setIconId(R.drawable.ic_warning_red_24dp);
+            if(string.equals("\"High\"")){
+                ins[i].setIconId(R.drawable.red_skull_crossbones);
             }
-            else{
+            else if(string.equals("\"Moderate\"")){
                 ins[i].setIconId(R.drawable.ic_warning_yellow_24dp);
             }
+            else
+                ins[i].setIconId(R.drawable.greencheckp);
             inspectionList.add(ins[i]);
         }
     }
 
     private void getIntents() {
         Intent intent = getIntent();
-        index = intent.getIntExtra("ca/sfu/restaurantinspections/MainActivity.java:14", 0);
+        index = intent.getIntExtra("com/carbon/restaurantinspection/model/MainActivity.java:30", 0);
     }
 
 
     private class MyListAdapter extends ArrayAdapter<myInspections>{
-        MyListAdapter(){
+        public MyListAdapter(){
             super(RestaurantDetails.this,R.layout.item_view, inspectionList);
         }
         @Override
