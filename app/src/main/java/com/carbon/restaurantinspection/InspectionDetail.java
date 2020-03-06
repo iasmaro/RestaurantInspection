@@ -47,7 +47,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     private void registerClickCallBack() {
-        ListView list = findViewById(R.id.inspectionListView);
+        ListView list = findViewById(R.id.inspection_listView);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,20 +60,20 @@ public class InspectionDetail extends AppCompatActivity {
 
     private void populateListView() {
         ArrayAdapter<violations> adapter = new MyListAdapter();
-        ListView list = findViewById(R.id.inspectionListView);
+        ListView list = findViewById(R.id.inspection_listView);
         list.setAdapter(adapter);
     }
 
     private class MyListAdapter extends ArrayAdapter<violations> {
         public MyListAdapter(){
-            super(InspectionDetail.this, R.layout.item_view, vList);
+            super(InspectionDetail.this, R.layout.inspection_item_view, vList);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             View itemView = convertView;
             if (itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.item_view, parent, false);
+                itemView = getLayoutInflater().inflate(R.layout.inspection_item_view, parent, false);
             }
 
             //Find current violation
