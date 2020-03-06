@@ -1,5 +1,11 @@
 package com.carbon.restaurantinspection.model;
 
+/**
+ * Restaurant class models a restaurant's details.
+ * It contains a restaurant's tracking number, name, physical address, city, factype, latitude,
+ * and longitude
+ */
+
 public class Restaurant {
 
     private String trackingNumber;
@@ -49,3 +55,4 @@ public class Restaurant {
         return longitude;
     }
 }
+
