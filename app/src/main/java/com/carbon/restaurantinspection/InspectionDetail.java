@@ -19,7 +19,9 @@ import java.util.ArrayList;
 public class InspectionDetail extends AppCompatActivity {
 
     private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetail.position";
+    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetail.trackingNumber";
     private int inspectionPosition;
+    private String trackingNumber;
     inspectionArrayTest inspection = new inspectionArrayTest();
     private ArrayList<violations> vList = inspection.getViolationList();
 
@@ -37,12 +39,14 @@ public class InspectionDetail extends AppCompatActivity {
     private void extractDataFromIntent() {
         Intent intent = getIntent();
         inspectionPosition = intent.getIntExtra(EXTRA_POSITION, 0);
+        trackingNumber = intent.getStringExtra(EXTRA_TRACKING_NUMBER);
         //adjust arrayList by calling singleton method
     }
 
-    public static Intent makeIntent(Context context, int position) {
+    public static Intent makeIntent(Context context, int position, String trackingNumber) {
         Intent intent = new Intent(context, InspectionDetail.class);
         intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(EXTRA_TRACKING_NUMBER, trackingNumber);
         return intent;
     }
 
@@ -99,14 +103,8 @@ public class InspectionDetail extends AppCompatActivity {
                 hazardView.setImageResource(R.drawable.red_skull_crossbones);
             }
             return itemView;
-//            return super.getView(position, convertView, parent);
-
         }
-
     }
-
-
-
 
     public class inspectionArrayTest{
         private ArrayList<violations> violationList = new ArrayList<>();
