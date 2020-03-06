@@ -1,4 +1,4 @@
-package com.carbon.restaurantinspection;
+package com.carbon.restaurantinspection.model;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.carbon.restaurantinspection.R;
 
 public class MainActivity extends AppCompatActivity {
     Button btn;
@@ -25,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int index = 3;
                 Intent intent = new Intent(MainActivity.this, RestaurantDetails.class);
+                intent.putExtra("com/carbon/restaurantinspection/model/MainActivity.java:30",index);
                 startActivity(intent);
             }
         });
