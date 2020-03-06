@@ -15,12 +15,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+/**
+ * RestaurantLoader Class loads restaurant information from a csv file,
+ * and creates a Restaurant object for each line from the csv file.
+ * It adds the Restaurant objects into an ArrayList.
+ */
 public class RestaurantLoader {
     private final String DELIMITER = ",";
-    private ArrayList<Restaurant> restaurantList;
+    private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
     public ArrayList<Restaurant> loadRestaurantList(Context context) {
-        restaurantList = new ArrayList<>();
+
         InputStream is = context.getResources().openRawResource(R.raw.restaurants_itr1);
 
         BufferedReader reader = new BufferedReader(
@@ -30,9 +35,11 @@ public class RestaurantLoader {
         try {
             reader.readLine();
 
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while (line != null) {
                 String[] tokens = line.split(DELIMITER);
                 addRestaurant(tokens);
+                line = reader.readLine();
             }
         } catch (IOException e) {
             Log.wtf("RestaurantLoader", "Error reading data file on line " + line, e);
