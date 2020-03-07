@@ -42,10 +42,11 @@ public class RestaurantLoader {
     }
 
     private void addRestaurant(String[] restaurantInfo) {
-        double latitude = Double.parseDouble(restaurantInfo[5]);
-        double longitude = Double.parseDouble(restaurantInfo[6]);
-        Restaurant restaurant = new Restaurant(restaurantInfo[0], restaurantInfo[1], restaurantInfo[2],
-                restaurantInfo[3], restaurantInfo[4], latitude, longitude);
+        double latitude = Double.parseDouble(restaurantInfo[6]);
+        double longitude = Double.parseDouble(restaurantInfo[7]);
+        int iconID = Integer.parseInt(restaurantInfo[0]);
+        Restaurant restaurant = new Restaurant(iconID, restaurantInfo[1], restaurantInfo[2], restaurantInfo[3],
+                restaurantInfo[4], restaurantInfo[5], latitude, longitude);
         restaurantList.add(restaurant);
     }
 }

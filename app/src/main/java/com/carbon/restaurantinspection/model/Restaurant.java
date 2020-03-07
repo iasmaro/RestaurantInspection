@@ -8,6 +8,7 @@ package com.carbon.restaurantinspection.model;
 
 public class Restaurant {
 
+    private int iconID;
     private String trackingNumber;
     private String name;
     private String physicalAddress;
@@ -16,7 +17,8 @@ public class Restaurant {
     private double latitude;
     private double longitude;
 
-    public Restaurant(String trackingNumber, String name, String physicalAddress, String city, String factype, double latitude, double longitude) {
+    public Restaurant(int iconID, String trackingNumber, String name, String physicalAddress, String city, String factype, double latitude, double longitude) {
+        this.iconID = iconID;
         this.trackingNumber = trackingNumber;
         this.name = name;
         this.physicalAddress = physicalAddress;
@@ -24,6 +26,9 @@ public class Restaurant {
         this.factype = factype;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    public int getIconID() {
+        return iconID;
     }
 
     public String getTrackingNumber() {
