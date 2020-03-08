@@ -44,33 +44,66 @@ public class InspectionDetail {
     }
 
     public String getInspectionDate() {
-        Date date = getDate();
-        Calendar inspecDate = new GregorianCalendar();
-        inspecDate.setTime(date);
-        Calendar monthAgo = new GregorianCalendar();
-        monthAgo.add(monthAgo.DAY_OF_MONTH, -30);
-        Calendar yearAgo = new GregorianCalendar();
-        yearAgo.add(yearAgo.YEAR, -1);
+        Calendar inspecDate = getInspecDate();
+        Calendar monthAgo = getMonthAgo();
+        Calendar yearAgo = getYearAgo();
+
         String dateOfInspection = "";
         if (monthAgo.before(inspecDate)) {
-            Calendar today = Calendar.getInstance();
-            long milliSecs = today.getTimeInMillis() - inspecDate.getTimeInMillis();
-            int days = (int) (milliSecs / MILISEC_TO_DAYS);
+            int days = daysBetween(inspecDate);
             dateOfInspection = days + " days ago.";
         }
         else if (yearAgo.before(inspecDate)) {
-            String month = inspecDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
+            String month = getMonth(inspectionDate.substring(4, 6));
             dateOfInspection = month + " " + inspecDate.DAY_OF_MONTH;
         }
         else {
-            String month = inspecDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
+            String month = getMonth(inspectionDate.substring(4, 6));
             int year = inspecDate.YEAR;
             dateOfInspection = month + " " + year;
         }
         return dateOfInspection;
     }
 
+    private Calendar getInspecDate(){
+        Calendar inspecDate = new GregorianCalendar();
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = dateFormat.parse(inspectionDate);
+            inspecDate.setTime(date);
+            return inspecDate;
+        } catch (ParseException e) {
+            return inspecDate;
+        }
+    }
+
+    private Calendar getYearAgo() {
+        Calendar yearAgo = new GregorianCalendar();
+        yearAgo.add(yearAgo.YEAR, -1);
+        return yearAgo;
+    }
+
+    private Calendar getMonthAgo() {
+        Calendar monthAgo = new GregorianCalendar();
+        monthAgo.add(monthAgo.DAY_OF_MONTH, -30);
+        return monthAgo;
+    }
+
+    private int daysBetween(Calendar inspecDate) {
+        Calendar today = Calendar.getInstance();
+        long milliSecs = today.getTimeInMillis() - inspecDate.getTimeInMillis();
+        int days = (int) (milliSecs / MILISEC_TO_DAYS);
+        return days;
+    }
+
     public String getFullDate() {
+        String fullDate = getMonth(inspectionDate.substring(4, 6)) + " "
+                + inspectionDate.substring(6) + ", "
+                + inspectionDate.substring(0, 4);
+        return fullDate;
+    }
+
+    private String getMonth(String month) {
         Hashtable<String, String> months = new Hashtable<>();
         months.put("01", "January");
         months.put("02", "February");
@@ -84,23 +117,11 @@ public class InspectionDetail {
         months.put("10", "October");
         months.put("11", "November");
         months.put("12", "December");
-        String fullDate = months.get(inspectionDate.substring(4, 6)) + " "
-                + inspectionDate.substring(6) + ", "
-                + inspectionDate.substring(0, 4);
-        return fullDate;
+        return months.get(month);
     }
 
     public void setInspectionDate(String inspectionDate) {
         this.inspectionDate = inspectionDate;
-    }
-
-    private Date getDate(){
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-            return dateFormat.parse(inspectionDate);
-        } catch (ParseException e) {
-            return new Date();
-        }
     }
 
     public String getInspectionType() {
