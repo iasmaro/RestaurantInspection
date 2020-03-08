@@ -1,5 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
+import java.util.ArrayList;
+
 /*
   InspectionDetail class models an inspection report's details.
   It contains the inspection's tracking number, date, type, number of critical issues found,
@@ -12,7 +14,7 @@ public class InspectionDetail {
     private int numCritical;
     private int numNonCritical;
     private String hazardLevel;
-    private String[] violations;
+    private ArrayList<Violation> violations= new ArrayList<>();
 
     public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
@@ -21,7 +23,15 @@ public class InspectionDetail {
         this.numCritical = numCritical;
         this.numNonCritical = numNonCritical;
         this.hazardLevel = hazardLevel;
-        this.violations = violations;
+        addViolations(violations);
+
+    }
+
+    private void addViolations(String[] strViolations) {
+        for (String violation: strViolations) {
+            Violation viol = new Violation(violation);
+            violations.add(viol);
+        }
     }
 
     public String getTrackingNumber() {
@@ -72,11 +82,11 @@ public class InspectionDetail {
         this.hazardLevel = hazardLevel;
     }
 
-    public String[] getViolations() {
+    public ArrayList<Violation> getViolations() {
         return violations;
     }
 
     public void setViolations(String[] violations) {
-        this.violations = violations;
+        addViolations(violations);
     }
 }
