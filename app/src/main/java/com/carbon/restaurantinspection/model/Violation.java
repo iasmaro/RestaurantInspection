@@ -34,7 +34,7 @@ public class Violation {
         otherCode.put("2", "Food");
         otherCode.put("4", "Hygiene");
         otherCode.put("5", "Foodsafe");
-        if (code.substring(0, 1) == "3") {
+        if (code.substring(0, 1).equals("3")) {
             if (threeCode.containsKey(code)) {
                 this.type = threeCode.get(code);
             }
