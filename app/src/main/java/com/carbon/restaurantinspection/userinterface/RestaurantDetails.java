@@ -1,20 +1,22 @@
-package com.carbon.restaurantinspection.model;
+package com.carbon.restaurantinspection.userinterface;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.model.InspectionDetail;
+import com.carbon.restaurantinspection.model.InspectionManger;
+import com.carbon.restaurantinspection.model.Restaurant;
+import com.carbon.restaurantinspection.model.RestaurantManager;
 
 import java.util.ArrayList;
 import java.util.List;
