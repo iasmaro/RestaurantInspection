@@ -23,7 +23,9 @@ public class InspectionDetail {
         this.numCritical = numCritical;
         this.numNonCritical = numNonCritical;
         this.hazardLevel = hazardLevel;
-        addViolations(violations);
+        if (violations != null) {
+            addViolations(violations);
+        }
 
     }
 
