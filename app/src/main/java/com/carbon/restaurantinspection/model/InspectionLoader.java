@@ -46,16 +46,26 @@ public class InspectionLoader {
     private void addInspectionDetail(String[] tokens) {
         int criticalIssues = Integer.parseInt(tokens[3]);
         int nonCriticalIssues = Integer.parseInt(tokens[4]);
-        String[] violationsArray = tokens[6].split("|");
-        InspectionDetail inspection = new InspectionDetail(tokens[0], tokens[1], tokens[2],
-                criticalIssues, nonCriticalIssues, tokens[5], violationsArray);
-        if (inspections.containsKey(tokens[0])) {
-            inspections.get(tokens[0]).add(inspection);
+        String[] violationsArray;
+        if (tokens.length == 7) {
+            String violations = tokens[6].split("\"")[1];
+            violationsArray = violations.split("\\|");
+        } else {
+            violationsArray = null;
+        }
+        String trackingNumber = tokens[0].split("\"")[1];
+        String type = tokens[2].split("\"")[1];
+        String hazard = tokens[5].split("\"")[1];
+        InspectionDetail inspection = new InspectionDetail(trackingNumber, tokens[1], type,
+                criticalIssues, nonCriticalIssues, hazard, violationsArray);
+        if (inspections.containsKey(trackingNumber)) {
+            inspections.get(trackingNumber).add(inspection);
         }
         else {
             ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
             inspectionList.add(inspection);
-            inspections.put(tokens[0], inspectionList);
+            inspections.put(trackingNumber, inspectionList);
         }
     }
 }
+

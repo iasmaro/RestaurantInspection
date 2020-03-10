@@ -29,8 +29,10 @@ public class InspectionDetail {
 
     private void addViolations(String[] strViolations) {
         for (String violation: strViolations) {
-            Violation viol = new Violation(violation);
-            violations.add(viol);
+            if (violation.length() > 10) {
+                Violation viol = new Violation(violation);
+                violations.add(viol);
+            }
         }
     }
 

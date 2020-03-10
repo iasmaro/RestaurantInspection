@@ -17,7 +17,11 @@ public class Violation {
         if (violationArray.length > 0) {
             code = violationArray[0];
             status = violationArray[1];
-            description = violationArray[2] + "," + violationArray[3];
+            if (violationArray.length > 3) {
+                description = violationArray[2] + "," + violationArray[3];
+            } else {
+                description = violationArray[2];
+            }
             setTypeFromCode();
         }
     }
@@ -40,12 +44,10 @@ public class Violation {
         if (code.substring(0, 1).equals("3")) {
             if (threeCode.containsKey(code)) {
                 this.type = threeCode.get(code);
-            }
-            else {
+            } else {
                 this.type = "Equipment";
             }
-        }
-        else {
+        } else {
             this.type = otherCode.get(code.substring(0, 1));
         }
     }
