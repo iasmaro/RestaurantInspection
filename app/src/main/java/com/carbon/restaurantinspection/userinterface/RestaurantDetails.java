@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
-import com.carbon.restaurantinspection.model.InspectionManger;
+import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 
@@ -50,7 +50,7 @@ class myInspections{
 public class RestaurantDetails extends AppCompatActivity {
     private int index;
     private static RestaurantDetails instance;
-    private InspectionManger InsManager;
+    private InspectionManager InsManager;
     private List<myInspections> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
     ArrayAdapter<myInspections> adapter;
@@ -68,7 +68,7 @@ public class RestaurantDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getIntents();
         RestaurantManager restManager = RestaurantManager.getInstance(this);
-        InsManager =  InspectionManger.getInstance(this);
+        InsManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_rest_dets);
         updateAddress();

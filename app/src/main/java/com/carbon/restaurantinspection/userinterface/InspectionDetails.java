@@ -43,8 +43,6 @@ public class InspectionDetails extends AppCompatActivity {
         setContentView(R.layout.activity_inspection_details);
 
         extractDataFromIntent();
-        trackingNumber = "SWOD-AHZUMF";
-        inspectionPosition = 0;
 
         updateLists();
 
