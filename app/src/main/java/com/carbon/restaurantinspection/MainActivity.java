@@ -1,3 +1,4 @@
+
 package com.carbon.restaurantinspection;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this, InspectionDetail.class);
+        Intent intent = new Intent(this, InspectionDetails.class);
         startActivity(intent);
     }
 }
