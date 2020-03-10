@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carbon.restaurantinspection.model.InspectionDetail;
+import com.carbon.restaurantinspection.model.InspectionManager;
+import com.carbon.restaurantinspection.model.Violation;
+
 import java.util.ArrayList;
 
 public class InspectionDetails extends AppCompatActivity {
@@ -22,8 +26,9 @@ public class InspectionDetails extends AppCompatActivity {
     private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetails.trackingNumber";
     private int inspectionPosition;
     private String trackingNumber;
-    inspectionArrayTest inspection = new inspectionArrayTest();
-    private ArrayList<violations> vList = inspection.getViolationList();
+    private InspectionManager inspectionManager = InspectionManager.getInstance(this);
+    ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
+    private ArrayList<Violation> violationList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,12 @@ public class InspectionDetails extends AppCompatActivity {
         setContentView(R.layout.activity_inspection_detail);
 
         extractDataFromIntent();
+        //delete
+        inspectionPosition = 0;
+        trackingNumber = "SDFO-8HKP7E";
+        updateLists();
 
+        updateViews();
         populateListView();
         registerClickCallBack();
     }
@@ -50,29 +60,51 @@ public class InspectionDetails extends AppCompatActivity {
         return intent;
     }
 
-    private void registerClickCallBack() {
-        ListView list = findViewById(R.id.inspection_listView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                violations clickedViolation = vList.get(position);
-                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+    private void updateLists(){
+        inspectionList = inspectionManager.getInspections(trackingNumber);
+        violationList = inspectionList.get(inspectionPosition).getViolations();
+    }
+
+    private void updateViews(){
+        TextView textView = findViewById(R.id.inspection_dateText);
+        textView.setText("Date: " + inspectionList.get(inspectionPosition).getInspectionDate());
+
+        textView = findViewById(R.id.inspection_typeText);
+        textView.setText("Type: " + inspectionList.get(inspectionPosition).getInspectionType());
+
+        textView = findViewById(R.id.inspection_criticalText);
+        textView.setText("Critical Issues: " + inspectionList.get(inspectionPosition).getNumCritical());
+
+        textView = findViewById(R.id.inspection_nonCriticalText);
+        textView.setText("Non-Critical Issues: " + inspectionList.get(inspectionPosition).getNumNonCritical());
+
+        textView = findViewById(R.id.inspection_hazardText);
+        String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
+        textView.setText("Hazard Level: " + hazardLevel);
+        ImageView imageView = findViewById(R.id.inspection_hazardImage);
+        if(hazardLevel.equals("\"High\"")){
+            imageView.setImageResource(R.drawable.red_skull_crossbones);
+        }
+        else if(hazardLevel.equals("\"Moderate\"")){
+            imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
+        }
+        else{
+            imageView.setImageResource(R.drawable.greencheckp);
+        }
     }
 
     private void populateListView() {
-        ArrayAdapter<violations> adapter = new MyListAdapter();
+        ArrayAdapter<Violation> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.inspection_listView);
         list.setAdapter(adapter);
     }
 
-    private class MyListAdapter extends ArrayAdapter<violations> {
-        public MyListAdapter(){
-            super(InspectionDetails.this, R.layout.inspection_item_view, vList);
-        }
+    private class MyListAdapter extends ArrayAdapter<Violation> {
 
+
+        public MyListAdapter(){
+            super(InspectionDetails.this, R.layout.inspection_item_view, violationList);
+        }
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             View itemView = convertView;
@@ -81,11 +113,12 @@ public class InspectionDetails extends AppCompatActivity {
             }
 
             //Find current violation
-            violations currentViolation = vList.get(position);
+            Violation currentViolation = violationList.get(position);
 
             //Fill the violation icon
             ImageView violationView = itemView.findViewById(R.id.item_violationIcon);
-            violationView.setImageResource(currentViolation.getIconID());
+            int iconID = findResourceID(currentViolation);
+            violationView.setImageResource(iconID);
 
             //violation title
             TextView titleText = itemView.findViewById(R.id.item_violationTitle);
@@ -104,62 +137,37 @@ public class InspectionDetails extends AppCompatActivity {
             }
             return itemView;
         }
+
+        private int findResourceID(Violation currentViolation){
+            //6
+            int id;
+            String type = currentViolation.getType();
+            if (type.equals("Permit")){
+                id = R.drawable.permit;
+            } else if (type.equals("Food")){
+                id = R.drawable.food;
+            } else if (type.equals("Foodsafe")){
+                id = R.drawable.permit;
+            } else if (type.equals("Pest")){
+                id = R.drawable.pest;
+            } else if (type.equals("Hygiene")){
+                id = R.drawable.hygiene;
+            } else {
+                id = R.drawable.equipment;
+            }
+            return  id;
+        }
+
     }
-
-    public class inspectionArrayTest{
-        private ArrayList<violations> violationList = new ArrayList<>();
-
-        public ArrayList<violations> getViolationList() {
-            return violationList;
-        }
-
-        public inspectionArrayTest() {
-            this.violationList.add(new violations(101, "non critical", "Plans/construction/alterations not in accordance with the Regulation [s. 3; s. 4],Not Repeat", "Pest", R.drawable.pest));
-            this.violationList.add(new violations(101, "non critical", "Plans/construction/alterations not in accordance with the Regulation [s. 3; s. 4],Not Repeat", "Pest", R.drawable.pest));
-            this.violationList.add(new violations(102, "non critical", "Operation of an unapproved food premises [s. 6(1)],Not Repeat", "Equipment", R.drawable.hygiene));
-        }
+    private void registerClickCallBack() {
+        ListView list = findViewById(R.id.inspection_listView);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Violation clickedViolation = violationList.get(position);
+                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
-    public class violations{
-
-        //100: permit
-        //200: food
-        //400: hygiene
-        //500: foodsafe
-
-        private int code;
-        private String status;
-        private String description;
-        private String type;
-        private int iconID;
-
-        public violations(int code, String status, String description, String type, int iconID) {
-            this.code = code;
-            this.status = status;
-            this.description = description;
-            this.type = type;
-            this.iconID = iconID;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getType(){
-            return type;
-        }
-
-        public int getIconID() {
-            return iconID;
-        }
-    }
-
 }
