@@ -90,13 +90,14 @@ public class RestaurantListActivity extends AppCompatActivity {
            ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(sub);
 //            Collections.sort(inspections);
 
+            // set # issues
             if(inspections != null) {
                 int numCrit = inspections.get(0).getNumCritical();
                 int numNonCrit = inspections.get(0).getNumNonCritical();
-                int total = numCrit + numNonCrit;
+                int totalIssues = numCrit + numNonCrit;
 
                 TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
-                numIssuesText.setText("" + total);
+                numIssuesText.setText("# Issues: " + totalIssues);
             }
 
             else {
@@ -115,10 +116,8 @@ public class RestaurantListActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id){
 
                     Toast.makeText(RestaurantListActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
-
                 }
             });
-
             return itemView;
         }
     }
