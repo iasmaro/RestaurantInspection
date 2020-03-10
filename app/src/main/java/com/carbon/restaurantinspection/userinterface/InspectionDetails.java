@@ -1,6 +1,4 @@
-package com.carbon.restaurantinspection;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.carbon.restaurantinspection.userinterface;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +12,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.carbon.restaurantinspection.R;
+
 import java.util.ArrayList;
 
 public class InspectionDetails extends AppCompatActivity {
 
-    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetails.position";
-    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetails.trackingNumber";
+    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.userinterface.InspectionDetails.position";
+    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.userinterface.InspectionDetails.trackingNumber";
     private int inspectionPosition;
     private String trackingNumber;
     inspectionArrayTest inspection = new inspectionArrayTest();

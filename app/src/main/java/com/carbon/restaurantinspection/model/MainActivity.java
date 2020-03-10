@@ -29,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int index = 1;
-                Intent intent = new Intent(MainActivity.this, RestaurantDetails.class);
-                intent.putExtra("com/carbon/restaurantinspection/model/MainActivity.java:30",index);
+                Intent intent = RestaurantDetails.getInstance(MainActivity.this,index);
                 startActivity(intent);
             }
         });

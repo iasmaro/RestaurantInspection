@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// Class to help me display my an icon beside the the inspections
+
 class InspectionDetailHolder {
+    // Class to help me display my an icon beside the the inspections
     private String details;
     private int iconId;
 
@@ -31,15 +32,6 @@ class InspectionDetailHolder {
         details = str;
         iconId = id;
     }
-
-    void setDetails(String details) {
-        this.details = details;
-    }
-
-    void setIconId(int iconId) {
-        this.iconId = iconId;
-    }
-
     int getIconId() {
         return iconId;
     }
@@ -53,25 +45,22 @@ class InspectionDetailHolder {
 
 public class RestaurantDetails extends AppCompatActivity {
     private int index;
-    private static RestaurantDetails instance;
     private InspectionManager InsManager;
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
-    ArrayAdapter<InspectionDetailHolder> adapter;
-    private String trackingNum;
 
 
-    public static RestaurantDetails getInstance(Context context) {
-        if (instance == null) {
-            instance = new RestaurantDetails();
-        }
-        return instance;
+
+    public static Intent getInstance(Context context, int index) {
+        Intent intent = new Intent(context, RestaurantDetails.class);
+        intent.putExtra("com/carbon/restaurantinspection/model/MainActivity.java:30",0);
+        return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getIntents();
-
         RestaurantManager restManager = RestaurantManager.getInstance(this);
         InsManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
@@ -97,6 +86,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
 
     private void populateStringList() {
+        String trackingNum;
         trackingNum = restaurant.getTrackingNumber();
         List<InspectionDetail> inspections = InsManager.getInspections(trackingNum);
         System.out.println(inspections.isEmpty());
@@ -144,6 +134,7 @@ public class RestaurantDetails extends AppCompatActivity {
     }
 
     private void populateListView() {
+        ArrayAdapter<InspectionDetailHolder> adapter;
         adapter = new MyListAdapter();
         ListView list = findViewById(R.id.list);
         list.setAdapter(adapter);
