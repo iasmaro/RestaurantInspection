@@ -117,9 +117,10 @@
             android:id="@+id/inspection_listView"
             android:layout_width="359dp"
             android:layout_height="200dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.555"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

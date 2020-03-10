@@ -25,8 +25,8 @@ public class InspectionDetails extends AppCompatActivity {
 
     private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetails.position";
     private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetails.trackingNumber";
-    private int inspectionPosition = 0;
-    private String trackingNumber = "SDFO-8HKP7E";
+    private int inspectionPosition;
+    private String trackingNumber;
     private InspectionManager inspectionManager;
     ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
     private ArrayList<Violation> violationList;
@@ -36,21 +36,28 @@ public class InspectionDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         inspectionManager = InspectionManager.getInstance(this);
         setContentView(R.layout.activity_inspection_details);
-        Toast.makeText(InspectionDetails.this, "WHY AM I GETTING AN ERROR",
-                Toast.LENGTH_LONG).show();
+
         extractDataFromIntent();
-        //delete
+        trackingNumber = "SWOD-AHZUMF";
+        inspectionPosition = 1;
+
+
 
         updateLists();
-        Log.e("my class", "in on create");
+        Toast.makeText(InspectionDetails.this, "size of violation: " + violationList.size(),
+                Toast.LENGTH_LONG).show();
+
         if (violationList != null){
+            if (violationList.size() > 0) {
+//                violationList.remove(violationList.size() - 1);
+            }
+
+            Toast.makeText(InspectionDetails.this, "2 size of violation: " + violationList.size(),
+                    Toast.LENGTH_LONG).show();
             updateViews();
         }
         populateListView();
         registerClickCallBack();
-        Toast.makeText(InspectionDetails.this, "end of on create",
-                Toast.LENGTH_LONG).show();
-        Log.e("my class", "end of on create");
     }
 
     private void extractDataFromIntent() {
@@ -79,37 +86,32 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     private void updateLists(){
-        inspectionList = inspectionManager.getInspections("SDFO-8HKP7E");
-        violationList = inspectionList.get(0).getViolations();
+        inspectionList = inspectionManager.getInspections(trackingNumber);
+        violationList = inspectionList.get(inspectionPosition).getViolations();
     }
 
     private void populateListView() {
-        Toast.makeText(InspectionDetails.this, "in populate listView",
-                Toast.LENGTH_LONG).show();
         ArrayAdapter<Violation> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.inspection_listView);
         list.setAdapter(adapter);
     }
 
     private void updateViews(){
-        Toast.makeText(InspectionDetails.this, "in update views",
-                Toast.LENGTH_LONG).show();
 
-        Log.e("my class", "in update view");
         TextView textView = findViewById(R.id.inspection_dateText);
-        textView.setText("Date: " + inspectionList.get(0).getInspectionDate());
+        textView.setText("Date: " + inspectionList.get(inspectionPosition).getFullDate());
 
         textView = findViewById(R.id.inspection_typeText);
-        textView.setText("Type: " + inspectionList.get(0).getInspectionType());
+        textView.setText("Type: " + inspectionList.get(inspectionPosition).getInspectionType());
 
         textView = findViewById(R.id.inspection_criticalText);
-        textView.setText("Critical Issues: " + inspectionList.get(0).getNumCritical());
+        textView.setText("Critical Issues: " + inspectionList.get(inspectionPosition).getNumCritical());
 
         textView = findViewById(R.id.inspection_nonCriticalText);
-        textView.setText("Non-Critical Issues: " + inspectionList.get(0).getNumNonCritical());
+        textView.setText("Non-Critical Issues: " + inspectionList.get(inspectionPosition).getNumNonCritical());
 
         textView = findViewById(R.id.inspection_hazardText);
-        String hazardLevel = inspectionList.get(0).getHazardLevel();
+        String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
         textView.setText("Hazard Level: " + hazardLevel);
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
         if(hazardLevel.equals("\"High\"")){
@@ -162,23 +164,24 @@ public class InspectionDetails extends AppCompatActivity {
         }
 
         private int findResourceID(Violation currentViolation){
-            int id;
             String type = currentViolation.getType();
-            if (type.equals("Permit")){
-                id = R.drawable.permit;
-            } else if (type.equals("Food")){
-                id = R.drawable.food;
-            } else if (type.equals("Foodsafe")){
-                id = R.drawable.permit;
-            } else if (type.equals("Pest")){
-                id = R.drawable.pest;
-            } else if (type.equals("Hygiene")){
-                id = R.drawable.hygiene;
+            if (type != null) {
+                if (type.equals("Permit")){
+                    return R.drawable.permit;
+                } else if (type.equals("Food")){
+                    return R.drawable.food;
+                } else if (type.equals("Foodsafe")){
+                    return R.drawable.permit;
+                } else if (type.equals("Pest")){
+                    return R.drawable.pest;
+                } else if (type.equals("Hygiene")){
+                    return R.drawable.hygiene;
+                } else {
+                    return R.drawable.equipment;
+                }
             } else {
-                id = R.drawable.equipment;
+                return 0;
             }
-            return  id;
         }
-
     }
 }
