@@ -1,5 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,9 +39,15 @@ public class InspectionDetail {
     }
 
     private void addViolations(String[] strViolations) {
-        for (String violation: strViolations) {
-            Violation viol = new Violation(violation);
-            violations.add(viol);
+        if (strViolations == null) {
+            return;
+        }
+        for (String violation : strViolations) {
+            if (!violation.isEmpty()) {
+                Log.d("lol", "0" + violation);
+                Violation viol = new Violation(violation);
+                violations.add(viol);
+            }
         }
     }
 

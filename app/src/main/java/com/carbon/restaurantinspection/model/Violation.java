@@ -1,5 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
+import android.util.Log;
+
 import java.util.Hashtable;
 
 /*
@@ -13,11 +15,18 @@ public class Violation {
     private String type;
 
     public Violation(String violation) {
-        String[] violationArray = violation.split(",");
-        code = violationArray[0];
-        status = violationArray[1];
-        description = violationArray[2] + "," + violationArray[3];
-        setTypeFromCode();
+        Log.d("viol", violation);
+        if (violation.length() > 10) {
+            String[] violationArray = violation.split(",");
+            code = violationArray[0];
+            status = violationArray[1];
+            if (violationArray.length > 3) {
+                description = violationArray[2] + "," + violationArray[3];
+            } else {
+                description = violationArray[2];
+            }
+            setTypeFromCode();
+        }
     }
 
     private void setTypeFromCode() {

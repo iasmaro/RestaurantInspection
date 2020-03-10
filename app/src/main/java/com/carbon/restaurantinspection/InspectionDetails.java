@@ -25,11 +25,11 @@ public class InspectionDetails extends AppCompatActivity {
 
     private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetails.position";
     private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetails.trackingNumber";
-    private int inspectionPosition;
-    private String trackingNumber;
+    private int inspectionPosition = 0;
+    private String trackingNumber = "SDFO-8HKP7E";
     private InspectionManager inspectionManager;
     ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
-    private ArrayList<Violation> violationList = new ArrayList<>();
+    private ArrayList<Violation> violationList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +38,14 @@ public class InspectionDetails extends AppCompatActivity {
         setContentView(R.layout.activity_inspection_details);
         Toast.makeText(InspectionDetails.this, "WHY AM I GETTING AN ERROR",
                 Toast.LENGTH_LONG).show();
-//        extractDataFromIntent();
+        extractDataFromIntent();
         //delete
-        inspectionPosition = 0;
-        trackingNumber = "SDFO-8HKP7E";
+
         updateLists();
         Log.e("my class", "in on create");
-
-        updateViews();
+        if (violationList != null){
+            updateViews();
+        }
         populateListView();
         registerClickCallBack();
         Toast.makeText(InspectionDetails.this, "end of on create",
@@ -71,7 +71,7 @@ public class InspectionDetails extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Violation clickedViolation = violationList.get(position);
+                Violation clickedViolation = violationList.get(0);
                 Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
                         Toast.LENGTH_LONG).show();
             }
@@ -79,8 +79,8 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     private void updateLists(){
-        inspectionList = inspectionManager.getInspections(trackingNumber);
-        violationList = inspectionList.get(inspectionPosition).getViolations();
+        inspectionList = inspectionManager.getInspections("SDFO-8HKP7E");
+        violationList = inspectionList.get(0).getViolations();
     }
 
     private void populateListView() {
@@ -97,19 +97,19 @@ public class InspectionDetails extends AppCompatActivity {
 
         Log.e("my class", "in update view");
         TextView textView = findViewById(R.id.inspection_dateText);
-        textView.setText("Date: " + inspectionList.get(inspectionPosition).getInspectionDate());
+        textView.setText("Date: " + inspectionList.get(0).getInspectionDate());
 
         textView = findViewById(R.id.inspection_typeText);
-        textView.setText("Type: " + inspectionList.get(inspectionPosition).getInspectionType());
+        textView.setText("Type: " + inspectionList.get(0).getInspectionType());
 
         textView = findViewById(R.id.inspection_criticalText);
-        textView.setText("Critical Issues: " + inspectionList.get(inspectionPosition).getNumCritical());
+        textView.setText("Critical Issues: " + inspectionList.get(0).getNumCritical());
 
         textView = findViewById(R.id.inspection_nonCriticalText);
-        textView.setText("Non-Critical Issues: " + inspectionList.get(inspectionPosition).getNumNonCritical());
+        textView.setText("Non-Critical Issues: " + inspectionList.get(0).getNumNonCritical());
 
         textView = findViewById(R.id.inspection_hazardText);
-        String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
+        String hazardLevel = inspectionList.get(0).getHazardLevel();
         textView.setText("Hazard Level: " + hazardLevel);
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
         if(hazardLevel.equals("\"High\"")){
