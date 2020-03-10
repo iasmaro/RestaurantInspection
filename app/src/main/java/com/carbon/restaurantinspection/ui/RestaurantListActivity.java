@@ -108,6 +108,16 @@ public class RestaurantListActivity extends AppCompatActivity {
            TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
            restaurantNameText.setText(currentRestaurants);
 
+            // clickable listview
+            ListView list = findViewById(R.id.restaurant_list_view);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id){
+
+                    Toast.makeText(RestaurantListActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
+
+                }
+            });
 
             return itemView;
         }
