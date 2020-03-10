@@ -59,7 +59,7 @@ public class InspectionDetail {
         }
         else {
             String month = getMonth(inspectionDate.substring(4, 6));
-            int year = inspecDate.YEAR;
+            int year = inspecDate.get(Calendar.YEAR);
             dateOfInspection = month + " " + year;
         }
         return dateOfInspection;
