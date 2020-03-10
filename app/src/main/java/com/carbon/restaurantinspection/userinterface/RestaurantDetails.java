@@ -82,7 +82,7 @@ public class RestaurantDetails extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = InspectionDetails.makeIntent(RestaurantDetails.this,index
+                Intent intent = InspectionDetailsActivity.makeIntent(RestaurantDetails.this,index
                         ,trackingNum);
                 startActivity(intent);
             }

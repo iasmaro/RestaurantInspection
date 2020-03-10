@@ -26,10 +26,10 @@ import java.util.ArrayList;
  * Data is passed from Restaurant Details via intent encapsulation.
  */
 
-public class InspectionDetails extends AppCompatActivity {
+public class InspectionDetailsActivity extends AppCompatActivity {
 
-    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.userinterface.InspectionDetails.position";
-    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.userinterface.InspectionDetails.trackingNumber";
+    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.userinterface.InspectionDetailsActivity.position";
+    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.userinterface.InspectionDetailsActivity.trackingNumber";
     private int inspectionPosition;
     private String trackingNumber;
     private InspectionManager inspectionManager;
@@ -60,7 +60,7 @@ public class InspectionDetails extends AppCompatActivity {
     }
 
     public static Intent makeIntent(Context context, int position, String trackingNumber) {
-        Intent intent = new Intent(context, InspectionDetails.class);
+        Intent intent = new Intent(context, InspectionDetailsActivity.class);
         intent.putExtra(EXTRA_POSITION, position);
         intent.putExtra(EXTRA_TRACKING_NUMBER, trackingNumber);
         return intent;
@@ -72,7 +72,7 @@ public class InspectionDetails extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Violation clickedViolation = violationList.get(position);
-                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
+                Toast.makeText(InspectionDetailsActivity.this, clickedViolation.getDescription(),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -107,10 +107,10 @@ public class InspectionDetails extends AppCompatActivity {
         String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
         textView.setText("Hazard Level: " + hazardLevel);
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
-        if(hazardLevel.equals("\"High\"")){
+        if(hazardLevel.equals("High")){
             imageView.setImageResource(R.drawable.red_skull_crossbones);
         }
-        else if(hazardLevel.equals("\"Moderate\"")){
+        else if(hazardLevel.equals("Moderate")){
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
         }
         else{
@@ -120,7 +120,7 @@ public class InspectionDetails extends AppCompatActivity {
 
     private class MyListAdapter extends ArrayAdapter<Violation> {
         public MyListAdapter(){
-            super(InspectionDetails.this, R.layout.inspection_item_view, violationList);
+            super(InspectionDetailsActivity.this, R.layout.inspection_item_view, violationList);
         }
 
         @Override
@@ -148,7 +148,7 @@ public class InspectionDetails extends AppCompatActivity {
 
             //Hazard icon
             ImageView hazardView = itemView.findViewById(R.id.item_hazardStatus);
-            if (currentViolation.getStatus() == "non critical"){
+            if (currentViolation.getStatus().equals("non critical")){
                 hazardView.setImageResource(R.drawable.yellow_caution);
             } else {
                 hazardView.setImageResource(R.drawable.red_skull_crossbones);

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.carbon.restaurantinspection.userinterface.InspectionDetails;
+import com.carbon.restaurantinspection.userinterface.InspectionDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_details);
-        Intent intent = InspectionDetails.makeIntent(this, 0, "SDFO-8HKP7E");
+        Intent intent = InspectionDetailsActivity.makeIntent(this, 0, "SDFO-8HKP7E");
         startActivity(intent);
     }
 }

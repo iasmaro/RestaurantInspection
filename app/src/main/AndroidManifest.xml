@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".userinterface.RestaurantDetails"></activity>
-        <activity android:name=".userinterface.InspectionDetails"></activity>
+        <activity android:name=".userinterface.InspectionDetailsActivity"></activity>
         <activity android:name=".model.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
