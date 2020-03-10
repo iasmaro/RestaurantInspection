@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,31 +27,36 @@ public class InspectionDetails extends AppCompatActivity {
     private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.InspectionDetails.trackingNumber";
     private int inspectionPosition;
     private String trackingNumber;
-    private InspectionManager inspectionManager = InspectionManager.getInstance(this);
+    private InspectionManager inspectionManager;
     ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
     private ArrayList<Violation> violationList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inspection_detail);
-
-        extractDataFromIntent();
+        inspectionManager = InspectionManager.getInstance(this);
+        setContentView(R.layout.activity_inspection_details);
+        Toast.makeText(InspectionDetails.this, "WHY AM I GETTING AN ERROR",
+                Toast.LENGTH_LONG).show();
+//        extractDataFromIntent();
         //delete
         inspectionPosition = 0;
         trackingNumber = "SDFO-8HKP7E";
         updateLists();
+        Log.e("my class", "in on create");
 
         updateViews();
         populateListView();
         registerClickCallBack();
+        Toast.makeText(InspectionDetails.this, "end of on create",
+                Toast.LENGTH_LONG).show();
+        Log.e("my class", "end of on create");
     }
 
     private void extractDataFromIntent() {
         Intent intent = getIntent();
         inspectionPosition = intent.getIntExtra(EXTRA_POSITION, 0);
         trackingNumber = intent.getStringExtra(EXTRA_TRACKING_NUMBER);
-        //adjust arrayList by calling singleton method
     }
 
     public static Intent makeIntent(Context context, int position, String trackingNumber) {
@@ -60,12 +66,36 @@ public class InspectionDetails extends AppCompatActivity {
         return intent;
     }
 
+    private void registerClickCallBack() {
+        ListView list = findViewById(R.id.inspection_listView);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Violation clickedViolation = violationList.get(position);
+                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void updateLists(){
         inspectionList = inspectionManager.getInspections(trackingNumber);
         violationList = inspectionList.get(inspectionPosition).getViolations();
     }
 
+    private void populateListView() {
+        Toast.makeText(InspectionDetails.this, "in populate listView",
+                Toast.LENGTH_LONG).show();
+        ArrayAdapter<Violation> adapter = new MyListAdapter();
+        ListView list = findViewById(R.id.inspection_listView);
+        list.setAdapter(adapter);
+    }
+
     private void updateViews(){
+        Toast.makeText(InspectionDetails.this, "in update views",
+                Toast.LENGTH_LONG).show();
+
+        Log.e("my class", "in update view");
         TextView textView = findViewById(R.id.inspection_dateText);
         textView.setText("Date: " + inspectionList.get(inspectionPosition).getInspectionDate());
 
@@ -93,18 +123,11 @@ public class InspectionDetails extends AppCompatActivity {
         }
     }
 
-    private void populateListView() {
-        ArrayAdapter<Violation> adapter = new MyListAdapter();
-        ListView list = findViewById(R.id.inspection_listView);
-        list.setAdapter(adapter);
-    }
-
     private class MyListAdapter extends ArrayAdapter<Violation> {
-
-
         public MyListAdapter(){
             super(InspectionDetails.this, R.layout.inspection_item_view, violationList);
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             View itemView = convertView;
@@ -139,7 +162,6 @@ public class InspectionDetails extends AppCompatActivity {
         }
 
         private int findResourceID(Violation currentViolation){
-            //6
             int id;
             String type = currentViolation.getType();
             if (type.equals("Permit")){
@@ -158,16 +180,5 @@ public class InspectionDetails extends AppCompatActivity {
             return  id;
         }
 
-    }
-    private void registerClickCallBack() {
-        ListView list = findViewById(R.id.inspection_listView);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Violation clickedViolation = violationList.get(position);
-                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
     }
 }

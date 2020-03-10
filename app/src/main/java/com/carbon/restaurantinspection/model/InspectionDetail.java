@@ -1,6 +1,13 @@
 package com.carbon.restaurantinspection.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Hashtable;
 
 /*
   InspectionDetails class models an inspection report's details.
@@ -15,6 +22,8 @@ public class InspectionDetail {
     private int numNonCritical;
     private String hazardLevel;
     private ArrayList<Violation> violations= new ArrayList<>();
+    private final int MILISEC_TO_DAYS = 1000*3600*24;
+
 
     public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
@@ -40,10 +49,6 @@ public class InspectionDetail {
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
-    }
-
-    public String getInspectionDate() {
-        return inspectionDate;
     }
 
     public void setInspectionDate(String inspectionDate) {
@@ -94,4 +99,82 @@ public class InspectionDetail {
         String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
         return str;
     }
+
+    public String getInspectionDate() {
+        Calendar inspecDate = getInspecDate();
+        Calendar monthAgo = getMonthAgo();
+        Calendar yearAgo = getYearAgo();
+
+        String dateOfInspection = "";
+        if (monthAgo.before(inspecDate)) {
+            int days = daysBetween(inspecDate);
+            dateOfInspection = days + " days ago.";
+        }
+        else if (yearAgo.before(inspecDate)) {
+            String month = getMonth(inspectionDate.substring(4, 6));
+            dateOfInspection = month + " " + inspecDate.DAY_OF_MONTH;
+        }
+        else {
+            String month = getMonth(inspectionDate.substring(4, 6));
+            int year = inspecDate.YEAR;
+            dateOfInspection = month + " " + year;
+        }
+        return dateOfInspection;
+    }
+
+    private Calendar getInspecDate(){
+        Calendar inspecDate = new GregorianCalendar();
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            Date date = dateFormat.parse(inspectionDate);
+            inspecDate.setTime(date);
+            return inspecDate;
+        } catch (ParseException e) {
+            return inspecDate;
+        }
+    }
+
+    private Calendar getYearAgo() {
+        Calendar yearAgo = new GregorianCalendar();
+        yearAgo.add(yearAgo.YEAR, -1);
+        return yearAgo;
+    }
+
+    private Calendar getMonthAgo() {
+        Calendar monthAgo = new GregorianCalendar();
+        monthAgo.add(monthAgo.DAY_OF_MONTH, -30);
+        return monthAgo;
+    }
+
+    private int daysBetween(Calendar inspecDate) {
+        Calendar today = Calendar.getInstance();
+        long milliSecs = today.getTimeInMillis() - inspecDate.getTimeInMillis();
+        int days = (int) (milliSecs / MILISEC_TO_DAYS);
+        return days;
+    }
+
+    public String getFullDate() {
+        String fullDate = getMonth(inspectionDate.substring(4, 6)) + " "
+                + inspectionDate.substring(6) + ", "
+                + inspectionDate.substring(0, 4);
+        return fullDate;
+    }
+
+    private String getMonth(String month) {
+        Hashtable<String, String> months = new Hashtable<>();
+        months.put("01", "January");
+        months.put("02", "February");
+        months.put("03", "March");
+        months.put("04", "April");
+        months.put("05", "May");
+        months.put("06", "June");
+        months.put("07", "July");
+        months.put("08", "August");
+        months.put("09", "September");
+        months.put("10", "October");
+        months.put("11", "November");
+        months.put("12", "December");
+        return months.get(month);
+    }
+
 }
