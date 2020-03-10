@@ -1,15 +1,16 @@
 package com.carbon.restaurantinspection.model;
 
-        import android.content.Context;
+import android.content.Context;
+import android.util.Log;
 
-        import java.util.ArrayList;
-        import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 /*
   InspectionManager class is a singleton class containing inspection details of restaurants.
  */
 public class InspectionManager {
-    private Hashtable<String, ArrayList<InspectionDetail>> inspections;
+    private static Hashtable<String, ArrayList<InspectionDetail>> inspections;
     private static InspectionManager instance;
 
     public static InspectionManager getInstance(Context context) {

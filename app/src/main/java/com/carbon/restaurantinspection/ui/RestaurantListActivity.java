@@ -1,15 +1,18 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +24,7 @@ import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
@@ -38,8 +42,13 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         // Get that one instance that RestaurantManager class produced
         restaurantManager = RestaurantManager.getInstance(this);
-        //inspectionManager = InspectionManager.getInstance(this);
-
+        inspectionManager = InspectionManager.getInstance(this);
+        if (inspectionManager == null){
+            Log.e("Hello : ", "it is null");
+        }
+        if (inspectionManager.getInspections("SDFO-8HKP7E") == null){
+            Log.e("Does not load : ", "SDFO-8HKP7E not loaded");
+        }
         populateRestaurantListView();
     }
 
@@ -51,6 +60,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         //configure list view
         ListView list = (ListView) findViewById(R.id.restaurant_list_view);
         list.setAdapter(adapter);
+
     }
 
     private class MyListAdapter extends ArrayAdapter<Restaurant> {
@@ -74,24 +84,30 @@ public class RestaurantListActivity extends AppCompatActivity {
             } else
                 imageView.setImageResource(R.drawable.beer_icon);
 
-            int report = 0;
+           String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
+           String sub = restaurantTrackingNum.replace("\"", "");
 
+           ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(sub);
+//            Collections.sort(inspections);
 
-//           String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
-//           ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(restaurantTrackingNum);
-//
-//                TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
-//                numIssuesText.setText(inspections.size());
+            if(inspections != null) {
+                int numCrit = inspections.get(0).getNumCritical();
+                int numNonCrit = inspections.get(0).getNumNonCritical();
+                int total = numCrit + numNonCrit;
 
+                TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
+                numIssuesText.setText("" + total);
+            }
 
-            /*for (int i=0; i<inspections.size(); i++) {
-                    numIssues.add(inspectionDetails.getNumCritical());
-                    numIssues.add(inspectionDetails.getNumNonCritical());
-                }
-            }*/
+            else {
+                TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
+                numIssuesText.setText("" + 0);
+            }
 
-            TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
-            restaurantNameText.setText(currentRestaurants);
+            // set restaurant name
+           TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
+           restaurantNameText.setText(currentRestaurants);
+
 
             return itemView;
         }
