@@ -13,6 +13,12 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+/**
+ * InspectionLoader class loads inspection information from a csv file,
+ * and creates an InspectionDetail object for each line from the csv file.
+ * It adds the InspectionDetail objects to a hashtable that has trackingNumber
+ * as its key, and ArrayList of IssueDetails as its value.
+ */
 public class InspectionLoader {
     private Hashtable<String, ArrayList<InspectionDetail>> inspections = new Hashtable<>();
 
@@ -31,12 +37,14 @@ public class InspectionLoader {
             // Step over headers
             reader.readLine();
 
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while (line != null) {
                 // Split by ','
                 String[] tokens = line.split(",");
 
                 // Read the data
                 addInspectionDetail(tokens);
+                line = reader.readLine();
             }
         } catch (IOException e) {
             Log.wtf("InspectionLoader", "Error reading data file on line " + line, e);
@@ -46,7 +54,12 @@ public class InspectionLoader {
     private void addInspectionDetail(String[] tokens) {
         int criticalIssues = Integer.parseInt(tokens[3]);
         int nonCriticalIssues = Integer.parseInt(tokens[4]);
-        String[] violationsArray = tokens[6].split("|");
+        String[] violationsArray;
+        if (tokens.length >= 6) {
+            violationsArray = tokens[6].split("|");
+        } else {
+            violationsArray = null;
+        }
         InspectionDetail inspection = new InspectionDetail(tokens[0], tokens[1], tokens[2],
                 criticalIssues, nonCriticalIssues, tokens[5], violationsArray);
         if (inspections.containsKey(tokens[0])) {
