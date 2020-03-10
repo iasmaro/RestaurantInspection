@@ -16,7 +16,8 @@ public class Restaurant {
     private double latitude;
     private double longitude;
 
-    public Restaurant(String trackingNumber, String name, String physicalAddress, String city, String factype, double latitude, double longitude) {
+    public Restaurant(String trackingNumber, String name, String physicalAddress, String city, String factype,
+                      double latitude, double longitude) {
         this.trackingNumber = trackingNumber;
         this.name = name;
         this.physicalAddress = physicalAddress;
@@ -24,9 +25,6 @@ public class Restaurant {
         this.factype = factype;
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-    public Restaurant(){
-
     }
 
     public String getTrackingNumber() {
@@ -57,9 +55,5 @@ public class Restaurant {
         return longitude;
     }
 
-    @Override
-    public String toString() {
-        return name.replace("\"", "");
-    }
 }
 
