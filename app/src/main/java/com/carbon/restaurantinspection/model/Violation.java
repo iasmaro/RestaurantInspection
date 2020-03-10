@@ -17,9 +17,10 @@ public class Violation {
         code = violationArray[0];
         status = violationArray[1];
         description = violationArray[2] + "," + violationArray[3];
+        setTypeFromCode();
     }
 
-    private void setTypeFromCode(String code) {
+    private void setTypeFromCode() {
         Hashtable<String, String> threeCode = new Hashtable<>();
         threeCode.put("311", "Permit");
         threeCode.put("312", "Permit");
