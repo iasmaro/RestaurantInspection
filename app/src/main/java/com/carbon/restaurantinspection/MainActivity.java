@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carbon.restaurantinspection.userinterface.InspectionDetails;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

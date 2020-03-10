@@ -7,9 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.carbon.restaurantinspection.InspectionDetails;
+import com.carbon.restaurantinspection.userinterface.InspectionDetails;
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.userinterface.RestaurantDetails;
 
 public class MainActivity extends AppCompatActivity {
     Button btn;
