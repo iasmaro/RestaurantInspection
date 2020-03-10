@@ -51,7 +51,8 @@ public class RestaurantLoader {
     private void addRestaurant(String[] restaurantInfo) {
         double latitude = Double.parseDouble(restaurantInfo[5]);
         double longitude = Double.parseDouble(restaurantInfo[6]);
-        Restaurant restaurant = new Restaurant(restaurantInfo[0], restaurantInfo[1], restaurantInfo[2],
+        String trackingNumber = restaurantInfo[0].split("\"")[1];
+        Restaurant restaurant = new Restaurant(trackingNumber, restaurantInfo[1], restaurantInfo[2],
                 restaurantInfo[3], restaurantInfo[4], latitude, longitude);
         restaurantList.add(restaurant);
     }
