@@ -52,9 +52,10 @@ public class RestaurantDetails extends AppCompatActivity {
     private int index;
     private static RestaurantDetails instance;
     private InspectionManger InsManager;
-    private List<myInspections> inspectionList = new ArrayList<myInspections>();
+    private List<myInspections> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
     ArrayAdapter<myInspections> adapter;
+    private String trackingNum;
 
 
     public static RestaurantDetails getInstance(Context context) {
@@ -82,7 +83,8 @@ public class RestaurantDetails extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = InspectionDetails.makeIntent(RestaurantDetails.this,index);
+                Intent intent = InspectionDetails.makeIntent(RestaurantDetails.this,index
+                        ,trackingNum);
                 startActivity(intent);
             }
         });
@@ -95,7 +97,7 @@ public class RestaurantDetails extends AppCompatActivity {
     }
 
     private void populateStringList() {
-        String trackingNum = restaurant.getTrackingNumber();
+        trackingNum = restaurant.getTrackingNumber();
         List<InspectionDetail> inspections = InsManager.getInspections(trackingNum);
         int size = inspections.size();
         myInspections[] ins = new myInspections[size];
@@ -118,12 +120,13 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private void getIntents() {
         Intent intent = getIntent();
-        index = intent.getIntExtra("com/carbon/restaurantinspection/model/MainActivity.java:30", 0);
+        index = intent.getIntExtra("com/carbon/restaurantinspection/model/MainActivity.java:30"
+                , 0);
     }
 
 
     private class MyListAdapter extends ArrayAdapter<myInspections>{
-        public MyListAdapter(){
+        MyListAdapter(){
             super(RestaurantDetails.this,R.layout.item_view, inspectionList);
         }
         @Override
