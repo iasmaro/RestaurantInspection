@@ -14,10 +14,12 @@ public class Violation {
 
     public Violation(String violation) {
         String[] violationArray = violation.split(",");
-        code = violationArray[0];
-        status = violationArray[1];
-        description = violationArray[2] + "," + violationArray[3];
-        setTypeFromCode();
+        if (violationArray.length > 0) {
+            code = violationArray[0];
+            status = violationArray[1];
+            description = violationArray[2] + "," + violationArray[3];
+            setTypeFromCode();
+        }
     }
 
     private void setTypeFromCode() {
