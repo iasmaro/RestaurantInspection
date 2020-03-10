@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class InspectionDetail extends AppCompatActivity {
+public class InspectionDetails extends AppCompatActivity {
 
-    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetail.position";
+    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.InspectionDetails.position";
     private int inspectionPosition;
     inspectionArrayTest inspection = new inspectionArrayTest();
     private ArrayList<violations> vList = inspection.getViolationList();
@@ -41,7 +41,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     public static Intent makeIntent(Context context, int position) {
-        Intent intent = new Intent(context, InspectionDetail.class);
+        Intent intent = new Intent(context, InspectionDetails.class);
         intent.putExtra(EXTRA_POSITION, position);
         return intent;
     }
@@ -52,7 +52,7 @@ public class InspectionDetail extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 violations clickedViolation = vList.get(position);
-                Toast.makeText(InspectionDetail.this, clickedViolation.getDescription(),
+                Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -66,7 +66,7 @@ public class InspectionDetail extends AppCompatActivity {
 
     private class MyListAdapter extends ArrayAdapter<violations> {
         public MyListAdapter(){
-            super(InspectionDetail.this, R.layout.inspection_item_view, vList);
+            super(InspectionDetails.this, R.layout.inspection_item_view, vList);
         }
 
         @Override

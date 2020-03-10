@@ -10,7 +10,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 /*
-  InspectionDetail class models an inspection report's details.
+  InspectionDetails class models an inspection report's details.
   It contains the inspection's tracking number, date, type, number of critical issues found,
   number of non-critical issues found, hazard level, and a summary of all the violations.
  */
