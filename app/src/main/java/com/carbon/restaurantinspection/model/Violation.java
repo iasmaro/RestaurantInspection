@@ -14,12 +14,19 @@ public class Violation {
 
     public Violation(String violation) {
         String[] violationArray = violation.split(",");
-        code = violationArray[0];
-        status = violationArray[1];
-        description = violationArray[2] + "," + violationArray[3];
+        if (violationArray.length > 0) {
+            code = violationArray[0];
+            status = violationArray[1];
+            if (violationArray.length > 3) {
+                description = violationArray[2] + "," + violationArray[3];
+            } else {
+                description = violationArray[2];
+            }
+            setTypeFromCode();
+        }
     }
 
-    private void setTypeFromCode(String code) {
+    private void setTypeFromCode() {
         Hashtable<String, String> threeCode = new Hashtable<>();
         threeCode.put("311", "Permit");
         threeCode.put("312", "Permit");
@@ -34,18 +41,17 @@ public class Violation {
         otherCode.put("2", "Food");
         otherCode.put("4", "Hygiene");
         otherCode.put("5", "Foodsafe");
-        if (code.substring(0, 1) == "3") {
+        if (code.substring(0, 1).equals("3")) {
             if (threeCode.containsKey(code)) {
                 this.type = threeCode.get(code);
-            }
-            else {
+            } else {
                 this.type = "Equipment";
             }
-        }
-        else {
+        } else {
             this.type = otherCode.get(code.substring(0, 1));
         }
     }
+
 
     public String getCode() {
         return code;

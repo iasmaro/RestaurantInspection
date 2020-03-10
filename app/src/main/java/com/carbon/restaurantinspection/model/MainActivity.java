@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = 3;
+                int index = 1;
                 Intent intent = new Intent(MainActivity.this, RestaurantDetails.class);
                 intent.putExtra("com/carbon/restaurantinspection/model/MainActivity.java:30",index);
                 startActivity(intent);

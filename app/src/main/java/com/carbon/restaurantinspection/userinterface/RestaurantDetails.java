@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -13,10 +12,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.carbon.restaurantinspection.InspectionDetails;
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
-import com.carbon.restaurantinspection.model.InspectionManger;
+import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 
@@ -56,7 +54,7 @@ class InspectionDetailHolder {
 public class RestaurantDetails extends AppCompatActivity {
     private int index;
     private static RestaurantDetails instance;
-    private InspectionManger InsManager;
+    private InspectionManager InsManager;
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
     ArrayAdapter<InspectionDetailHolder> adapter;
@@ -75,7 +73,7 @@ public class RestaurantDetails extends AppCompatActivity {
         getIntents();
 
         RestaurantManager restManager = RestaurantManager.getInstance(this);
-        InsManager =  InspectionManger.getInstance(this);
+        InsManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_rest_dets);
         updateAddress();
@@ -101,6 +99,7 @@ public class RestaurantDetails extends AppCompatActivity {
     private void populateStringList() {
         trackingNum = restaurant.getTrackingNumber();
         List<InspectionDetail> inspections = InsManager.getInspections(trackingNum);
+        System.out.println(inspections.isEmpty());
         int size = inspections.size();
         InspectionDetailHolder[] ins = new InspectionDetailHolder[size];
 
