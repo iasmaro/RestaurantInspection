@@ -27,15 +27,16 @@ public class RestaurantManager implements Iterable<Restaurant>{
         return restaurantList.get(index);
     }
 
-    // gets the name of the restaurant
-    //public Restaurant getRestaurantName() {
-    //    return restaurantList.getName();
-    //}
 
     // gets the entire list of restaurants
-    public List getRestaurantList(){
+    public ArrayList getRestaurantList(){
         return restaurantList;
     }
+
+    public void setRestaurantList(ArrayList <Restaurant> restaurantList) {
+        this.restaurantList = restaurantList;
+    }
+
 
     // Supports adding restaurants
     public void add(Restaurant restaurant) {

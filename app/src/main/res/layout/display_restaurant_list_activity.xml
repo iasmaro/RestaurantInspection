@@ -12,6 +12,7 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="36dp"
         android:text="Restaurant Name: "
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/item_restaurant_icon"
         app:layout_constraintTop_toTopOf="parent" />
 
