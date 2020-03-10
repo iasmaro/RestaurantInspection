@@ -19,10 +19,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btn = findViewById(R.id.button);
         setUpBtn();
-//        int index = 1;
-//        Intent intent = new Intent(this,RestaurantDetailActivity.class);
-//        intent.putExtra("ca/sfu/restaurantinspections/MainActivity.java:14", index);
-        //       startActivity(intent);
     }
 
     private void setUpBtn() {

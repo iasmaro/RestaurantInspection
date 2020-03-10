@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +19,11 @@ import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Violation;
 
 import java.util.ArrayList;
+
+/**
+ * Inspection Details Activity contains all details of a specific restaurant's inspection.
+ * Data is passed from Restaurant Details via intent encapsulation.
+ */
 
 public class InspectionDetails extends AppCompatActivity {
 
@@ -39,21 +43,11 @@ public class InspectionDetails extends AppCompatActivity {
 
         extractDataFromIntent();
         trackingNumber = "SWOD-AHZUMF";
-        inspectionPosition = 1;
-
-
+        inspectionPosition = 0;
 
         updateLists();
-        Toast.makeText(InspectionDetails.this, "size of violation: " + violationList.size(),
-                Toast.LENGTH_LONG).show();
 
         if (violationList != null){
-            if (violationList.size() > 0) {
-//                violationList.remove(violationList.size() - 1);
-            }
-
-            Toast.makeText(InspectionDetails.this, "2 size of violation: " + violationList.size(),
-                    Toast.LENGTH_LONG).show();
             updateViews();
         }
         populateListView();
@@ -78,7 +72,7 @@ public class InspectionDetails extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Violation clickedViolation = violationList.get(0);
+                Violation clickedViolation = violationList.get(position);
                 Toast.makeText(InspectionDetails.this, clickedViolation.getDescription(),
                         Toast.LENGTH_LONG).show();
             }
