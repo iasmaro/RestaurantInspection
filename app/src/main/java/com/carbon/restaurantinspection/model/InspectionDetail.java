@@ -16,27 +16,32 @@ public class InspectionDetail {
     private String hazardLevel;
     private ArrayList<Violation> violations= new ArrayList<>();
 
-    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
-        this.trackingNumber = trackingNumber;
-        this.inspectionDate = inspectionDate;
-        this.inspectionType = inspectionType;
-        this.numCritical = numCritical;
-        this.numNonCritical = numNonCritical;
-        this.hazardLevel = hazardLevel;
-        addViolations(violations);
+    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType,
+                            int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
+            this.trackingNumber = trackingNumber;
+            this.inspectionDate = inspectionDate;
+            this.inspectionType = inspectionType;
+            this.numCritical = numCritical;
+            this.numNonCritical = numNonCritical;
+            this.hazardLevel = hazardLevel;
+            if (violations != null) {
+                addViolations(violations);
+            }
 
-    }
-
-    private void addViolations(String[] strViolations) {
-        for (String violation: strViolations) {
-            Violation viol = new Violation(violation);
-            violations.add(viol);
         }
-    }
 
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
+        private void addViolations(String[] strViolations) {
+            for (String violation: strViolations) {
+                if (violation.length() > 10) {
+                    Violation viol = new Violation(violation);
+                    violations.add(viol);
+                }
+            }
+        }
+
+        public String getTrackingNumber() {
+            return trackingNumber;
+        }
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
@@ -58,35 +63,42 @@ public class InspectionDetail {
         this.inspectionType = inspectionType;
     }
 
+
     public int getNumCritical() {
-        return numCritical;
+                return numCritical;
+            }
+
+            public void setNumCritical(int numCritical) {
+                this.numCritical = numCritical;
+            }
+
+            public int getNumNonCritical() {
+                return numNonCritical;
+            }
+
+            public void setNumNonCritical(int numNonCritical) {
+                this.numNonCritical = numNonCritical;
+            }
+
+            public String getHazardLevel() {
+                return hazardLevel;
+            }
+
+            public void setHazardLevel(String hazardLevel) {
+                this.hazardLevel = hazardLevel;
+            }
+
+
+                public ArrayList<Violation> getViolations() {
+                    return violations;
+                }
+
+                public void setViolations(String[] violations) {
+                    addViolations(violations);
+                }
+    public String returnInsDetails() {
+        String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
+        return str;
     }
 
-    public void setNumCritical(int numCritical) {
-        this.numCritical = numCritical;
-    }
-
-    public int getNumNonCritical() {
-        return numNonCritical;
-    }
-
-    public void setNumNonCritical(int numNonCritical) {
-        this.numNonCritical = numNonCritical;
-    }
-
-    public String getHazardLevel() {
-        return hazardLevel;
-    }
-
-    public void setHazardLevel(String hazardLevel) {
-        this.hazardLevel = hazardLevel;
-    }
-
-    public ArrayList<Violation> getViolations() {
-        return violations;
-    }
-
-    public void setViolations(String[] violations) {
-        addViolations(violations);
-    }
 }
