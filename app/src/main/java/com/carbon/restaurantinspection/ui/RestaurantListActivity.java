@@ -118,7 +118,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
                 ImageView hazardLevelIcon = itemView.findViewById(R.id.item_hazard_icon);
                 if (hazardLevel.contains("Low")){
-                    hazardLevelIcon.setImageResource(R.drawable.low_hazard);
+                    hazardLevelIcon.setImageResource(R.drawable.greencheckmark);
                 }
                 else if (hazardLevel.contains("Moderate"))
                 {
