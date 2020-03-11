@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -30,9 +29,6 @@ import java.util.List;
 
 public class RestaurantListActivity extends AppCompatActivity {
 
-    ArrayList<Integer> numIssues = new ArrayList<Integer>();
-
-    // calls RestaurantManager class
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
 
@@ -41,7 +37,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.restaurant_list_activity);
 
-        // Get that one instance that RestaurantManager class produced
+        // 2 singletons classes
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
 
@@ -51,7 +47,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     private void populateRestaurantListView() {
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
-        ListView list = (ListView) findViewById(R.id.restaurant_list_view);
+        ListView list = findViewById(R.id.restaurant_list_view);
         list.setAdapter(adapter);
     }
 
@@ -70,14 +66,14 @@ public class RestaurantListActivity extends AppCompatActivity {
             String currentRestaurants = restaurantManager.getRestaurant(position).getName().replace("\"", "");
 
             //fill in the view
-            ImageView imageView = (ImageView) itemView.findViewById(R.id.item_restaurant_icon);
+            ImageView imageView = itemView.findViewById(R.id.item_restaurant_icon);
             if (currentRestaurants.contains("A&W")){
                 imageView.setImageResource(R.drawable.a_w_restaurant_icon);
             } else
                 imageView.setImageResource(R.drawable.beer_icon);
 
             // set restaurant name
-            TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
+            TextView restaurantNameText = itemView.findViewById(R.id.restaurant_name_textview);
             restaurantNameText.setText(currentRestaurants);
 
            String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
