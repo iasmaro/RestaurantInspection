@@ -45,22 +45,19 @@ public class RestaurantListActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-
-                Toast.makeText(RestaurantListActivity.this, "Position: " + position,
-                        Toast.LENGTH_LONG).show();
-
 //                Intent intent = RestaurantDetailsActivity.makeIntent(RestaurantListActivity.this, position);
 //                startActivity(intent);
             }
         });
     }
 
-    /** Use adapter to fill images and textviews **/
+    /** Use adapter to fill images and text views **/
     private class MyListAdapter extends ArrayAdapter<Restaurant> {
         public MyListAdapter(){
             super(RestaurantListActivity.this, R.layout.display_restaurant_list_activity,
                     restaurantManager.getRestaurantList());
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
             View itemView = convertView;
@@ -70,7 +67,8 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
 
             // find restaurant
-            String currentRestaurants = restaurantManager.getRestaurant(position).getName().replace("\"", "");
+            String currentRestaurants = restaurantManager.getRestaurant(position).getName()
+                    .replace("\"", "");
 
             ImageView imageView = itemView.findViewById(R.id.item_restaurant_icon);
             if (currentRestaurants.contains("A&W")){
@@ -110,7 +108,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
                 String date = inspections.get(0).getInspectionDate();
                 TextView recentInspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-                recentInspectionDateText.setText("" + date);
+                recentInspectionDateText.setText("Recent Inspection Date: " + date);
 
                 String hazardLevel = inspections.get(0).getHazardLevel();
                 TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
@@ -132,13 +130,13 @@ public class RestaurantListActivity extends AppCompatActivity {
             /** displays the correct headings when inspection array list is null **/
             else {
                 TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-                numIssuesText.setText("# Issues: " + 0);
+                numIssuesText.setText("              " + "# Issues: Unavailable");
 
                 TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-                inspectionDateText.setText("Recent Inspection Unavailable");
+                inspectionDateText.setText("Recent Inspection Date: Unavailable");
 
                 TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
-                hazardLevelText.setText("Unavailable Hazard Level");
+                hazardLevelText.setText("Hazard Level: Unavailable");
 
                 ImageView imageViewHazardLevel = itemView.findViewById(R.id.item_hazard_icon);
                 imageViewHazardLevel.setImageResource(R.drawable.error_icon);
