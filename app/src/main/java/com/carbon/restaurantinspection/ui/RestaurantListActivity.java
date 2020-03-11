@@ -100,6 +100,11 @@ public class RestaurantListActivity extends AppCompatActivity {
 //                TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
 //                inspectionDateText.setText("Recent inspection: " + date);
 
+                //get recent inspection date
+                String date = inspections.get(0).getInspectionDate();
+                TextView recentInspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
+                recentInspectionDateText.setText("" + date);
+
                 //get hazard level
                 String hazardLevel = inspections.get(0).getHazardLevel();
                 TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
