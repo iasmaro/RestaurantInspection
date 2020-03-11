@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Restaurant Inspection</string>
+    <string name="inspection_details">Inspection Details</string>
 </resources>
