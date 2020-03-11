@@ -155,32 +155,4 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
         });
     }
-    /**private String dateFormat (String daysInBetween){
-
-//        DateTimeFormatter form = DateTimeFormatter.ofPattern("yyyyMMMdd", Locale.ENGLISH);
-//        DateTimeFormatter inspectionDate = DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH);
-//        LocalDate localDate = LocalDate.parse(daysInBetween, form);
-//        String monthYear = inspectionDate.format(localDate);
-
-        Date inspectionDate = new SimpleDateFormat ("yyyyMMMdd", Locale.ENGLISH).parse(daysInBetween);
-
-        Date currentTime = new Date();
-        String format;
-
-        long daysMilliseconds = Math.abs(currentTime.getTime() - inspectionDate.getTime());
-        long convertToDays = TimeUnit.DAYS.convert(daysMilliseconds, TimeUnit.MILLISECONDS);
-
-        if (convertToDays <= 30){
-            format = convertToDays + "days";
-        }else  if (convertToDays < 365) {
-            SimpleDateFormat formatDay = new SimpleDateFormat();
-            formatDay.applyPattern("MMM dd");
-            format = formatDay.format(convertToDays);
-        }else{
-            SimpleDateFormat formatDay = new SimpleDateFormat();
-            formatDay.applyPattern("MMM YYYY");
-            format = formatDay.format(convertToDays);
-        }
-        return format;
-    }**/
 }
