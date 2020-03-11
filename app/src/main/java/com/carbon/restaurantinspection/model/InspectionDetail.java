@@ -1,5 +1,8 @@
 package com.carbon.restaurantinspection.model;
 
+<<<<<<< app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
+import java.util.ArrayList;
+=======
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +11,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Locale;
+>>>>>>> app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
 
 /*
   InspectionDetail class models an inspection report's details.
@@ -21,18 +25,31 @@ public class InspectionDetail {
     private int numCritical;
     private int numNonCritical;
     private String hazardLevel;
+    private ArrayList<Violation> violations= new ArrayList<>();
     private String[] violations;
     private final int MILISEC_TO_DAYS = 1000*3600*24;
 
-    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, 
-    int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
+
+    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
         this.inspectionDate = inspectionDate;
         this.inspectionType = inspectionType;
         this.numCritical = numCritical;
         this.numNonCritical = numNonCritical;
         this.hazardLevel = hazardLevel;
-        this.violations = violations;
+        if (violations != null) {
+            addViolations(violations);
+        }
+
+    }
+
+    private void addViolations(String[] strViolations) {
+        for (String violation: strViolations) {
+            if (violation.length() > 10) {
+                Violation viol = new Violation(violation);
+                violations.add(viol);
+            }
+        }
     }
 
     public String getTrackingNumber() {
@@ -43,7 +60,6 @@ public class InspectionDetail {
         this.trackingNumber = trackingNumber;
     }
 
-<<<<<<< app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
     public String getInspectionDate() {
         Calendar inspecDate = getInspecDate();
         Calendar monthAgo = getMonthAgo();
@@ -162,11 +178,11 @@ public class InspectionDetail {
         this.hazardLevel = hazardLevel;
     }
 
-    public String[] getViolations() {
+    public ArrayList<Violation> getViolations() {
         return violations;
     }
 
     public void setViolations(String[] violations) {
-        this.violations = violations;
+        addViolations(violations);
     }
 }
