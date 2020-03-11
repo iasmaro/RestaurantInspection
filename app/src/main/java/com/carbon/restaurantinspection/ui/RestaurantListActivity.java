@@ -24,6 +24,7 @@ import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,24 +44,14 @@ public class RestaurantListActivity extends AppCompatActivity {
         // Get that one instance that RestaurantManager class produced
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
-        if (inspectionManager == null){
-            Log.e("Hello : ", "it is null");
-        }
-        if (inspectionManager.getInspections("SDFO-8HKP7E") == null){
-            Log.e("Does not load : ", "SDFO-8HKP7E not loaded");
-        }
+
         populateRestaurantListView();
     }
 
     private void populateRestaurantListView() {
-
-        // Build adapter
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
-
-        //configure list view
         ListView list = (ListView) findViewById(R.id.restaurant_list_view);
         list.setAdapter(adapter);
-
     }
 
     private class MyListAdapter extends ArrayAdapter<Restaurant> {
@@ -85,10 +76,12 @@ public class RestaurantListActivity extends AppCompatActivity {
                 imageView.setImageResource(R.drawable.beer_icon);
 
            String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
-           String sub = restaurantTrackingNum.replace("\"", "");
+           String restarantTrackNum = restaurantTrackingNum.replace("\"", "");
 
-           ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(sub);
-//            Collections.sort(inspections);
+           ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(restarantTrackNum);
+//           Collections.sort(inspections);
+
+            // gets inspection date and already compares current date with inspection date
 
             // set # issues
             if(inspections != null) {
@@ -96,13 +89,52 @@ public class RestaurantListActivity extends AppCompatActivity {
                 int numNonCrit = inspections.get(0).getNumNonCritical();
                 int totalIssues = numCrit + numNonCrit;
 
-                TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
+                TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
                 numIssuesText.setText("# Issues: " + totalIssues);
-            }
+                //Log.d("total issues is : ", Integer.toString(totalIssues));
 
+//                Calendar dateFormatDispay = inspections.get(0).getInspecDate();
+//                int daysBetween = inspections.get(0).daysBetween(dateFormatDispay);
+//                Log.d("date is : ", Integer.toString(daysBetween));
+
+//                TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
+//                inspectionDateText.setText("Recent inspection: " + date);
+
+                //get hazard level
+                String hazardLevel = inspections.get(0).getHazardLevel();
+                TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
+                hazardLevelText.setText("Hazard Level: " + hazardLevel);
+
+                //fill in the view for hazard level
+                ImageView imageViewHazardLevel = itemView.findViewById(R.id.item_hazard_icon);
+                if (hazardLevel.contains("Low")){
+                    imageViewHazardLevel.setImageResource(R.drawable.low_hazard);
+                }
+                if (hazardLevel.contains("Moderate"))
+                {
+                    imageViewHazardLevel.setImageResource(R.drawable.moderate_hazard);
+                }
+                if (hazardLevel.contains("High"))
+                {
+                    imageViewHazardLevel.setImageResource(R.drawable.high_hazard);
+                }
+            }
             else {
+
+                // # issues
                 TextView numIssuesText = (TextView) itemView.findViewById(R.id.num_issues_textview);
-                numIssuesText.setText("" + 0);
+                numIssuesText.setText("# Issues: " + 0);
+
+                // hazard level
+                TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
+                hazardLevelText.setText("Unavailable Hazard Level");
+
+                // icon for hazard level
+                ImageView imageViewHazardLevel = itemView.findViewById(R.id.item_hazard_icon);
+                imageViewHazardLevel.setImageResource(R.drawable.error_icon);
+
+                TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
+                inspectionDateText.setText("Recent Inspection Unavailable");
             }
 
             // set restaurant name
@@ -121,4 +153,5 @@ public class RestaurantListActivity extends AppCompatActivity {
             return itemView;
         }
     }
+
 }
