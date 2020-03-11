@@ -21,6 +21,13 @@ import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
+import android.icu.text.SimpleDateFormat;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,9 +100,10 @@ public class RestaurantListActivity extends AppCompatActivity {
                 //Log.d("total issues is : ", Integer.toString(totalIssues));
 
                 //get recent inspection date
-                String date = inspections.get(0).getInspectionDate();
+                String date1 = inspections.get(0).getInspectionDate();
+
                 TextView recentInspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-                recentInspectionDateText.setText("" + date);
+                recentInspectionDateText.setText("" + date1);
 
                 //get hazard level
                 String hazardLevel = inspections.get(0).getHazardLevel();
@@ -147,4 +155,32 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
         });
     }
+    /**private String dateFormat (String daysInBetween){
+
+//        DateTimeFormatter form = DateTimeFormatter.ofPattern("yyyyMMMdd", Locale.ENGLISH);
+//        DateTimeFormatter inspectionDate = DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH);
+//        LocalDate localDate = LocalDate.parse(daysInBetween, form);
+//        String monthYear = inspectionDate.format(localDate);
+
+        Date inspectionDate = new SimpleDateFormat ("yyyyMMMdd", Locale.ENGLISH).parse(daysInBetween);
+
+        Date currentTime = new Date();
+        String format;
+
+        long daysMilliseconds = Math.abs(currentTime.getTime() - inspectionDate.getTime());
+        long convertToDays = TimeUnit.DAYS.convert(daysMilliseconds, TimeUnit.MILLISECONDS);
+
+        if (convertToDays <= 30){
+            format = convertToDays + "days";
+        }else  if (convertToDays < 365) {
+            SimpleDateFormat formatDay = new SimpleDateFormat();
+            formatDay.applyPattern("MMM dd");
+            format = formatDay.format(convertToDays);
+        }else{
+            SimpleDateFormat formatDay = new SimpleDateFormat();
+            formatDay.applyPattern("MMM YYYY");
+            format = formatDay.format(convertToDays);
+        }
+        return format;
+    }**/
 }
