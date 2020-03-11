@@ -33,7 +33,7 @@ public class InspectionDetail {
         this.trackingNumber = trackingNumber;
     }
 
-    public String getInspectionDate() {
+    public String getStrInspectionDate() {
         return inspectionDate;
     }
 

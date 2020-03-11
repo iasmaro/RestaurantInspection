@@ -11,7 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * InspectionLoader class loads inspection information from a csv file,
@@ -24,7 +27,21 @@ public class InspectionLoader {
 
     public Hashtable<String, ArrayList<InspectionDetail>> loadInspectionDetailList(Context context) {
         readInspectionDetails(context);
+        sortInspectionDetails();
         return inspections;
+    }
+
+    private void sortInspectionDetails() {
+        Set<String> trackingNumbers = inspections.keySet();
+        for (String trackingNum : trackingNumbers) {
+            ArrayList<InspectionDetail> inspectionList = inspections.get(trackingNum);
+            Collections.sort(inspectionList, new Comparator<InspectionDetail>() {
+                @Override
+                public int compare(InspectionDetail inspectionDetail, InspectionDetail otherinspection) {
+                    return otherinspection.getStrInspectionDate().compareTo(inspectionDetail.getStrInspectionDate());
+                }
+            });
+        }
     }
 
     private void readInspectionDetails(Context context) {
@@ -37,14 +54,12 @@ public class InspectionLoader {
             // Step over headers
             reader.readLine();
 
-            line = reader.readLine();
-            while (line != null) {
+            while ((line = reader.readLine()) != null) {
                 // Split by ','
                 String[] tokens = line.split(",");
 
                 // Read the data
                 addInspectionDetail(tokens);
-                line = reader.readLine();
             }
         } catch (IOException e) {
             Log.wtf("InspectionLoader", "Error reading data file on line " + line, e);
@@ -55,20 +70,25 @@ public class InspectionLoader {
         int criticalIssues = Integer.parseInt(tokens[3]);
         int nonCriticalIssues = Integer.parseInt(tokens[4]);
         String[] violationsArray;
-        if (tokens.length >= 6) {
-            violationsArray = tokens[6].split("|");
+        if (tokens.length == 7) {
+            String violations = tokens[6].split("\"")[1];
+            violationsArray = violations.split("\\|");
         } else {
             violationsArray = null;
         }
-        InspectionDetail inspection = new InspectionDetail(tokens[0], tokens[1], tokens[2],
-                criticalIssues, nonCriticalIssues, tokens[5], violationsArray);
-        if (inspections.containsKey(tokens[0])) {
-            inspections.get(tokens[0]).add(inspection);
+        String trackingNumber = tokens[0].split("\"")[1];
+        String type = tokens[2].split("\"")[1];
+        String hazard = tokens[5].split("\"")[1];
+        InspectionDetail inspection = new InspectionDetail(trackingNumber, tokens[1], type,
+                criticalIssues, nonCriticalIssues, hazard, violationsArray);
+        if (inspections.containsKey(trackingNumber)) {
+            inspections.get(trackingNumber).add(inspection);
         }
         else {
             ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
             inspectionList.add(inspection);
-            inspections.put(tokens[0], inspectionList);
+            inspections.put(trackingNumber, inspectionList);
         }
     }
 }
+
