@@ -147,7 +147,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             descriptionText.setText("Code: " + currentViolation.getCode() + ", " + currentViolation.getStatus());
 
             ImageView hazardView = itemView.findViewById(R.id.item_hazardStatus);
-            if (currentViolation.getStatus().equals("non critical")){
+            if (currentViolation.getStatus().equals("Not Critical")){
                 hazardView.setImageResource(R.drawable.yellow_caution);
             } else {
                 hazardView.setImageResource(R.drawable.red_skull_crossbones);
