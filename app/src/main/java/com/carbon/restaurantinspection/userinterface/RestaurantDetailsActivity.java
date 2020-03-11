@@ -42,7 +42,6 @@ class InspectionDetailHolder {
     }
 }
 
-
 /**
  *  Displays a list of Restaurants, their number of inspections(critical and non-critical), sorted
  *  by date from most recent inspection to oldest.
@@ -94,7 +93,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void populateStringList() {
         trackingNum = restaurant.getTrackingNumber();
         List<InspectionDetail> inspections = myInspectionManager.getInspections(trackingNum);
-        System.out.println(inspections.isEmpty());
         int size = inspections.size();
         InspectionDetailHolder[] ins = new InspectionDetailHolder[size];
 
@@ -109,32 +107,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             else if(hazardLevel.equals("Moderate")){
                 iconId = R.drawable.ic_warning_yellow_24dp;
             }
-            else
+            else {
                 iconId = R.drawable.greencheckmark;
+            }
             ins[i] = new InspectionDetailHolder(str, iconId);
             inspectionList.add(ins[i]);
-        }
-    }
-
-    private class MyListAdapter extends ArrayAdapter<InspectionDetailHolder>{
-        MyListAdapter(){
-            super(RestaurantDetailsActivity.this,R.layout.item_view, inspectionList);
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent){
-            View itemView = convertView;
-            if(itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.item_view,parent,false);
-            }
-            InspectionDetailHolder currentInspection = inspectionList.get(position);
-
-            ImageView imageView = itemView.findViewById(R.id.icon);
-            imageView.setImageResource(currentInspection.getIconId());
-
-            TextView makeText = itemView.findViewById(R.id.Text);
-            makeText.setText(currentInspection.getDetails());
-
-            return itemView;
         }
     }
 
@@ -160,5 +137,31 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void getIntents() {
         Intent intent = getIntent();
         index = intent.getIntExtra(INTENT_NAME, 0);
+    }
+
+
+    /**
+     * MyListAdapter was formatted to be able to display the necessary information in te listView
+     */
+    private class MyListAdapter extends ArrayAdapter<InspectionDetailHolder>{
+        MyListAdapter(){
+            super(RestaurantDetailsActivity.this,R.layout.item_view, inspectionList);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            View itemView = convertView;
+            if(itemView == null){
+                itemView = getLayoutInflater().inflate(R.layout.item_view,parent,false);
+            }
+            InspectionDetailHolder currentInspection = inspectionList.get(position);
+
+            ImageView imageView = itemView.findViewById(R.id.icon);
+            imageView.setImageResource(currentInspection.getIconId());
+
+            TextView makeText = itemView.findViewById(R.id.Text);
+            makeText.setText(currentInspection.getDetails());
+
+            return itemView;
+        }
     }
 }
