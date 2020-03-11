@@ -43,6 +43,7 @@ public class InspectionDetail {
         this.trackingNumber = trackingNumber;
     }
 
+<<<<<<< app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
     public String getInspectionDate() {
         Calendar inspecDate = getInspecDate();
         Calendar monthAgo = getMonthAgo();
@@ -118,6 +119,11 @@ public class InspectionDetail {
         months.put("11", "November");
         months.put("12", "December");
         return months.get(month);
+    }
+
+    public String getStrInspectionDate() {
+        return inspectionDate;
+
     }
 
     public void setInspectionDate(String inspectionDate) {
