@@ -11,14 +11,37 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.Set;
 
+/**
+ * InspectionLoader class loads inspection information from a csv file,
+ * and creates an InspectionDetail object for each line from the csv file.
+ * It adds the InspectionDetail objects to a hashtable that has trackingNumber
+ * as its key, and ArrayList of IssueDetails as its value.
+ */
 public class InspectionLoader {
     private Hashtable<String, ArrayList<InspectionDetail>> inspections = new Hashtable<>();
 
     public Hashtable<String, ArrayList<InspectionDetail>> loadInspectionDetailList(Context context) {
         readInspectionDetails(context);
+        sortInspectionDetails();
         return inspections;
+    }
+
+    private void sortInspectionDetails() {
+        Set<String> trackingNumbers = inspections.keySet();
+        for (String trackingNum : trackingNumbers) {
+            ArrayList<InspectionDetail> inspectionList = inspections.get(trackingNum);
+            Collections.sort(inspectionList, new Comparator<InspectionDetail>() {
+                @Override
+                public int compare(InspectionDetail inspectionDetail, InspectionDetail otherinspection) {
+                    return otherinspection.getStrInspectionDate().compareTo(inspectionDetail.getStrInspectionDate());
+                }
+            });
+        }
     }
 
     private void readInspectionDetails(Context context) {
@@ -33,7 +56,8 @@ public class InspectionLoader {
 
             while ((line = reader.readLine()) != null) {
                 // Split by ','
-                String[] tokens = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String[] tokens = line.split(",");
+
                 // Read the data
                 addInspectionDetail(tokens);
             }
@@ -47,8 +71,8 @@ public class InspectionLoader {
         int nonCriticalIssues = Integer.parseInt(tokens[4]);
         String[] violationsArray;
         if (tokens.length == 7) {
-            String[] violations = tokens[6].split("\"");
-            violationsArray = violations[1].split("\\|");
+            String violations = tokens[6].split("\"")[1];
+            violationsArray = violations.split("\\|");
         } else {
             violationsArray = null;
         }
