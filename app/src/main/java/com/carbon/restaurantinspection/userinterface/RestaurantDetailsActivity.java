@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,10 +22,10 @@ import com.carbon.restaurantinspection.model.RestaurantManager;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
+/**
+ * Class makes it easier to display an icon beside the the inspections
+ */
 class InspectionDetailHolder {
-    // Class to help me display my an icon beside the the inspections
     private String details;
     private int iconId;
 
@@ -42,53 +43,57 @@ class InspectionDetailHolder {
 }
 
 
-
-public class RestaurantDetails extends AppCompatActivity {
+/**
+ *  Displays a list of Restaurants, their number of inspections(critical and non-critical), sorted
+ *  by date from most recent inspection to oldest.
+ */
+public class RestaurantDetailsActivity extends AppCompatActivity {
+    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
     private int index;
-    private InspectionManager InsManager;
+    private InspectionManager myInspectionManager;
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
+    String trackingNum;
 
-
-
-    public static Intent getInstance(Context context, int index) {
-        Intent intent = new Intent(context, RestaurantDetails.class);
-        intent.putExtra("com/carbon/restaurantinspection/model/MainActivity.java:30",0);
-        return intent;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getIntents();
         RestaurantManager restManager = RestaurantManager.getInstance(this);
-        InsManager =  InspectionManager.getInstance(this);
+        myInspectionManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_rest_dets);
+
         updateAddress();
         populateStringList();
         populateListView();
-     //   onInspectionClick();
+        onInspectionClick();
     }
 
-//    private void onInspectionClick() {
-//        ListView listView = findViewById(R.id.list);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = InspectionDetails.makeIntent(RestaurantDetails.this,index
-//                        ,trackingNum);
-//                startActivity(intent);
-//            }
-//        });
-//    }
+    public static Intent makeIntent(Context context, int index) {
+        Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+        intent.putExtra(INTENT_NAME, index);
+        return intent;
+    }
 
+    private void onInspectionClick() {
+        ListView listView = findViewById(R.id.list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = InspectionDetails.makeIntent(RestaurantDetailsActivity.this,
+                        i,trackingNum);
 
+                startActivity(intent);
+            }
+        });
+    }
 
     private void populateStringList() {
-        String trackingNum;
         trackingNum = restaurant.getTrackingNumber();
-        List<InspectionDetail> inspections = InsManager.getInspections(trackingNum);
+        List<InspectionDetail> inspections = myInspectionManager.getInspections(trackingNum);
         System.out.println(inspections.isEmpty());
         int size = inspections.size();
         InspectionDetailHolder[] ins = new InspectionDetailHolder[size];
@@ -98,10 +103,10 @@ public class RestaurantDetails extends AppCompatActivity {
             int iconId;
             String hazardLevel = inspections.get(i).getHazardLevel();
 
-            if(hazardLevel.equals("\"High\"")){
+            if(hazardLevel.equals("High")){
                 iconId = R.drawable.red_skull_crossbones;
             }
-            else if(hazardLevel.equals("\"Moderate\"")){
+            else if(hazardLevel.equals("Moderate")){
                 iconId = R.drawable.ic_warning_yellow_24dp;
             }
             else
@@ -113,7 +118,7 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private class MyListAdapter extends ArrayAdapter<InspectionDetailHolder>{
         MyListAdapter(){
-            super(RestaurantDetails.this,R.layout.item_view, inspectionList);
+            super(RestaurantDetailsActivity.this,R.layout.item_view, inspectionList);
         }
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
@@ -154,7 +159,6 @@ public class RestaurantDetails extends AppCompatActivity {
 
     private void getIntents() {
         Intent intent = getIntent();
-        index = intent.getIntExtra("com/carbon/restaurantinspection/model/MainActivity.java:30"
-                , 0);
+        index = intent.getIntExtra(INTENT_NAME, 0);
     }
 }

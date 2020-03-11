@@ -8,7 +8,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.userinterface.RestaurantDetails;
+import com.carbon.restaurantinspection.userinterface.RestaurantDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button btn;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int index = 1;
-                Intent intent = RestaurantDetails.getInstance(MainActivity.this,index);
+                Intent intent = RestaurantDetailsActivity.makeIntent(MainActivity.this,index);
                 startActivity(intent);
             }
         });
