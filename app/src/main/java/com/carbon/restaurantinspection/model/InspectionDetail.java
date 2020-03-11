@@ -1,5 +1,6 @@
 package com.carbon.restaurantinspection.model;
 
+
 import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+
 
 /*
   InspectionDetail class models an inspection report's details.
@@ -124,12 +126,17 @@ public class InspectionDetail {
     }
 
 
+
     public String getTrackingNumber() {
         return trackingNumber;
     }
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
+    }
+    
+    public String getStrInspectionDate() {
+        return inspectionDate;
     }
 
     public void setInspectionDate(String inspectionDate) {

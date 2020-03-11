@@ -14,13 +14,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
+/**
+ * RestaurantLoader Class loads restaurant information from a csv file,
+ * and creates a Restaurant object for each line from the csv file.
+ * It adds the Restaurant objects into an ArrayList.
+ */
 public class RestaurantLoader {
     private final String DELIMITER = ",";
-    private ArrayList<Restaurant> restaurantList;
+    private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
     public ArrayList<Restaurant> loadRestaurantList(Context context) {
-        restaurantList = new ArrayList<>();
+
         InputStream is = context.getResources().openRawResource(R.raw.restaurants_itr1);
 
         BufferedReader reader = new BufferedReader(
@@ -30,13 +37,22 @@ public class RestaurantLoader {
         try {
             reader.readLine();
 
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while (line != null) {
                 String[] tokens = line.split(DELIMITER);
                 addRestaurant(tokens);
+                line = reader.readLine();
             }
         } catch (IOException e) {
             Log.wtf("RestaurantLoader", "Error reading data file on line " + line, e);
         }
+
+        Collections.sort(restaurantList, new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant restaurant, Restaurant otherRestaurant) {
+                return  restaurant.getName().compareTo(otherRestaurant.getName());
+            }
+        });
 
         return restaurantList;
     }
@@ -44,7 +60,8 @@ public class RestaurantLoader {
     private void addRestaurant(String[] restaurantInfo) {
         double latitude = Double.parseDouble(restaurantInfo[5]);
         double longitude = Double.parseDouble(restaurantInfo[6]);
-        Restaurant restaurant = new Restaurant(restaurantInfo[0], restaurantInfo[1], restaurantInfo[2],
+        String trackingNumber = restaurantInfo[0].split("\"")[1];
+        Restaurant restaurant = new Restaurant(trackingNumber, restaurantInfo[1], restaurantInfo[2],
                 restaurantInfo[3], restaurantInfo[4], latitude, longitude);
         restaurantList.add(restaurant);
     }
