@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -66,7 +65,6 @@ public class RestaurantListActivity extends AppCompatActivity {
                         parent,false);
             }
 
-            // find restaurant
             String currentRestaurants = restaurantManager.getRestaurant(position).getName()
                     .replace("\"", "");
 
@@ -144,5 +142,4 @@ public class RestaurantListActivity extends AppCompatActivity {
             return itemView;
         }
     }
-
 }
