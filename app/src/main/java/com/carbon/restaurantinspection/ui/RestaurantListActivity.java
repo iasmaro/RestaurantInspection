@@ -46,6 +46,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         inspectionManager = InspectionManager.getInstance(this);
 
         populateRestaurantListView();
+        setupClickableRestaurants();
     }
 
     private void populateRestaurantListView() {
@@ -75,13 +76,15 @@ public class RestaurantListActivity extends AppCompatActivity {
             } else
                 imageView.setImageResource(R.drawable.beer_icon);
 
+            // set restaurant name
+            TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
+            restaurantNameText.setText(currentRestaurants);
+
            String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
            String restarantTrackNum = restaurantTrackingNum.replace("\"", "");
 
            ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(restarantTrackNum);
 //           Collections.sort(inspections);
-
-            // gets inspection date and already compares current date with inspection date
 
             // set # issues
             if(inspections != null) {
@@ -92,13 +95,6 @@ public class RestaurantListActivity extends AppCompatActivity {
                 TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
                 numIssuesText.setText("# Issues: " + totalIssues);
                 //Log.d("total issues is : ", Integer.toString(totalIssues));
-
-//                Calendar dateFormatDispay = inspections.get(0).getInspecDate();
-//                int daysBetween = inspections.get(0).daysBetween(dateFormatDispay);
-//                Log.d("date is : ", Integer.toString(daysBetween));
-
-//                TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-//                inspectionDateText.setText("Recent inspection: " + date);
 
                 //get recent inspection date
                 String date = inspections.get(0).getInspectionDate();
@@ -141,22 +137,18 @@ public class RestaurantListActivity extends AppCompatActivity {
                 TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
                 inspectionDateText.setText("Recent Inspection Unavailable");
             }
-
-            // set restaurant name
-           TextView restaurantNameText = (TextView) itemView.findViewById(R.id.restaurant_name_textview);
-           restaurantNameText.setText(currentRestaurants);
-
-            // clickable listview
-            ListView list = findViewById(R.id.restaurant_list_view);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                @Override
-                public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id){
-
-                    Toast.makeText(RestaurantListActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
-                }
-            });
             return itemView;
         }
     }
+    private void setupClickableRestaurants() {
+        // clickable listview
+        ListView list = findViewById(R.id.restaurant_list_view);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id){
 
+                Toast.makeText(RestaurantListActivity.this, "Position: " + position, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
