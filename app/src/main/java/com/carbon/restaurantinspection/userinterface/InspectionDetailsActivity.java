@@ -24,6 +24,7 @@ import java.util.ArrayList;
 /**
  * Inspection Details Activity contains all details of a specific restaurant's inspection.
  * Data is passed from Restaurant Details via intent encapsulation.
+ * Contains a private MyArrayAdapter Class for the listView.
  */
 
 public class InspectionDetailsActivity extends AppCompatActivity {
@@ -118,6 +119,9 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * MyListAdapter formats the row in the listView to include the necessary data.
+     */
     private class MyListAdapter extends ArrayAdapter<Violation> {
         public MyListAdapter(){
             super(InspectionDetailsActivity.this, R.layout.inspection_item_view, violationList);
@@ -130,23 +134,18 @@ public class InspectionDetailsActivity extends AppCompatActivity {
                 itemView = getLayoutInflater().inflate(R.layout.inspection_item_view, parent, false);
             }
 
-            //Find current violation
             Violation currentViolation = violationList.get(position);
 
-            //Fill the violation icon
             ImageView violationView = itemView.findViewById(R.id.item_violationIcon);
             int iconID = findResourceID(currentViolation);
             violationView.setImageResource(iconID);
 
-            //violation title
             TextView titleText = itemView.findViewById(R.id.item_violationTitle);
             titleText.setText(currentViolation.getType() + " Violation");
 
-            //violation title
             TextView descriptionText = itemView.findViewById(R.id.item_violationDescription);
             descriptionText.setText("Code: " + currentViolation.getCode() + ", " + currentViolation.getStatus());
 
-            //Hazard icon
             ImageView hazardView = itemView.findViewById(R.id.item_hazardStatus);
             if (currentViolation.getStatus().equals("non critical")){
                 hazardView.setImageResource(R.drawable.yellow_caution);
