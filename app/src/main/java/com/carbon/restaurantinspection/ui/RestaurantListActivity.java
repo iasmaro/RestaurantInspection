@@ -1,5 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-//                Intent intent = RestaurantDetailsActivity.makeIntent(RestaurantListActivity.this, position);
-//                startActivity(intent);
+                Intent intent = RestaurantDetailsActivity.makeIntent(RestaurantListActivity.this, position);
+                startActivity(intent);
             }
         });
     }
