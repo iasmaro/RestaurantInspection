@@ -102,15 +102,18 @@ public class RestaurantListActivity extends AppCompatActivity {
                 int totalIssues = numCrit + numNonCrit;
 
                 TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-                numIssuesText.setText("# Issues: " + totalIssues);
+                String numIssuesTextContent = "# Issues: " + totalIssues;
+                numIssuesText.setText(numIssuesTextContent);
 
                 String date = inspections.get(0).getInspectionDate();
                 TextView recentInspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-                recentInspectionDateText.setText("Recent Inspection Date: " + date);
+                String recentInspectionDateTextContent = "Recent Inspection Date: " + date;
+                recentInspectionDateText.setText(recentInspectionDateTextContent);
 
                 String hazardLevel = inspections.get(0).getHazardLevel();
                 TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
-                hazardLevelText.setText("Hazard Level: " + hazardLevel);
+                String hazardlevelTextContent = "Hazard Level: " + hazardLevel;
+                hazardLevelText.setText(hazardlevelTextContent);
 
                 ImageView imageViewHazardLevel = itemView.findViewById(R.id.item_hazard_icon);
                 if (hazardLevel.contains("Low")){
