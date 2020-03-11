@@ -1,5 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
+import android.util.Log;
+
 import java.util.Hashtable;
 
 /*
@@ -51,6 +53,7 @@ public class Violation {
             this.type = otherCode.get(code.substring(0, 1));
         }
     }
+
 
     public String getCode() {
         return code;

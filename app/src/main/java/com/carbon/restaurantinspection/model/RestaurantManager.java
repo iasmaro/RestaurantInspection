@@ -5,9 +5,6 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * RestaurantManager class is a singleton class that manages a list of Restaurants.
- */
 public class RestaurantManager implements Iterable<Restaurant>{
     private ArrayList<Restaurant> restaurantList;
 

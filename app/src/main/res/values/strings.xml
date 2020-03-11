@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Restaurant Inspection</string>
     <string name="inspection_details">Inspection Details</string>
+    <string name="address">Address</string>
+    <string name="address1">Address:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="inspection">Inspection</string>
+    <string name="longitudeValue">Longitude</string>
+    <string name="latitudeValue">Latitude</string>
+    <string name="date_inspection_test">Date: May 3rd, 2019</string>
+    <string name="type_inspection_test">Type: Routine</string>
+    <string name="critical_issues__inspection_test">Critical issues: 4</string>
+    <string name="non_critical_issues_inspection_test">Non-Critical issues: 2</string>
+    <string name="hazard_level__inspection_test">Hazard Level: High</string>
 </resources>

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_background"
-    tools:context=".InspectionDetail">
+    tools:context=".userinterface.InspectionDetailsActivity">
 
     <TextView
-        android:id="@+id/inspectionDetailTitle"
+        android:id="@+id/inspection_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -31,13 +31,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/inspectionDateText"
+            android:id="@+id/inspection_dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="18dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Date: May 3rd, 2019"
+            android:text="@string/date_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -45,81 +45,82 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/inspectionTypeText"
+            android:id="@+id/inspection_typeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Type: Routine"
+            android:text="@string/type_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionDateText" />
+            app:layout_constraintTop_toBottomOf="@+id/inspection_dateText" />
 
         <TextView
-            android:id="@+id/inspectionCriticalText"
+            android:id="@+id/inspection_criticalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
-            android:drawableLeft="@drawable/red_skull_size"
+            android:drawableStart="@drawable/red_skull_size"
             android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Critical issues: 4"
+            android:text="@string/critical_issues__inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionTypeText" />
+            app:layout_constraintTop_toBottomOf="@+id/inspection_typeText" />
 
         <TextView
-            android:id="@+id/inspectionNonCriticalText"
+            android:id="@+id/inspection_nonCriticalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
-            android:drawableLeft="@drawable/caution_size"
+            android:drawableStart="@drawable/caution_size"
             android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Non-Critical issues: 2"
+            android:text="@string/non_critical_issues_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionCriticalText" />
+            app:layout_constraintTop_toBottomOf="@+id/inspection_criticalText" />
 
         <ImageView
-            android:id="@+id/inspectionRedSkull"
+            android:id="@+id/inspection_hazardImage"
             android:layout_width="145dp"
             android:layout_height="90dp"
             android:layout_marginTop="9dp"
             android:layout_marginEnd="100dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionHazardText"
+            app:layout_constraintTop_toBottomOf="@+id/inspection_hazardText"
             app:srcCompat="@drawable/red_skull_crossbones" />
 
         <TextView
-            android:id="@+id/inspectionHazardText"
+            android:id="@+id/inspection_hazardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="21dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Hazard Level: High"
+            android:text="@string/hazard_level__inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inspectionNonCriticalText" />
+            app:layout_constraintTop_toBottomOf="@+id/inspection_nonCriticalText" />
 
         <ListView
-            android:id="@+id/inspectionListView"
+            android:id="@+id/inspection_listView"
             android:layout_width="359dp"
             android:layout_height="200dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.555"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

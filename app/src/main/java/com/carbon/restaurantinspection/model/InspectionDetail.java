@@ -1,8 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
-<<<<<<< app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
+
 import java.util.ArrayList;
-=======
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,8 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
-import java.util.Locale;
->>>>>>> app/src/main/java/com/carbon/restaurantinspection/model/InspectionDetail.java
+
 
 /*
   InspectionDetail class models an inspection report's details.
@@ -26,9 +24,7 @@ public class InspectionDetail {
     private int numNonCritical;
     private String hazardLevel;
     private ArrayList<Violation> violations= new ArrayList<>();
-    private String[] violations;
     private final int MILISEC_TO_DAYS = 1000*3600*24;
-
 
     public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
@@ -50,14 +46,6 @@ public class InspectionDetail {
                 violations.add(viol);
             }
         }
-    }
-
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
     }
 
     public String getInspectionDate() {
@@ -137,9 +125,18 @@ public class InspectionDetail {
         return months.get(month);
     }
 
+
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
+    
     public String getStrInspectionDate() {
         return inspectionDate;
-
     }
 
     public void setInspectionDate(String inspectionDate) {
@@ -184,5 +181,10 @@ public class InspectionDetail {
 
     public void setViolations(String[] violations) {
         addViolations(violations);
+    }
+
+    public String returnInsDetails() {
+        String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
+        return str;
     }
 }
