@@ -128,13 +128,16 @@ public class RestaurantListActivity extends AppCompatActivity {
             /** displays the correct headings when inspection array list is null **/
             else {
                 TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-                numIssuesText.setText("              " + "# Issues: Unavailable");
+                String numIssuesContent = "              " + "# Issues: Unavailable";
+                numIssuesText.setText(numIssuesContent);
 
                 TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-                inspectionDateText.setText("Recent Inspection Date: Unavailable");
+                String inspectionDateContent = "Recent Inspection Date: Unavailable";
+                inspectionDateText.setText(inspectionDateContent);
 
                 TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
-                hazardLevelText.setText("Hazard Level: Unavailable");
+                String hazardLevelContent = "Hazard Level: Unavailable";
+                hazardLevelText.setText(hazardLevelContent);
 
                 ImageView imageViewHazardLevel = itemView.findViewById(R.id.item_hazard_icon);
                 imageViewHazardLevel.setImageResource(R.drawable.error_icon);
