@@ -71,8 +71,8 @@
         android:layout_marginEnd="70dp"
         android:layout_marginBottom="40dp"
         android:fontFamily="@font/athiti_extralight"
-        android:textColor="#000000"
         android:text="@string/longitude"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/Longitude"
@@ -99,20 +99,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="40dp"
-        android:textColor="#000000"
         android:fontFamily="@font/athiti_extralight"
         android:text="@string/address1"
-        android:typeface="normal"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/Address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
         android:layout_marginEnd="70dp"
         android:layout_marginBottom="40dp"
         android:fontFamily="@font/athiti_extralight"
@@ -121,7 +124,8 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
