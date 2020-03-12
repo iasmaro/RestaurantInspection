@@ -1,4 +1,4 @@
-package com.carbon.restaurantinspection.userinterface;
+package com.carbon.restaurantinspection.UI;
 
 import android.content.Context;
 import android.content.Intent;

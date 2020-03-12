@@ -1,4 +1,4 @@
-package com.carbon.restaurantinspection.userinterface;
+package com.carbon.restaurantinspection.UI;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class InspectionDetails extends AppCompatActivity {
 
-    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.userinterface.InspectionDetails.position";
-    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.userinterface.InspectionDetails.trackingNumber";
+    private static final String EXTRA_POSITION = "com.carbon.restaurantinspection.UI.InspectionDetails.position";
+    private static final String EXTRA_TRACKING_NUMBER = "com.carbon.restaurantinspection.UI.InspectionDetails.trackingNumber";
     private int inspectionPosition;
     private String trackingNumber;
     inspectionArrayTest inspection = new inspectionArrayTest();
