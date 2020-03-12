@@ -26,7 +26,8 @@ public class InspectionDetail {
     private ArrayList<Violation> violations= new ArrayList<>();
     private final int MILISEC_TO_DAYS = 1000*3600*24;
 
-    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType, int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
+    public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType,
+                            int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
         this.trackingNumber = trackingNumber;
         this.inspectionDate = inspectionDate;
         this.inspectionType = inspectionType;
@@ -134,7 +135,7 @@ public class InspectionDetail {
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
-    
+
     public String getStrInspectionDate() {
         return inspectionDate;
     }
