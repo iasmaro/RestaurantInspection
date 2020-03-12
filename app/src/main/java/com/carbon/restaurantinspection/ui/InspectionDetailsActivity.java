@@ -115,7 +115,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
         }
         else{
-            imageView.setImageResource(R.drawable.greencheckp);
+            imageView.setImageResource(R.drawable.greencheckmark);
         }
     }
 
