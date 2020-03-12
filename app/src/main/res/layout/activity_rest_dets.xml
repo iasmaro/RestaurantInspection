@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="70dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
         android:text="@string/latitudeValue"
         android:textColor="#000000"
@@ -29,12 +29,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="68dp"
-        android:layout_marginBottom="132dp"
+        android:layout_marginBottom="32dp"
         android:fontFamily="sans-serif"
         android:text="@string/longitudeValue"
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/list"
+        app:layout_constraintBottom_toTopOf="@+id/inspectionTitle"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
         android:text="@string/latitude"
         android:textColor="#000000"
@@ -66,12 +66,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
-        android:layout_marginBottom="132dp"
+        android:layout_marginBottom="32dp"
         android:fontFamily="sans-serif"
         android:text="@string/longitude"
         android:textColor="#000000"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/list"
+        app:layout_constraintBottom_toTopOf="@+id/inspectionTitle"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -94,27 +94,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
         android:fontFamily="sans-serif"
         android:text="@string/address1"
         android:textColor="#000000"
         android:textSize="16sp"
         android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Title" />
 
     <TextView
         android:id="@+id/Address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="70dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="24dp"
         android:fontFamily="sans-serif"
         android:text="@string/address"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/Latitude"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Title" />
 
     <TextView
         android:id="@+id/Title"
