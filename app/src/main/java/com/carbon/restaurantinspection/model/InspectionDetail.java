@@ -61,7 +61,7 @@ public class InspectionDetail {
         }
         else if (yearAgo.before(inspecDate)) {
             String month = getMonth(inspectionDate.substring(4, 6));
-            dateOfInspection = month + " " + inspecDate.DAY_OF_MONTH;
+            dateOfInspection = month + " " + inspecDate.get(inspecDate.DAY_OF_MONTH);
         }
         else {
             String month = getMonth(inspectionDate.substring(4, 6));

@@ -12,7 +12,6 @@
         <activity android:name=".ui.InspectionDetailsActivity"></activity>
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".ui.RestaurantDetailsActivity"></activity>
-        <activity android:name=".InspectionDetail" />
         <activity android:name=".ui.RestaurantListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
