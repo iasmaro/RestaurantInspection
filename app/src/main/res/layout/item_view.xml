@@ -20,8 +20,10 @@
         android:id="@+id/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="56dp"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="3dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toTopOf="parent" />
