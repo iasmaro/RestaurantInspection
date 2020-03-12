@@ -4,7 +4,6 @@
     <item
         android:drawable="@drawable/yellow_caution"
         android:width="22dp"
-        android:height="21dp"
-        />
+        android:height="21dp" />
 
 </layer-list >

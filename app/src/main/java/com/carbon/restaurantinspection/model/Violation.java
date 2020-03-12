@@ -15,9 +15,8 @@ public class Violation {
     private String type;
 
     public Violation(String violation) {
-        Log.d("viol", violation);
-        if (violation.length() > 10) {
-            String[] violationArray = violation.split(",");
+        String[] violationArray = violation.split(",");
+        if (violationArray.length > 0) {
             code = violationArray[0];
             status = violationArray[1];
             if (violationArray.length > 3) {
@@ -47,15 +46,14 @@ public class Violation {
         if (code.substring(0, 1).equals("3")) {
             if (threeCode.containsKey(code)) {
                 this.type = threeCode.get(code);
-            }
-            else {
+            } else {
                 this.type = "Equipment";
             }
-        }
-        else {
+        } else {
             this.type = otherCode.get(code.substring(0, 1));
         }
     }
+
 
     public String getCode() {
         return code;

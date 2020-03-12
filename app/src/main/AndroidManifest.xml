@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.InspectionDetailsActivity"></activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".ui.RestaurantDetailsActivity"></activity>
         <activity android:name=".InspectionDetail" />
         <activity android:name=".ui.RestaurantListActivity">
@@ -22,6 +24,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

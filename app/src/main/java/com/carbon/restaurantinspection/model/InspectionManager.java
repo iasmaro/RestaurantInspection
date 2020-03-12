@@ -10,7 +10,7 @@ import java.util.Hashtable;
   InspectionManager class is a singleton class containing inspection details of restaurants.
  */
 public class InspectionManager {
-    private static Hashtable<String, ArrayList<InspectionDetail>> inspections;
+    private Hashtable<String, ArrayList<InspectionDetail>> inspections;
     private static InspectionManager instance;
 
     public static InspectionManager getInstance(Context context) {
@@ -29,4 +29,3 @@ public class InspectionManager {
         return inspections.get(trackingNumber);
     }
 }
-
