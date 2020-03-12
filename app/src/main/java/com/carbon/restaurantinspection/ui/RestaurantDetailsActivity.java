@@ -53,7 +53,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
     private String trackingNum;
-
+    List<InspectionDetail> inspections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,39 +78,45 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
     private void onInspectionClick() {
-        ListView listView = findViewById(R.id.list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = InspectionDetailsActivity.makeIntent(RestaurantDetailsActivity.this,
-                        i,trackingNum);
+        if(inspections != null) {
+            ListView listView = findViewById(R.id.list);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = InspectionDetailsActivity.makeIntent(RestaurantDetailsActivity.this,
+                            i, trackingNum);
 
-                startActivity(intent);
-            }
-        });
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void populateStringList() {
         trackingNum = restaurant.getTrackingNumber();
-        List<InspectionDetail> inspections = myInspectionManager.getInspections(trackingNum);
-        int size = inspections.size();
+        inspections = myInspectionManager.getInspections(trackingNum);
+        if(inspections != null) {
+            int size = inspections.size();
 
-        for(int i = 0; i < size; i++){
-            String str = inspections.get(i).returnInsDetails();
-            int iconId;
-            String hazardLevel = inspections.get(i).getHazardLevel();
+            for (int i = 0; i < size; i++) {
+                String str = inspections.get(i).returnInsDetails();
+                int iconId;
+                String hazardLevel = inspections.get(i).getHazardLevel();
 
-            if(hazardLevel.equals("High")){
-                iconId = R.drawable.red_skull_crossbones;
+                if (hazardLevel.equals("High")) {
+                    iconId = R.drawable.red_skull_crossbones;
+                } else if (hazardLevel.equals("Moderate")) {
+                    iconId = R.drawable.ic_warning_yellow_24dp;
+                } else {
+                    iconId = R.drawable.greencheckmark;
+                }
+                InspectionDetailHolder inspectionDetailHolder = new InspectionDetailHolder(str, iconId);
+                inspectionList.add(inspectionDetailHolder);
             }
-            else if(hazardLevel.equals("Moderate")){
-                iconId = R.drawable.ic_warning_yellow_24dp;
-            }
-            else {
-                iconId = R.drawable.greencheckmark;
-            }
-            InspectionDetailHolder inspectionDetailHolder = new InspectionDetailHolder(str, iconId);
-            inspectionList.add(inspectionDetailHolder);
+        }
+        else{
+            TextView textView = findViewById(R.id.inspectionTitle);
+            textView.setText(R.string.ifNoInspection);
         }
     }
 
@@ -147,19 +153,27 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             super(RestaurantDetailsActivity.this,R.layout.item_view, inspectionList);
         }
         @Override
-        public View getView(int position, View convertView, ViewGroup parent){
+        public View getView(int position, View convertView, ViewGroup parent) {
             View itemView = convertView;
-            if(itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.item_view,parent,false);
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.item_view, parent, false);
             }
-            InspectionDetailHolder currentInspection = inspectionList.get(position);
 
-            ImageView imageView = itemView.findViewById(R.id.icon);
-            imageView.setImageResource(currentInspection.getIconId());
+            if (inspections == null) {
+                TextView makeText = itemView.findViewById(R.id.Text);
+                makeText.setText(R.string.ifNoInspection);
+            }
 
-            TextView makeText = itemView.findViewById(R.id.Text);
-            makeText.setText(currentInspection.getDetails());
+            else {
+                InspectionDetailHolder currentInspection = inspectionList.get(position);
 
+                ImageView imageView = itemView.findViewById(R.id.icon);
+                imageView.setImageResource(currentInspection.getIconId());
+
+                TextView makeText = itemView.findViewById(R.id.Text);
+                makeText.setText(currentInspection.getDetails());
+
+            }
             return itemView;
         }
     }
