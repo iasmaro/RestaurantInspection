@@ -1,4 +1,4 @@
-package com.carbon.restaurantinspection.UI;
+package com.carbon.restaurantinspection.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -82,7 +82,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = InspectionDetails.makeIntent(RestaurantDetailsActivity.this,
+                Intent intent = InspectionDetailsActivity.makeIntent(RestaurantDetailsActivity.this,
                         i,trackingNum);
 
                 startActivity(intent);

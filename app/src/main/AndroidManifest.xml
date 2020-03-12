@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.InspectionDetailsActivity"></activity>
+        <activity android:name=".ui.InspectionDetailsActivity"></activity>
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".UI.RestaurantDetailsActivity"></activity>
+        <activity android:name=".ui.RestaurantDetailsActivity"></activity>
         <activity android:name=".model.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

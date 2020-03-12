@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_background"
-    tools:context=".userinterface.InspectionDetailsActivity">
+    tools:context=".ui.InspectionDetailsActivity">
 
     <TextView
         android:id="@+id/inspection_title"

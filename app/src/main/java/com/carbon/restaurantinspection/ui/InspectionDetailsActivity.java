@@ -1,4 +1,4 @@
-package com.carbon.restaurantinspection.userinterface;
+package com.carbon.restaurantinspection.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
