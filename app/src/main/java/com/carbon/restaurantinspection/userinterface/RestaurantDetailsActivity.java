@@ -94,7 +94,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         trackingNum = restaurant.getTrackingNumber();
         List<InspectionDetail> inspections = myInspectionManager.getInspections(trackingNum);
         int size = inspections.size();
-        InspectionDetailHolder[] ins = new InspectionDetailHolder[size];
 
         for(int i = 0;i < size;i++){
             String str = inspections.get(i).returnInsDetails();
@@ -110,8 +109,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             else {
                 iconId = R.drawable.greencheckmark;
             }
-            ins[i] = new InspectionDetailHolder(str, iconId);
-            inspectionList.add(ins[i]);
+            InspectionDetailHolder inspectionDetailHolder = new InspectionDetailHolder(str, iconId);
+            inspectionList.add(inspectionDetailHolder);
         }
     }
 
