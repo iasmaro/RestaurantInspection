@@ -12,13 +12,12 @@
         style="@style/Widget.AppCompat.TextView.SpinnerItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/athiti_extralight"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif"
         android:text="@string/inspection_details"
         android:textAlignment="viewStart"
         android:textColor="#000000"
         android:textSize="34sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,11 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="18dp"
-            android:fontFamily="@font/athiti_extralight"
+            android:fontFamily="sans-serif"
             android:text="@string/date_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,11 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
-            android:fontFamily="@font/athiti_extralight"
+            android:fontFamily="sans-serif"
             android:text="@string/type_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inspection_dateText" />
 
@@ -67,11 +64,10 @@
             android:layout_marginTop="17dp"
             android:drawableStart="@drawable/red_skull_size"
             android:drawablePadding="4dp"
-            android:fontFamily="@font/athiti_extralight"
+            android:fontFamily="sans-serif"
             android:text="@string/critical_issues__inspection_test"
-            android:textColor="#000000"
+            android:textColor="#E53935"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inspection_typeText" />
 
@@ -83,11 +79,10 @@
             android:layout_marginTop="17dp"
             android:drawableStart="@drawable/caution_size"
             android:drawablePadding="4dp"
-            android:fontFamily="@font/athiti_extralight"
+            android:fontFamily="sans-serif"
             android:text="@string/non_critical_issues_inspection_test"
-            android:textColor="#000000"
+            android:textColor="#FDD835"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inspection_criticalText" />
 
@@ -107,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="21dp"
-            android:fontFamily="@font/athiti_extralight"
+            android:fontFamily="sans-serif"
             android:text="@string/hazard_level__inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"

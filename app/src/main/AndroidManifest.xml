@@ -8,9 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.InspectionDetailsActivity"></activity>
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ui.InspectionDetailsActivity"></activity>
         <activity android:name=".ui.RestaurantDetailsActivity"></activity>
         <activity android:name=".ui.RestaurantListActivity">
             <intent-filter>
