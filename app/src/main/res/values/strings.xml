@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Restaurant Inspection</string>
     <string name="inspection_details">Inspection Details</string>
+    <string name="restaurant_list">Restaurant List</string>
+    <string name="restaurant_name">Restaurant Name:</string>
+    <string name="issues"># issues</string>
+    <string name="recent_inspection_date">Recent Inspection Date</string>
+    <string name="hazard_level">Hazard level:</string>
     <string name="address">Address</string>
     <string name="address1">Address:</string>
     <string name="longitude">Longitude:</string>
