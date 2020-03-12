@@ -128,6 +128,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
     private void updateAddress() {
+        TextView title = findViewById(R.id.Title);
+        title.setText(restaurant.getName());
         TextView address = findViewById(R.id.Address);
         TextView latitude1 = findViewById(R.id.Latitude);
         TextView longitude1 = findViewById(R.id.Longitude);
