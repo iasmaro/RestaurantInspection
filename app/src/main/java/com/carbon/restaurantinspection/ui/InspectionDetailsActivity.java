@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,12 +111,15 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
         if(hazardLevel.equals("High")){
             imageView.setImageResource(R.drawable.red_skull_crossbones);
+            textView.setTextColor(Color.RED);
         }
         else if(hazardLevel.equals("Moderate")){
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
+            textView.setTextColor(Color.YELLOW);
         }
         else{
             imageView.setImageResource(R.drawable.greencheckmark);
+            textView.setTextColor(Color.GREEN);
         }
     }
 
