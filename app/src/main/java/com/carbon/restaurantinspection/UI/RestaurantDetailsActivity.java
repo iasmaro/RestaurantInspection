@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class makes it easier to display an icon beside the the inspections
+ * Class makes it easier to display an icon beside the inspections
  */
 class InspectionDetailHolder {
     private String details;
@@ -52,7 +52,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private InspectionManager myInspectionManager;
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
-    String trackingNum;
+    private String trackingNum;
 
 
     @Override
@@ -95,7 +95,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         List<InspectionDetail> inspections = myInspectionManager.getInspections(trackingNum);
         int size = inspections.size();
 
-        for(int i = 0;i < size;i++){
+        for(int i = 0; i < size; i++){
             String str = inspections.get(i).returnInsDetails();
             int iconId;
             String hazardLevel = inspections.get(i).getHazardLevel();
@@ -140,7 +140,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
 
     /**
-     * MyListAdapter was formatted to be able to display the necessary information in te listView
+     * MyListAdapter was formatted to be able to display the necessary information in the listView
      */
     private class MyListAdapter extends ArrayAdapter<InspectionDetailHolder>{
         MyListAdapter(){
