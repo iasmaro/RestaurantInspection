@@ -36,7 +36,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         populateRestaurantListView();
         setupClickableRestaurants();
     }
-    
+
     private void populateRestaurantListView() {
         ArrayAdapter<Restaurant> adapter = new listAdapter();
         ListView list = findViewById(R.id.restaurant_list_view);
@@ -78,7 +78,7 @@ public class RestaurantListActivity extends AppCompatActivity {
                 inspectionsNotNull(inspections, itemView);
             }
             else {
-                inspectionsIsNull(inspections, itemView);
+                inspectionsIsNull(null, itemView);
             }
             return itemView;
         }
@@ -121,6 +121,10 @@ public class RestaurantListActivity extends AppCompatActivity {
             String hazardLevelDisplay = "Hazard Level: " + hazardLevel;
             hazardLevelText.setText(hazardLevelDisplay);
 
+            setHazardLevelIcons(hazardLevel, itemView);
+        }
+
+        private void setHazardLevelIcons(String hazardLevel, View itemView) {
             ImageView hazardLevelIcon = itemView.findViewById(R.id.item_hazard_icon);
             if (hazardLevel.contains("Low")){
                 hazardLevelIcon.setImageResource(R.drawable.greencheckmark);
