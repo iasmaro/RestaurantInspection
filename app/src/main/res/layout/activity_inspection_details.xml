@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/layout_background"
-    tools:context=".UI.InspectionDetails">
+    tools:context=".userinterface.InspectionDetailsActivity">
 
     <TextView
         android:id="@+id/inspection_title"
@@ -37,7 +37,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginTop="18dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Date: May 3rd, 2019"
+            android:text="@string/date_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Type: Routine"
+            android:text="@string/type_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -64,10 +64,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
-            android:drawableLeft="@drawable/red_skull_size"
+            android:drawableStart="@drawable/red_skull_size"
             android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Critical issues: 4"
+            android:text="@string/critical_issues__inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -80,10 +80,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="17dp"
-            android:drawableLeft="@drawable/caution_size"
+            android:drawableStart="@drawable/caution_size"
             android:drawablePadding="4dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Non-Critical issues: 2"
+            android:text="@string/non_critical_issues_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -107,7 +107,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginTop="21dp"
             android:fontFamily="@font/athiti_extralight"
-            android:text="Hazard Level: High"
+            android:text="@string/hazard_level__inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,9 +117,10 @@
             android:id="@+id/inspection_listView"
             android:layout_width="359dp"
             android:layout_height="200dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="28dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.555"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,4 +1,7 @@
 package com.carbon.restaurantinspection.model;
+
+
+import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+
 
 /*
   InspectionDetail class models an inspection report's details.
@@ -19,7 +23,7 @@ public class InspectionDetail {
     private int numCritical;
     private int numNonCritical;
     private String hazardLevel;
-    private String[] violations;
+    private ArrayList<Violation> violations= new ArrayList<>();
     private final int MILISEC_TO_DAYS = 1000*3600*24;
 
     public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType,
@@ -30,15 +34,19 @@ public class InspectionDetail {
         this.numCritical = numCritical;
         this.numNonCritical = numNonCritical;
         this.hazardLevel = hazardLevel;
-        this.violations = violations;
+        if (violations != null) {
+            addViolations(violations);
+        }
+
     }
 
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
+    private void addViolations(String[] strViolations) {
+        for (String violation: strViolations) {
+            if (violation.length() > 10) {
+                Violation viol = new Violation(violation);
+                violations.add(viol);
+            }
+        }
     }
 
     public String getInspectionDate() {
@@ -118,6 +126,20 @@ public class InspectionDetail {
         return months.get(month);
     }
 
+
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
+
+    public String getStrInspectionDate() {
+        return inspectionDate;
+    }
+
     public void setInspectionDate(String inspectionDate) {
         this.inspectionDate = inspectionDate;
     }
@@ -154,22 +176,16 @@ public class InspectionDetail {
         this.hazardLevel = hazardLevel;
     }
 
-    public String[] getViolations() {
+    public ArrayList<Violation> getViolations() {
         return violations;
     }
 
     public void setViolations(String[] violations) {
-        this.violations = violations;
+        addViolations(violations);
     }
-
 
     public String returnInsDetails() {
         String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
         return str;
-    }
-
-
-    public String getStrInspectionDate() {
-        return inspectionDate;
     }
 }

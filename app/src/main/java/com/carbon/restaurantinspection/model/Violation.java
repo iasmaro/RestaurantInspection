@@ -1,5 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
+import android.util.Log;
+
 import java.util.Hashtable;
 
 /*

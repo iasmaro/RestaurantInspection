@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * RestaurantLoader Class loads restaurant information from a csv file,
@@ -41,6 +43,13 @@ public class RestaurantLoader {
         } catch (IOException e) {
             Log.wtf("RestaurantLoader", "Error reading data file on line " + line, e);
         }
+
+        Collections.sort(restaurantList, new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant restaurant, Restaurant otherRestaurant) {
+                return  restaurant.getName().compareTo(otherRestaurant.getName());
+            }
+        });
 
         return restaurantList;
     }

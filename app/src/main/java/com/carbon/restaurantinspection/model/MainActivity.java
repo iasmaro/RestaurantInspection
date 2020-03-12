@@ -7,8 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.carbon.restaurantinspection.userinterface.InspectionDetailsActivity;
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.UI.RestaurantDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button btn;
@@ -18,18 +18,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btn = findViewById(R.id.button);
         setUpBtn();
-//        int index = 1;
-//        Intent intent = new Intent(this,RestaurantDetailActivity.class);
-//        intent.putExtra("ca/sfu/restaurantinspections/MainActivity.java:14", index);
-        //       startActivity(intent);
     }
 
     private void setUpBtn() {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = 1;
-                Intent intent = RestaurantDetailsActivity.makeIntent(MainActivity.this,index);
+                Intent intent = new Intent(getApplicationContext(), InspectionDetailsActivity.class);
                 startActivity(intent);
             }
         });

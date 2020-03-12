@@ -56,8 +56,7 @@ public class InspectionLoader {
 
             while ((line = reader.readLine()) != null) {
                 // Split by ','
-                String[] tokens = line.split(",");
-
+                String[] tokens = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                 // Read the data
                 addInspectionDetail(tokens);
             }
@@ -91,3 +90,4 @@ public class InspectionLoader {
         }
     }
 }
+
