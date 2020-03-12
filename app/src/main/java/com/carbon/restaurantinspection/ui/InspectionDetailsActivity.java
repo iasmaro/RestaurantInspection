@@ -115,7 +115,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         }
         else if(hazardLevel.equals("Moderate")){
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
-            textView.setTextColor(Color.YELLOW);
+            textView.setTextColor(Color.rgb(255,165,0));
         }
         else{
             imageView.setImageResource(R.drawable.greencheckmark);

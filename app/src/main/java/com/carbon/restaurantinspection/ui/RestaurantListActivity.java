@@ -126,7 +126,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
             else if (hazardLevel.contains("Moderate"))
             {
-                hazardLevelText.setTextColor(Color.YELLOW);
+                hazardLevelText.setTextColor(Color.rgb(255,165,0));
             }
             else {
                 hazardLevelText.setTextColor(Color.RED);
