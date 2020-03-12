@@ -38,7 +38,7 @@
         android:id="@+id/item_restaurant_icon"
         android:layout_width="91dp"
         android:layout_height="84dp"
-        android:layout_marginStart="44dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -174,7 +174,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                 TextView makeText = itemView.findViewById(R.id.Text);
                 makeText.setText(currentInspection.getDetails());
-
             }
             return itemView;
         }
