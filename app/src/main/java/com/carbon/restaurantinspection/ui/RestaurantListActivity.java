@@ -88,7 +88,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             String unavailable = "Unavailable";
 
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-            String numIssuesDisplay = "              " + "# Issues: " + unavailable;
+            String numIssuesDisplay = "# Issues: " + unavailable;
             numIssuesText.setText(numIssuesDisplay);
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
