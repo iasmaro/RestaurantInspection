@@ -2,18 +2,54 @@ package com.carbon.restaurantinspection.model;
 
         import android.content.Context;
 
+        import com.carbon.restaurantinspection.R;
+
+        import java.io.InputStream;
         import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.Comparator;
         import java.util.Iterator;
-        import java.util.List;
 
 public class RestaurantManager implements Iterable<Restaurant>{
-    private ArrayList<Restaurant> restaurantList;
+    private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
     private static RestaurantManager instance;
 
     private RestaurantManager(Context context) {
-        RestaurantLoader loader = new RestaurantLoader();
-        restaurantList = loader.loadRestaurantList(context);
+        InputStream is = context.getResources().openRawResource(R.raw.restaurants_itr1);
+        CSVLoader loader = new CSVLoader();
+        ArrayList<String> file = loader.readCSV(is);
+        parseFile(file);
+        sortRestaurants();
+    }
+
+    private void sortRestaurants() {
+        Collections.sort(restaurantList, new Comparator<Restaurant>() {
+            @Override
+            public int compare(Restaurant restaurant, Restaurant otherRestaurant) {
+                return  restaurant.getName().compareTo(otherRestaurant.getName());
+            }
+        });
+    }
+
+    private void parseFile(ArrayList<String> file) {
+        for (String line : file) {
+            String[] tokens = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+            addRestaurant(tokens);
+        }
+    }
+
+    private void addRestaurant(String[] restaurantInfo) {
+        double latitude = Double.parseDouble(restaurantInfo[5]);
+        double longitude = Double.parseDouble(restaurantInfo[6]);
+        String trackingNumber = restaurantInfo[0].split("\"")[1];
+        String restaurantName = restaurantInfo[1].split("\"")[1];
+        String restaurantAddress = restaurantInfo[2].split("\"")[1];
+        String restaurantCity = restaurantInfo[3].split("\"")[1];
+        String type = restaurantInfo[4].split("\"")[1];
+        Restaurant restaurant = new Restaurant(trackingNumber, restaurantName, restaurantAddress,
+                restaurantCity, type, latitude, longitude);
+        restaurantList.add(restaurant);
     }
 
     public static RestaurantManager getInstance(Context context) {

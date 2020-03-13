@@ -69,8 +69,7 @@ public class RestaurantListActivity extends AppCompatActivity {
                         parent,false);
             }
 
-            String restaurantName = restaurantManager.getRestaurant(position).getName()
-                    .replace("\"", "");
+            String restaurantName = restaurantManager.getRestaurant(position).getName();
 
             setRestaurantNameAndIcon(restaurantName, itemView);
 
@@ -176,7 +175,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         private ArrayList<InspectionDetail> getInspectionArrayList(int position) {
             String restaurantTrackingNum = restaurantManager.getRestaurant(position).getTrackingNumber();
-            String trackNum = restaurantTrackingNum.replace("\"", "");
+            String trackNum = restaurantTrackingNum;
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackNum);
             return inspections;
         }
