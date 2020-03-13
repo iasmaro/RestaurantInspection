@@ -42,6 +42,7 @@
         android:id="@+id/hazard_level_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif"
         android:text="@string/hazard_level"
