@@ -14,10 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ui.MapActivity"></activity>
+        <activity android:name=".ui.MapActivity" />
+        <activity android:name=".ui.RestaurantListActivity" />
         <activity android:name=".ui.InspectionDetailsActivity" />
         <activity android:name=".ui.RestaurantDetailsActivity" />
-        <activity android:name=".ui.RestaurantListActivity">
+        <activity android:name=".model.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +37,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
     </application>
 
 </manifest>
