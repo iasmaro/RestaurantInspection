@@ -26,19 +26,27 @@ import java.util.List;
  * Class makes it easier to display an icon beside the inspections
  */
 class InspectionDetailHolder {
-    private String details;
+    private InspectionDetail inspectionDetail;
     private int iconId;
 
-    InspectionDetailHolder(String str, int id) {
-        details = str;
+    InspectionDetailHolder(int id, InspectionDetail detail) {
         iconId = id;
+        inspectionDetail = detail;
     }
     int getIconId() {
         return iconId;
     }
 
-    String getDetails() {
-        return details;
+    String getDate() {
+        return inspectionDetail.getInspectionDate();
+    }
+
+    int getNumCritical(){
+        return inspectionDetail.getNumCritical();
+    }
+
+    int getNumNonCritical(){
+        return inspectionDetail.getNumNonCritical();
     }
 }
 
@@ -99,7 +107,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             int size = inspections.size();
 
             for (int i = 0; i < size; i++) {
-                String str = inspections.get(i).returnInsDetails();
                 int iconId;
                 String hazardLevel = inspections.get(i).getHazardLevel();
 
@@ -110,7 +117,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 } else {
                     iconId = R.drawable.greencheckmark;
                 }
-                InspectionDetailHolder inspectionDetailHolder = new InspectionDetailHolder(str, iconId);
+                InspectionDetailHolder inspectionDetailHolder = new InspectionDetailHolder(iconId
+                        ,inspections.get(i));
                 inspectionList.add(inspectionDetailHolder);
             }
         }
@@ -131,14 +139,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.Title);
         title.setText(restaurant.getName());
         TextView address = findViewById(R.id.Address);
-        TextView latitude1 = findViewById(R.id.Latitude);
-        TextView longitude1 = findViewById(R.id.Longitude);
+        TextView latitude1 = findViewById(R.id.Coordinates);
         String str = restaurant.getPhysicalAddress();
-        address.setText(str);
+        address.setText("address: "+str);
         String longitude = Double.toString(restaurant.getLongitude());
         String latitude = Double.toString(restaurant.getLatitude());
-        longitude1.setText(longitude);
-        latitude1.setText(latitude);
+        latitude1.setText("coordinates: "+longitude+"   "+latitude);
     }
 
     private void getIntents() {
@@ -173,7 +179,16 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 imageView.setImageResource(currentInspection.getIconId());
 
                 TextView makeText = itemView.findViewById(R.id.Text);
-                makeText.setText(currentInspection.getDetails());
+                makeText.setText(currentInspection.getDate());
+
+                TextView makeText2 = itemView.findViewById(R.id.numCritical);
+                String numCrit = Integer.toString(currentInspection.getNumCritical());
+                makeText2.setText("Number of critical: "+ numCrit);
+
+                String numNonCrit = Integer.toString(currentInspection.getNumNonCritical());
+                TextView makeText3 = itemView.findViewById(R.id.numNonCritical);
+                makeText3.setText("Number of non-critical: "+ numNonCrit);
+
             }
             return itemView;
         }

@@ -9,8 +9,8 @@
     <string name="address">Address</string>
     <string name="address1">Address:</string>
     <string name="longitude">Longitude:</string>
-    <string name="latitude">Latitude:</string>
-    <string name="inspection">Inspection</string>
+    <string name="coordinates">Coordinates:</string>
+    <string name="inspection">Inspections</string>
     <string name="longitudeValue">Longitude</string>
     <string name="latitudeValue">Latitude</string>
     <string name="date_inspection_test">Date: May 3rd, 2019</string>
@@ -20,4 +20,7 @@
     <string name="hazard_level__inspection_test">Hazard Level: High</string>
     <string name="ifNoInspection">No inspections yet</string>
     <string name="restaurant_details">Restaurant Details</string>
+    <string name="item_view_date">Date</string>
+    <string name="item_view_critical_issues">critical issues</string>
+    <string name="item_view_non_critical_issues">non-critical issues</string>
 </resources>
