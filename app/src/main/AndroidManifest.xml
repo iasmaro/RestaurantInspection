@@ -18,7 +18,7 @@
         <activity android:name=".ui.RestaurantListActivity" />
         <activity android:name=".ui.InspectionDetailsActivity" />
         <activity android:name=".ui.RestaurantDetailsActivity" />
-        <activity android:name=".model.MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
