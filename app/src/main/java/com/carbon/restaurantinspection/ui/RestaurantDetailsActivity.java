@@ -141,10 +141,10 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         TextView address = findViewById(R.id.Address);
         TextView latitude1 = findViewById(R.id.Coordinates);
         String str = restaurant.getPhysicalAddress();
-        address.setText("address: "+str);
+        address.setText("address:  "+str);
         String longitude = Double.toString(restaurant.getLongitude());
         String latitude = Double.toString(restaurant.getLatitude());
-        latitude1.setText("coordinates: "+longitude+"   "+latitude);
+        latitude1.setText("coordinates:   "+longitude+"   "+latitude);
     }
 
     private void getIntents() {
