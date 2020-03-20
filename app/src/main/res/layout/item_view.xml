@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="32dp"
-        android:layout_height="31dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="44dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,11 +20,41 @@
         android:id="@+id/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="56dp"
-        android:fontFamily="sans-serif"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/athiti_extralight"
         android:lineSpacingExtra="3dp"
-        android:text="TextView"
+        android:text="@string/item_view_date"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/numCritical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/athiti_extralight"
+        android:text="@string/item_view_critical_issues"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/Text"
+        app:layout_constraintTop_toBottomOf="@id/Text" />
+
+    <TextView
+        android:id="@+id/numNonCritical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/athiti_extralight"
+        android:text="@string/item_view_non_critical_issues"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/numCritical"
+        app:layout_constraintTop_toBottomOf="@+id/numCritical" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
