@@ -2,7 +2,9 @@ package com.carbon.restaurantinspection.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -114,6 +116,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         list.setAdapter(adapter);
     }
 
+    @SuppressLint("ResourceAsColor")
     private void updateViews(){
 
         TextView textView = findViewById(R.id.inspection_dateText);
@@ -132,17 +135,18 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
         textView.setText("Hazard Level: " + hazardLevel);
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
+
         if(hazardLevel.equals("High")){
             imageView.setImageResource(R.drawable.red_skull_crossbones);
-            textView.setTextColor(Color.RED);
+            textView.setTextColor(ContextCompat.getColor(this, R.color.highCriticalColour));
         }
         else if(hazardLevel.equals("Moderate")){
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
-            textView.setTextColor(Color.rgb(255,165,0));
+            textView.setTextColor(ContextCompat.getColor(this, R.color.moderateCriticalColour));
         }
         else{
             imageView.setImageResource(R.drawable.greencheckmark);
-            textView.setTextColor(Color.GREEN);
+            textView.setTextColor(ContextCompat.getColor(this, R.color.lowCriticalColour));
         }
     }
 

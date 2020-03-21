@@ -1,7 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -128,14 +128,13 @@ public class RestaurantListActivity extends AppCompatActivity {
             String hazardLevelDisplay = "Hazard Level: " + hazardLevel;
             hazardLevelText.setText(hazardLevelDisplay);
             if (hazardLevel.contains("Low")){
-                hazardLevelText.setTextColor(Color.GREEN);
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.lowCriticalColour));
             }
-            else if (hazardLevel.contains("Moderate"))
-            {
-                hazardLevelText.setTextColor(Color.rgb(255,165,0));
+            else if (hazardLevel.contains("Moderate")) {
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.moderateCriticalColour));
             }
             else {
-                hazardLevelText.setTextColor(Color.RED);
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.highCriticalColour));
             }
 
             setHazardLevelIcons(hazardLevel, itemView);
