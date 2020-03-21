@@ -174,6 +174,27 @@ public class RestaurantListActivity extends AppCompatActivity {
             else if(restaurantName.contains("Chicken")) {
                 restaurantIcon.setImageResource(R.drawable.chicken_icon);
             }
+            else if(restaurantName.contains("McDonald's")) {
+                restaurantIcon.setImageResource(R.drawable.macdonald_icon);
+            }
+            else if(restaurantName.contains("Starbucks")) {
+                restaurantIcon.setImageResource(R.drawable.starbucks_icon);
+            }
+            else if(restaurantName.contains("Tim Hortons")) {
+                restaurantIcon.setImageResource(R.drawable.timhortons_icon);
+            }
+            else if(restaurantName.contains("Wendy's")) {
+                restaurantIcon.setImageResource(R.drawable.wendys_icon);
+            }
+            else if(restaurantName.contains("Burger King")) {
+                restaurantIcon.setImageResource(R.drawable.burgerking_icon);
+            }
+            else if(restaurantName.contains("Pizza Hut")) {
+                restaurantIcon.setImageResource(R.drawable.pizzahut_icon);
+            }
+            else if(restaurantName.contains("Domino's")) {
+                restaurantIcon.setImageResource(R.drawable.dominos_icon);
+            }
             else {
                 restaurantIcon.setImageResource(R.drawable.beer_icon);
             }
