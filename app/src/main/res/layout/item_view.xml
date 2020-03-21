@@ -26,7 +26,7 @@
         android:lineSpacingExtra="3dp"
         android:text="@string/item_view_date"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,11 +34,11 @@
         android:id="@+id/numCritical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:fontFamily="sans-serif"
         android:text="@string/item_view_critical_issues"
         android:textColor="@color/highCriticalColour"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/Text"
         app:layout_constraintTop_toBottomOf="@id/Text" />
 
@@ -46,11 +46,11 @@
         android:id="@+id/numNonCritical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:fontFamily="sans-serif"
         android:text="@string/item_view_non_critical_issues"
         android:textColor="@color/moderateCriticalColour"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/numCritical"
         app:layout_constraintTop_toBottomOf="@+id/numCritical" />
 </androidx.constraintlayout.widget.ConstraintLayout>
