@@ -1,11 +1,13 @@
 package com.carbon.restaurantinspection.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,6 +45,11 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         inspectionManager = InspectionManager.getInstance(this);
         setContentView(R.layout.activity_inspection_details);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Inspection Details");
+
 
         extractDataFromIntent();
 
