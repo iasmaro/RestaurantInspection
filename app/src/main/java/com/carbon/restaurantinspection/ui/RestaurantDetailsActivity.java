@@ -3,6 +3,8 @@ package com.carbon.restaurantinspection.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -71,12 +74,31 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         RestaurantManager restManager = RestaurantManager.getInstance(this);
         myInspectionManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
-        setContentView(R.layout.activity_rest_dets);
+        setContentView(R.layout.activity_restaurant_details);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(restaurant.getName());
 
         updateAddress();
         populateStringList();
         populateListView();
         onInspectionClick();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_restaurant_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.back:
+                startActivity(new Intent(this, RestaurantListActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static Intent makeIntent(Context context, int index) {
@@ -136,8 +158,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     }
 
     private void updateAddress() {
-        TextView title = findViewById(R.id.Title);
-        title.setText(restaurant.getName());
         TextView address = findViewById(R.id.Address);
         TextView latitude1 = findViewById(R.id.Coordinates);
         String str = restaurant.getPhysicalAddress();

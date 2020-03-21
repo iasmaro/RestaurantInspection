@@ -52,7 +52,6 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Inspection Details");
 
-
         extractDataFromIntent();
 
         updateLists();
