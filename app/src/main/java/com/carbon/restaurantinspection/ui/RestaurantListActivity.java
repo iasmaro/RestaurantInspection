@@ -120,7 +120,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
             String date = inspections.get(0).getInspectionDate();
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String dateDisplay = "Recent Inspection Date: " + date;
+            String dateDisplay = "Recent Inspection: " + date;
             dateText.setText(dateDisplay);
 
             String hazardLevel = inspections.get(0).getHazardLevel();

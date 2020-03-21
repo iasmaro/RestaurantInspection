@@ -116,7 +116,6 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         list.setAdapter(adapter);
     }
 
-    @SuppressLint("ResourceAsColor")
     private void updateViews(){
 
         TextView textView = findViewById(R.id.inspection_dateText);
