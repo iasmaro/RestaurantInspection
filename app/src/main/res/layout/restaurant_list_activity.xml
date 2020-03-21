@@ -6,43 +6,37 @@
     android:layout_height="match_parent"
     android:background="@drawable/layout_background">
 
+    <include
+        android:id="@id/toolbar"
+        layout="@layout/toolbar" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="337dp"
-        android:layout_height="561dp"
+        android:layout_height="630dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="25dp"
+        android:layout_marginBottom="84dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.636"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restaurant_list_title_textview">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.289">
 
         <ListView
             android:id="@+id/restaurant_list_view"
-            android:layout_width="335dp"
-            android:layout_height="479dp"
+            android:layout_width="332dp"
+            android:layout_height="593dp"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/restaurant_list_title_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/restaurant_list"
-        android:textColor="#000000"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

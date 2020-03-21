@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
  * For each restaurant, it shows the inspection information which includes
@@ -30,6 +33,10 @@ public class RestaurantListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.restaurant_list_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Restaurant List");
 
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
