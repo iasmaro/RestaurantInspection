@@ -98,7 +98,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             numIssuesText.setText(numIssuesDisplay);
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String inspectionDateContent = "Recent Inspection Date: " + unavailable;
+            String inspectionDateContent = "Recent Inspection: " + unavailable;
             inspectionDateText.setText(inspectionDateContent);
 
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
