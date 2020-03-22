@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
@@ -26,6 +27,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.barcode.Barcode;
+
+import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -38,17 +42,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-
+    private ArrayList<LocationList> locationList = new ArrayList<>();
+    private LocationList mLocationList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         getLocationPermission();
-
     }
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: sucess");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -59,8 +63,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
                 initializeMap();
+
             } else {
-                //ask for permissions
                 ActivityCompat.requestPermissions(this, permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -110,7 +114,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // when permission is granted, get the current location
             getCurrentLocation();
 
-            // Not working properly
+            // next save the location into an arrayList
+            //saveLocation();
+
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -118,14 +124,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
             googleMap.setMyLocationEnabled(true);
-
-
         }
+    }
+
+    private void saveLocation() {
+        // add getCurrentLocation and adds it to the ArrayList
+        //locationList.add()
     }
 
     private void getCurrentLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
-
+        final LatLng latLng;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
@@ -135,12 +144,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                            LatLng myLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            moveCamera(myLatLng, DEFAULT_ZOOM);
+                            LatLng latLng = myLatLng;
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -156,6 +165,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: success");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+//------------------class---------------------------------------------------------------------
+    public class LocationList {
+        private LatLng latLng;
+        private int index;
+
+        public LocationList (int index, LatLng latLng) {
+            this.latLng = latLng;
+            this.index = index;
+        }
+        public LocationList() {
+        }
+        public LatLng getLatLng() {
+            return latLng;
+        }
+        public int getIndex() {
+            return index;
+        }
     }
 }
 
