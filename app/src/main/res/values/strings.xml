@@ -24,4 +24,5 @@
     <string name="item_view_date">Date</string>
     <string name="item_view_critical_issues">critical issues</string>
     <string name="item_view_non_critical_issues">non-critical issues</string>
+    <string name="show_details"><![CDATA[show details >>]]></string>
 </resources>
