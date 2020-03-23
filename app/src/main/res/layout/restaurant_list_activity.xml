@@ -15,8 +15,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="333dp"
-        android:layout_height="562dp"
+        android:layout_width="378dp"
+        android:layout_height="558dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="16dp"
@@ -27,8 +27,8 @@
 
         <ListView
             android:id="@+id/restaurant_list_view"
-            android:layout_width="316dp"
-            android:layout_height="534dp"
+            android:layout_width="364dp"
+            android:layout_height="541dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
