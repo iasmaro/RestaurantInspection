@@ -9,34 +9,47 @@
 
     <include
         android:id="@id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
         android:layout_width="367dp"
         android:layout_height="642dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
             android:id="@+id/inspection_dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="185dp"
+            android:layout_marginBottom="17dp"
             android:fontFamily="sans-serif"
             android:text="@string/date_inspection_test"
             android:textColor="#000000"
             android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/inspection_typeText"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/inspection_typeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="17dp"
             android:fontFamily="sans-serif"
             android:text="@string/type_inspection_test"
@@ -49,7 +62,7 @@
             android:id="@+id/inspection_criticalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="17dp"
             android:drawableStart="@drawable/red_skull_size"
             android:drawablePadding="4dp"
@@ -64,7 +77,7 @@
             android:id="@+id/inspection_nonCriticalText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="17dp"
             android:drawableStart="@drawable/caution_size"
             android:drawablePadding="4dp"
@@ -89,7 +102,7 @@
             android:id="@+id/inspection_hazardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="21dp"
             android:fontFamily="sans-serif"
             android:text="@string/hazard_level__inspection_test"
@@ -100,12 +113,13 @@
 
         <ListView
             android:id="@+id/inspection_listView"
-            android:layout_width="342dp"
-            android:layout_height="289dp"
+            android:layout_width="331dp"
+            android:layout_height="250dp"
             android:layout_marginTop="28dp"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.48"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/inspection_hazardImage"
             app:layout_constraintVertical_bias="0.0" />
