@@ -161,6 +161,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
+    
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: success");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
