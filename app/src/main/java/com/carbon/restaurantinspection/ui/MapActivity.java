@@ -5,19 +5,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.carbon.restaurantinspection.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,8 +51,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private ArrayList<LocationList> locationList = new ArrayList<>();
-    private LocationList mLocationList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-    //---------------------------------------------------------------------------------------------------------------------------
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -113,9 +121,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (mLocationPermissionsGranted == true) {
             // when permission is granted, get the current location
             getCurrentLocation();
-
-            // next save the location into an arrayList
-            //saveLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -127,14 +132,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void saveLocation() {
-        // add getCurrentLocation and adds it to the ArrayList
-        //locationList.add()
-    }
+    private void getCurrentLocation() {
 
-    private void getCurrentLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
-        final LatLng latLng;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
@@ -149,7 +149,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             Location currentLocation = (Location) task.getResult();
                             LatLng myLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(myLatLng, DEFAULT_ZOOM);
-                            LatLng latLng = myLatLng;
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -165,24 +164,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: success");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
-//------------------class---------------------------------------------------------------------
-    public class LocationList {
-        private LatLng latLng;
-        private int index;
-
-        public LocationList (int index, LatLng latLng) {
-            this.latLng = latLng;
-            this.index = index;
-        }
-        public LocationList() {
-        }
-        public LatLng getLatLng() {
-            return latLng;
-        }
-        public int getIndex() {
-            return index;
-        }
     }
 }
 
