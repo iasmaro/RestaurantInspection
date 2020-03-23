@@ -1,7 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
  * For each restaurant, it shows the inspection information which includes
@@ -30,6 +33,10 @@ public class RestaurantListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.restaurant_list_activity);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Restaurant List");
 
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
@@ -91,7 +98,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             numIssuesText.setText(numIssuesDisplay);
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String inspectionDateContent = "Recent Inspection Date: " + unavailable;
+            String inspectionDateContent = "Recent Inspection: " + unavailable;
             inspectionDateText.setText(inspectionDateContent);
 
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
@@ -113,7 +120,7 @@ public class RestaurantListActivity extends AppCompatActivity {
 
             String date = inspections.get(0).getInspectionDate();
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String dateDisplay = "Recent Inspection Date: " + date;
+            String dateDisplay = "Recent Inspection: " + date;
             dateText.setText(dateDisplay);
 
             String hazardLevel = inspections.get(0).getHazardLevel();
@@ -121,14 +128,13 @@ public class RestaurantListActivity extends AppCompatActivity {
             String hazardLevelDisplay = "Hazard Level: " + hazardLevel;
             hazardLevelText.setText(hazardLevelDisplay);
             if (hazardLevel.contains("Low")){
-                hazardLevelText.setTextColor(Color.GREEN);
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.lowCriticalColour));
             }
-            else if (hazardLevel.contains("Moderate"))
-            {
-                hazardLevelText.setTextColor(Color.rgb(255,165,0));
+            else if (hazardLevel.contains("Moderate")) {
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.moderateCriticalColour));
             }
             else {
-                hazardLevelText.setTextColor(Color.RED);
+                hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.highCriticalColour));
             }
 
             setHazardLevelIcons(hazardLevel, itemView);
