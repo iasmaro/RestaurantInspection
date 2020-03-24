@@ -76,14 +76,18 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_restaurant_details);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(restaurant.getName());
-
+        toolbarBackButton();
         updateAddress();
         populateStringList();
         populateListView();
         onInspectionClick();
+    }
+
+    private void toolbarBackButton() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(restaurant.getName());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

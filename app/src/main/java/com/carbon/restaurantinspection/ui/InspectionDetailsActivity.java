@@ -47,10 +47,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         inspectionManager = InspectionManager.getInstance(this);
         setContentView(R.layout.activity_inspection_details);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Inspection Details");
-
+        toolbarBackButton();
         extractDataFromIntent();
 
         updateLists();
@@ -60,6 +57,21 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         }
         populateListView();
         registerClickCallBack();
+    }
+
+    private void toolbarBackButton() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Inspection Details");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InspectionDetailsActivity.this, RestaurantDetailsActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
