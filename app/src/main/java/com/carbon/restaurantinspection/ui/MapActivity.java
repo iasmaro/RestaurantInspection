@@ -60,22 +60,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        
-        //getSupportActionBar().setTitle("Map");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbarBackButton();
+        getLocationPermission();
+    }
+
+    private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-
-        getLocationPermission();
-        backButton();
-    }
-
-    private void backButton() {
-        Button backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener( new View.OnClickListener() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
             @Override
-                public void onClick (View view) {
+            public void onClick(View view) {
                 Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
                 finish();
                 startActivity(intent);
