@@ -36,6 +36,7 @@ public class UpdateDownloader {
     private long lastUpdate;
     private boolean restaurantsReady = false;
     private boolean inspectionsReady = false;
+    private boolean downloadComplete = false;
 
     public UpdateDownloader(Context context) {
         getRestaurant(context, RESTAURANTS_URL);
@@ -145,11 +146,12 @@ public class UpdateDownloader {
 
     public boolean downloadComplete() {
         // report download progress to user
-        return false;
+        return downloadComplete;
     }
 
     public void cancelUpdate() {
         // cancel updates
+        downloadComplete = true;
     }
 
     public boolean isReady() {

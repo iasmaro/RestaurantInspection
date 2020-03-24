@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -65,8 +66,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
                 TextView message = findViewById(R.id.loadingMessage);
                 message.setText(R.string.downloading);
-                cancelButton.setVisibility(View.VISIBLE);
-                downloadButton.setVisibility(View.INVISIBLE);
+                LinearLayout holder = findViewById(R.id.buttonHolder);
+                holder.removeView(downloadButton);
+                cancelButton.setGravity(Gravity.CENTER);
+                cancelDownload();
                 final Handler handler = new Handler();
                 Runnable runnable = new Runnable() {
                     @Override
@@ -74,10 +77,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         loadingIndicator.startAnimation(rotate);
                         if (!updateDownloader.downloadComplete()) {
                             handler.postDelayed(this, 1000);
+                        } else {
+                            stopLoadingScreen();
                         }
                     }
                 };
                 handler.post(runnable);
+            }
+        });
+    }
+
+    private void cancelDownload() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+                updateDownloader.cancelUpdate();
             }
         });
     }
