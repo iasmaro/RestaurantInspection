@@ -143,9 +143,9 @@ public class UpdateDownloader {
         editor.putLong(LAST_DOWNLOAD, date.getTime());
     }
 
-    public int downloadProgress() {
+    public boolean downloadComplete() {
         // report download progress to user
-        return 0;
+        return false;
     }
 
     public void cancelUpdate() {

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private UpdateDownloader updateDownloader;
+    private LinearLayout loadingScreen;
+    private Button downloadButton;
+    private Button cancelButton;
 
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -36,11 +40,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        loadingScreen = findViewById(R.id.loadingScreen);
+        downloadButton = findViewById(R.id.downloadButton);
+        cancelButton = findViewById(R.id.cancelButton);
+        loadingScreen.setVisibility(View.INVISIBLE);
+        downloadButton.setVisibility(View.INVISIBLE);
+        cancelButton.setVisibility(View.INVISIBLE);
         startLoadingScreen();
         updateDownloader = new UpdateDownloader(this);
         checkForUpdates();
+        setUpCancelButton();
+        setUpDownloadButton();
 
         getLocationPermission();
+    }
+
+    private void setUpDownloadButton() {
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateDownloader.downloadUpdates(MapActivity.this);
+                final TextView loadingIndicator = findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
+                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                TextView message = findViewById(R.id.loadingMessage);
+                message.setText(R.string.downloading);
+                cancelButton.setVisibility(View.VISIBLE);
+                downloadButton.setVisibility(View.INVISIBLE);
+                final Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingIndicator.startAnimation(rotate);
+                        if (!updateDownloader.downloadComplete()) {
+                            handler.postDelayed(this, 1000);
+                        }
+                    }
+                };
+                handler.post(runnable);
+            }
+        });
+    }
+
+    private void setUpCancelButton() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+            }
+        });
     }
 
     public void checkForUpdates() {
@@ -52,20 +100,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }, 100);
         } else {
-            stopLoadingScreen();
-            updateDownloader.updatesAvailable(MapActivity.this);
+            if (updateDownloader.updatesAvailable(MapActivity.this)){
+                updatesAvailable();
+            } else{
+                stopLoadingScreen();
+            }
         }
     }
 
+    public void updatesAvailable() {
+        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        TextView message = findViewById(R.id.loadingMessage);
+        message.setText(R.string.updatesAvailable);
+        cancelButton.setVisibility(View.VISIBLE);
+        downloadButton.setVisibility(View.VISIBLE);
+    }
+
     public void startLoadingScreen() {
+        loadingScreen.setVisibility(View.VISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         TextView loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.startAnimation(rotate);
     }
 
     public void stopLoadingScreen() {
-
-        LinearLayout loadingScreen = findViewById(R.id.loadingScreen);
         loadingScreen.setVisibility(View.INVISIBLE);
     }
 

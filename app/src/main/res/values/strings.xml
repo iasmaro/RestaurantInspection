@@ -23,4 +23,8 @@
     <string name="restaurant_details">Restaurant Details</string>
     <string name="loadingMessage">Loading</string>
     <string name="loading">.</string>
+    <string name="updatesAvailable">Some updates are available.\nWould you like to download them?</string>
+    <string name="downloading">Downloading</string>
+    <string name="downloadButton">Download</string>
+    <string name="cancelButton">Cancel</string>
 </resources>
