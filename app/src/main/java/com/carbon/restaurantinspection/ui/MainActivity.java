@@ -18,35 +18,20 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class MainActivity extends AppCompatActivity {
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    private UpdateDownloader updateDownloader;
+
 
     Button btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        updateDownloader = new UpdateDownloader(this);
-        checkForUpdates();
-
 
         if (isServicesOK()) {
             startActivity(new Intent(MainActivity.this, MapActivity.class));
         }
     }
 
-    public void checkForUpdates() {
-        Handler handler = new Handler();
-        if(!updateDownloader.isReady()) {
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    boolean update = updateDownloader.updatesAvailable(MainActivity.this);
-                    Log.d("update", "" + update);
-                }
-            }, 1000);
-        } else {
-            updateDownloader.updatesAvailable(MainActivity.this);
-        }
-    }
+
 
     public boolean isServicesOK(){
         int available = GoogleApiAvailability.getInstance()

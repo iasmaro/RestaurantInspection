@@ -8,8 +8,16 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -19,6 +27,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private UpdateDownloader updateDownloader;
 
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -27,8 +36,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        startLoadingScreen();
+        updateDownloader = new UpdateDownloader(this);
+        checkForUpdates();
 
         getLocationPermission();
+    }
+
+    public void checkForUpdates() {
+        Handler handler = new Handler();
+        if(!updateDownloader.isReady()) {
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    checkForUpdates();
+                }
+            }, 100);
+        } else {
+            stopLoadingScreen();
+            updateDownloader.updatesAvailable(MapActivity.this);
+        }
+    }
+
+    public void startLoadingScreen() {
+        Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.startAnimation(rotate);
+    }
+
+    public void stopLoadingScreen() {
+
+        LinearLayout loadingScreen = findViewById(R.id.loadingScreen);
+        loadingScreen.setVisibility(View.INVISIBLE);
     }
 
     private void getLocationPermission(){

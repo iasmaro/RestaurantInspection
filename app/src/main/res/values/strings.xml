@@ -21,4 +21,6 @@
     <string name="hazard_level__inspection_test">Hazard Level: High</string>
     <string name="ifNoInspection">No inspections yet</string>
     <string name="restaurant_details">Restaurant Details</string>
+    <string name="loadingMessage">Loading</string>
+    <string name="loading">.</string>
 </resources>
