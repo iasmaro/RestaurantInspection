@@ -1,11 +1,10 @@
 package com.carbon.restaurantinspection.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -44,6 +47,10 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         inspectionManager = InspectionManager.getInstance(this);
         setContentView(R.layout.activity_inspection_details);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Inspection Details");
+
         extractDataFromIntent();
 
         updateLists();
@@ -53,6 +60,21 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         }
         populateListView();
         registerClickCallBack();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_inspection_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.back:
+              startActivity(new Intent(this, RestaurantDetailsActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void extractDataFromIntent() {
@@ -109,17 +131,18 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
         textView.setText("Hazard Level: " + hazardLevel);
         ImageView imageView = findViewById(R.id.inspection_hazardImage);
+
         if(hazardLevel.equals("High")){
             imageView.setImageResource(R.drawable.red_skull_crossbones);
-            textView.setTextColor(Color.RED);
+            textView.setTextColor(ContextCompat.getColor(this, R.color.highCriticalColour));
         }
         else if(hazardLevel.equals("Moderate")){
             imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
-            textView.setTextColor(Color.rgb(255,165,0));
+            textView.setTextColor(ContextCompat.getColor(this, R.color.moderateCriticalColour));
         }
         else{
             imageView.setImageResource(R.drawable.greencheckmark);
-            textView.setTextColor(Color.GREEN);
+            textView.setTextColor(ContextCompat.getColor(this, R.color.lowCriticalColour));
         }
     }
 
