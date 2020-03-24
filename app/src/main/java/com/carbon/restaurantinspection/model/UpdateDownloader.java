@@ -19,55 +19,76 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class UpdateDownloader {
     private static final String LAST_DOWNLOAD = "LastDownload";
     private static final int MILLISECS_TO_HOURS = 3600000;
-    private static final BigInteger DEFAULT_DATE = new BigInteger("1584687607039");
+    private static final BigInteger DEFAULT_DATE = new BigInteger("1574686607039");
     private static final String RESTAURANTS_URL = "http://data.surrey.ca/api/3/action/package_show?id=restaurants";
     private static final String INSPECTIONS_URL = "http://data.surrey.ca/api/3/action/package_show?id=fraser-health-restaurant-inspection-reports";
-    private String restaurantsJson;
+    private JSONObject restaurantsJson;
+    private JSONObject inspectionsJson;
+    private String restaurantsDownloadURL;
+    private String inspectionsDownloadURL;
+    private boolean restaurantsUpdateAvailable;
+    private boolean inspectionsUpdateAvailable;
+    private long lastUpdate;
+    private boolean restaurantsReady = false;
+    private boolean inspectionsReady = false;
+
+    public UpdateDownloader(Context context) {
+        getRestaurant(context, RESTAURANTS_URL);
+        getRestaurant(context, INSPECTIONS_URL);
+    }
+
     private boolean checkForUpdates(Context context) {
         Date date = new Date();
         SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
-        long savedDate = prefs.getLong(LAST_DOWNLOAD, DEFAULT_DATE.longValue());
-        long hours = (date.getTime() - savedDate)/MILLISECS_TO_HOURS;
+        lastUpdate = prefs.getLong(LAST_DOWNLOAD, DEFAULT_DATE.longValue());
+        long hours = (date.getTime() - lastUpdate)/MILLISECS_TO_HOURS;
         return hours >= 20;
     }
     public boolean updatesAvailable(Context context) {
         boolean updatesAvailable = false;
-        if (checkForUpdates(context)) {
-            getRestaurant(context, RESTAURANTS_URL);
-            getRestaurant(context, INSPECTIONS_URL);
-            Log.d("update", "" + restaurantsJson);
-            // check city of surrey website for updates
-            // return if date is less than saved date
-            updatesAvailable = true;
+        if (checkForUpdates(context) && restaurantsReady && inspectionsReady) {
+            try {
+                Date restaurantsUpdate = getDate(restaurantsJson.getString("last_modified"));
+                restaurantsDownloadURL = restaurantsJson.getString("url");
+                Date inspectionsUpdate = getDate(inspectionsJson.getString("last_modified"));
+                inspectionsDownloadURL = inspectionsJson.getString("url");
+                Log.d("update", restaurantsUpdate.toString());
+                Log.d("update", restaurantsDownloadURL);
+                Log.d("update", inspectionsUpdate.toString());
+                Log.d("update", inspectionsDownloadURL);
+                restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastUpdate;
+                inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastUpdate;
+                updatesAvailable = restaurantsUpdateAvailable || inspectionsUpdateAvailable;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         return updatesAvailable;
     }
 
-    private void getRestaurant(Context context, String url) {
+    private void getRestaurant(Context context, final String url) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    restaurantsJson = response.getString("result");
-                    JSONObject result = new JSONObject(restaurantsJson);
-                    JSONArray ja = result.getJSONArray("resources");
-                    String date = (ja.getJSONObject(0).getString("last_modified"));
-                    String csvURL = (ja.getJSONObject(0).getString("url"));
-                    String otherDate = date.substring(0, 10) + " " + date.substring(11);
-                    Date thisDate = getDate(otherDate);
-                    Log.d("update", "last_modified: " + thisDate.toString());
-                    Log.d("update", "last_modified: " + csvURL);
+                    if (url == RESTAURANTS_URL) {
+                        restaurantsJson = response.getJSONObject("result")
+                                .getJSONArray("resources").getJSONObject(0);
+                        restaurantsReady = true;
+                    } else if (url == INSPECTIONS_URL) {
+                        inspectionsJson = response.getJSONObject("result")
+                                .getJSONArray("resources").getJSONObject(0);
+                        inspectionsReady = true;
+                    }
                 } catch (JSONException e) {
-                    restaurantsJson = "something went wrong";
+                    Log.wtf("UpdateDownloader", "Error: "+ e);
                 }
             }
         }, new Response.ErrorListener() {
@@ -80,10 +101,11 @@ public class UpdateDownloader {
         queue.add(jsonObjectRequest);
     }
     private Date getDate(String someDate){
+        String correctDate = someDate.substring(0,10) + " " + someDate.substring(11);
         Date inspecDate;
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            inspecDate = dateFormat.parse(someDate);
+            inspecDate = dateFormat.parse(correctDate);
             return inspecDate;
         } catch (ParseException e) {
             return inspecDate = new Date();
@@ -91,6 +113,26 @@ public class UpdateDownloader {
     }
 
     public void downloadUpdates(Context context) {
+        if (inspectionsUpdateAvailable) {
+            downloadInspectionUpdates(context);
+        }
+        if (restaurantsUpdateAvailable) {
+            downloadRestaurantUpdates(context);
+        }
+    }
+
+    public void downloadRestaurantUpdates(Context context) {
+        // Download updates from city of surrey website
+        // allow user to cancel if necessary
+        // once download is complete, remove current data set
+        // rename newly downloaded data set
+        Date date = new Date();
+        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(LAST_DOWNLOAD, date.getTime());
+    }
+
+    public void downloadInspectionUpdates(Context context) {
         // Download updates from city of surrey website
         // allow user to cancel if necessary
         // once download is complete, remove current data set
@@ -108,5 +150,9 @@ public class UpdateDownloader {
 
     public void cancelUpdate() {
         // cancel updates
+    }
+
+    public boolean isReady() {
+        return restaurantsReady && inspectionsReady;
     }
 }
