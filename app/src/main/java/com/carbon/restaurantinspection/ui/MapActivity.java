@@ -2,13 +2,16 @@ package com.carbon.restaurantinspection.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -113,7 +116,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 public void run() {
                     checkForUpdates();
                 }
-            }, 100);
+            }, 1000);
         } else {
             if (updateDownloader.updatesAvailable(MapActivity.this)){
                 updatesAvailable();
@@ -141,7 +144,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void stopLoadingScreen() {
-        loadingScreen.setVisibility(View.INVISIBLE);
+        ConstraintLayout mapLayout = findViewById(R.id.mapLayout);
+        mapLayout.removeView(loadingScreen);
     }
 
     private void getLocationPermission(){
