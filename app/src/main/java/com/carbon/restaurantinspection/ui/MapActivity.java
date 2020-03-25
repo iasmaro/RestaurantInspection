@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -46,29 +46,61 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
-
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
     private int restaurant_index = 0;
     private Hashtable <String, Integer> markers;
     private Hashtable <String, Integer> restaurantIndexHolder;
     private Marker currentMarker;
     private Marker myMarker;
-
+    private int index;
+    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
 
         toolbarBackButton();
+        //getIntents();
         getLocationPermission();
+        getIntents();
     }
+//    public static Intent makeIntent(Context context) {
+//        Intent intent = new Intent(context, MapActivity.class);
+//        return intent;
+//    }
+    public static Intent makeIntentForMap(Context context, int index) {
+        Intent intent = new Intent(context, MapActivity.class);
+        intent.putExtra(INTENT_NAME, index);
+        return intent;
+    }
+    private void getIntents() {
+        Intent intent = getIntent();
+        index = intent.getIntExtra(INTENT_NAME, 0);
+        //match index with peg
+        //matchIndexToMarker();
+        String message = "The index is: " + index;
+        Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
+    }
+
+    //how to match index with the correct peg
+//    private void matchIndexToMarker() {
+//
+//        //go through all the markers
+//        //List<Restaurant> restaurantLists = RestaurantManager.getInstance(this).getRestaurantList();
+//        //int numOfRestaurants = restaurantLists.size();
+//        int numOfMarkers = markers.size();
+//        //for(int j = 0; j < numOfMarkers; j++) {
+//        for()
+//            Log.d(TAG, "matchIndexToMarker: ", );
+//        }
+//    }
 
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -83,89 +115,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
-    }
-
-    // gets the Restaurant and Inspection Lists and helps set markers where appropriate
-    private void setRestaurantMarkers() {
-        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
-        if(restaurantList != null){
-            int num_of_restaurants = restaurantList.size();
-
-            for(int i = 0; i < num_of_restaurants; i++) {
-                Restaurant restaurant = restaurantList.get(i);
-                String trackingNum = restaurant.getTrackingNumber();
-                List<InspectionDetail> inspectionDetailList = InspectionManager.getInstance(this)
-                        .getInspections(trackingNum);
-
-                float latitude = (float) restaurant.getLatitude();
-                float longitude = (float) restaurant.getLongitude();
-                String name = restaurant.getName();
-
-                if(inspectionDetailList != null) {
-                    int size = inspectionDetailList.size();
-                    InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
-                    moveCameraNotNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
-                            restaurant);
-                }
-                else{
-                    String address = restaurant.getPhysicalAddress();
-                    moveCameraNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address);
-                }
-            }
-        }
-    }
-
-    /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
-     inspections**/
-    private void moveCameraNull(LatLng latLng, float zoom, String title, String address){
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        if(!title.equals("Current location")) {
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .title(title)
-                    .snippet(address);
-            myMarker =  googleMap.addMarker(markerOptions);
-            markers.put(myMarker.getId(), 0);
-            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
-            restaurant_index++;
-        }
-    }
-
-    /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
-     inspection **/
-    private void moveCameraNotNull(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
-                                   Restaurant restaurant) {
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-        if(inspectionDetail != null){
-            String snippet = "Address: " + restaurant.getPhysicalAddress() + "\n\n" +
-                    "Hazard level " + inspectionDetail.getHazardLevel();
-
-            String hazardLevel = inspectionDetail.getHazardLevel();
-            int image_id;
-
-            if (hazardLevel.equals("High")) {
-                image_id = R.drawable.red_skull_crossbones;
-            }
-            else if (hazardLevel.equals("Moderate")) {
-                image_id = R.drawable.ic_warning_yellow_24dp;
-            }
-            else {
-                image_id = R.drawable.greencheckmark;
-            }
-
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .title(restaurant.getName())
-                    .snippet(snippet);
-            myMarker = googleMap.addMarker(markerOptions);
-            markers.put(myMarker.getId(), image_id);
-            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
-            restaurant_index++;
-            googleMap.setInfoWindowAdapter(new ExtraInfoWindowAdapter(MapActivity.this));
-        }
     }
 
     @Override
@@ -301,6 +250,90 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void moveCamera(LatLng latLng, float zoom){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    // gets the Restaurant and Inspection Lists and helps set markers where appropriate
+    private void setRestaurantMarkers() {
+        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
+        if(restaurantList != null) {
+            int num_of_restaurants = restaurantList.size();
+
+            for(int i = 0; i < num_of_restaurants; i++) {
+                Restaurant restaurant = restaurantList.get(i);
+                String trackingNum = restaurant.getTrackingNumber();
+
+                List<InspectionDetail> inspectionDetailList = InspectionManager.getInstance(this)
+                        .getInspections(trackingNum);
+
+                float latitude = (float) restaurant.getLatitude();
+                float longitude = (float) restaurant.getLongitude();
+                String name = restaurant.getName();
+
+                if(inspectionDetailList != null) {
+                    int size = inspectionDetailList.size();
+                    InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
+                    moveCameraNotNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
+                            restaurant);
+                }
+                else {
+                    String address = restaurant.getPhysicalAddress();
+                    moveCameraNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address);
+                }
+            }
+        }
+    }
+
+    /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
+     inspections**/
+    private void moveCameraNull(LatLng latLng, float zoom, String title, String address){
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        if(!title.equals("Current location")) {
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(title)
+                    .snippet(address);
+            myMarker =  googleMap.addMarker(markerOptions);
+            markers.put(myMarker.getId(), 0);
+            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
+            restaurant_index++;
+        }
+    }
+
+    /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
+     inspection **/
+    private void moveCameraNotNull(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
+                                   Restaurant restaurant) {
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        if(inspectionDetail != null){
+            String snippet = "Address: " + restaurant.getPhysicalAddress() + "\n\n" +
+                    "Hazard level " + inspectionDetail.getHazardLevel();
+
+            String hazardLevel = inspectionDetail.getHazardLevel();
+            int image_id;
+
+            if (hazardLevel.equals("High")) {
+                image_id = R.drawable.red_skull_crossbones;
+            }
+            else if (hazardLevel.equals("Moderate")) {
+                image_id = R.drawable.ic_warning_yellow_24dp;
+            }
+            else {
+                image_id = R.drawable.greencheckmark;
+            }
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(restaurant.getName())
+                    .snippet(snippet);
+            myMarker = googleMap.addMarker(markerOptions);
+            markers.put(myMarker.getId(), image_id);
+            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
+            restaurant_index++;
+            googleMap.setInfoWindowAdapter(new ExtraInfoWindowAdapter(MapActivity.this));
+        }
     }
 
     /**

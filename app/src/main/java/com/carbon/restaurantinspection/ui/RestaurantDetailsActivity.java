@@ -77,17 +77,36 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_details);
 
         toolbarBackButton();
+        clickCoordsToMap();
         updateAddress();
         populateStringList();
         populateListView();
         onInspectionClick();
+    }
+//    public static Intent makeIntentForMap(Context context, int index) {
+//        Intent intent = new Intent(context, RestaurantDetailsActivity.class);
+//        intent.putExtra(INTENT_NAME, index);
+//        return intent;
+//    }
+    private void clickCoordsToMap() {
+        TextView coordinates = findViewById(R.id.Coordinates);
+        coordinates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent intent = new Intent(RestaurantDetailsActivity.this, MapActivity.class);
+                Intent intent = MapActivity.makeIntentForMap(RestaurantDetailsActivity.this, index);
+//                intent.putExtra(restaurant, );
+                finish();
+                startActivity(intent);
+            }
+        });
     }
 
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(restaurant.getName());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

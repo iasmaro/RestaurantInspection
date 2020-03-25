@@ -63,15 +63,15 @@ public class InspectionDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Inspection Details");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(InspectionDetailsActivity.this, RestaurantDetailsActivity.class);
-                finish();
-                startActivity(intent);
-            }
-        });
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(InspectionDetailsActivity.this, RestaurantDetailsActivity.class);
+//                finish();
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override
