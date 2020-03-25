@@ -10,45 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.carbon.restaurantinspection.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -57,17 +36,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import java.util.Hashtable;
 import java.util.List;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.barcode.Barcode;
-
-import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -80,7 +50,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-
 
     private int restaurant_index = 0;
     private Hashtable <String, Integer> markers;
@@ -105,11 +74,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
-
     private void setRestaurantMarkers() {
-
        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
-
         if(restaurantList != null){
             int num_of_restaurants = restaurantList.size();
             for(int i = 0; i < num_of_restaurants; i++) {
@@ -124,20 +90,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(inspectionDetailList != null) {
                     int size = inspectionDetailList.size();
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
-                    moveCamera(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
+                    moveCameraNotNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant);
                 }
                 else{
                     String address = restaurant.getPhysicalAddress();
-                    moveCamera(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address);
+                    moveCameraNull(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address);
                 }
             }
         }
 }
 
-    // moves the camera to the location of the chosen restaurant given the restaurant has no
-    // inspections
-    private void moveCamera(LatLng latLng, float zoom, String title, String address){
+    /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
+    inspections**/
+    private void moveCameraNull(LatLng latLng, float zoom, String title, String address){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(!title.equals("Current location")) {
@@ -152,9 +118,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    // moves the camera to the location of the chosen restaurant given the restaurant has an
-    // inspection
-    private void moveCamera(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
+    /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
+    inspection **/
+    private void moveCameraNotNull(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
                             Restaurant restaurant) {
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
