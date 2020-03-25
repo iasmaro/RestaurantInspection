@@ -63,14 +63,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Map");
-
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
 
+        toolbarBackButton();
         getLocationPermission();
+    }
+
+    private void toolbarBackButton() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Map");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
     }
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
