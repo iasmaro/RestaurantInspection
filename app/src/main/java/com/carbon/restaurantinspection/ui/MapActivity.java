@@ -47,13 +47,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
 
-    private Boolean mLocationPermissionsGranted = false;
+    private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private int restaurant_index = 0;
     private Hashtable <String, Integer> markers;
-    private Hashtable <String, Integer> restaurant_index_holder;
+    private Hashtable <String, Integer> restaurantIndexHolder;
     private Marker currentMarker;
     private Marker myMarker;
 
@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getSupportActionBar().setTitle("Map");
 
         markers = new Hashtable<>();
-        restaurant_index_holder = new Hashtable<>();
+        restaurantIndexHolder = new Hashtable<>();
 
         getLocationPermission();
     }
@@ -78,11 +78,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
         if(restaurantList != null){
             int num_of_restaurants = restaurantList.size();
+
             for(int i = 0; i < num_of_restaurants; i++) {
                Restaurant restaurant = restaurantList.get(i);
                 String trackingNum = restaurant.getTrackingNumber();
                 List<InspectionDetail> inspectionDetailList = InspectionManager.getInstance(this)
                         .getInspections(trackingNum);
+
                 float latitude = (float) restaurant.getLatitude();
                 float longitude = (float) restaurant.getLongitude();
                 String name = restaurant.getName();
@@ -112,9 +114,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .title(title)
                     .snippet(address);
             myMarker =  googleMap.addMarker(markerOptions);
-           markers.put(myMarker.getId(), 0);
-           restaurant_index_holder.put(myMarker.getId(), restaurant_index);
-           restaurant_index++;
+            markers.put(myMarker.getId(), 0);
+            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
+            restaurant_index++;
         }
     }
 
@@ -148,7 +150,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .snippet(snippet);
              myMarker = googleMap.addMarker(markerOptions);
             markers.put(myMarker.getId(), image_id);
-            restaurant_index_holder.put(myMarker.getId(), restaurant_index);
+            restaurantIndexHolder.put(myMarker.getId(), restaurant_index);
             restaurant_index++;
             googleMap.setInfoWindowAdapter(new ExtraInfoWindowAdapter(MapActivity.this));
         }
@@ -170,7 +172,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void getLocationPermission() {
-        Log.d(TAG, "getLocationPermission: sucess");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
@@ -178,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                mLocationPermissionsGranted = true;
+                locationPermissionsGranted = true;
                 initializeMap();
 
             } else {
@@ -194,22 +195,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        mLocationPermissionsGranted = false;
+        locationPermissionsGranted = false;
 
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if(grantResults.length > 0){
-                    for (int grantResult : grantResults) {
-                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            mLocationPermissionsGranted = false;
-                            return;
-                        }
+        if (requestCode == 1234){
+            if(grantResults.length > 0) {
+                for (int grantResult : grantResults) {
+                    if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                        locationPermissionsGranted = false;
+                        return;
                     }
-                    mLocationPermissionsGranted = true;
-                    //initializeMap();
-                    finish();
-                    startActivity(getIntent());
                 }
+                locationPermissionsGranted = true;
+                finish();
+                startActivity(getIntent());
             }
         }
     }
@@ -223,78 +221,73 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        Log.d(TAG, "onMapReady: success");
-        if (mLocationPermissionsGranted == true) {
-            // when permission is granted, get the current location
+
+        if (locationPermissionsGranted == true) {
             getCurrentLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "onMapReady: NOT WORKING");
                 return;
             }
+
             googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             setRestaurantMarkers();
 
             // checks if marker has been clicked and goes to RestaurantDetailsActivity if it has
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    if(currentMarker != null) {
-                        if (myMarker == currentMarker) {
-                            int index = restaurant_index_holder.get(marker.getId());
-                            Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
-                                    index);
-                            startActivity(intent);
-                            currentMarker = null;
-                        }
-                        else{
-                            currentMarker = myMarker;
-                        }
+            clickToRestaurantDetails();
+        }
+    }
+
+    private void clickToRestaurantDetails() {
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(currentMarker != null) {
+                    if (myMarker == currentMarker) {
+                        int index = restaurantIndexHolder.get(marker.getId());
+                        Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
+                                index);
+                        startActivity(intent);
+                        currentMarker = null;
                     }
                     else{
                         currentMarker = myMarker;
                     }
-                    return false;
                 }
-            });
-        }
+                else{
+                    currentMarker = myMarker;
+                }
+                return false;
+            }
+        });
     }
 
+
     private void getCurrentLocation() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if(locationPermissionsGranted) {
 
-        try{
-            if(mLocationPermissionsGranted){
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
+            final Task location = fusedLocationProviderClient.getLastLocation();
+            location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: found location!");
+                        if (task.isSuccessful()) {
                             Location currentLocation = (Location) task.getResult();
                             LatLng myLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             moveCamera(myLatLng, DEFAULT_ZOOM);
 
                         } else {
-                            Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-        } catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
-    }
 
     private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: success");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
