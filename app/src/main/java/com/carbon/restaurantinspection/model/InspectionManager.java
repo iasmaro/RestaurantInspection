@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.carbon.restaurantinspection.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +30,22 @@ public class InspectionManager {
     }
 
     private InspectionManager(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.inspectionreports_itr1);
+        File csvFile = context.getFileStreamPath("inspections.csv");
         CSVLoader loader = new CSVLoader();
-        ArrayList<String> file = loader.readCSV(is);
+        ArrayList<String> file;
+        if (csvFile.isFile()) {
+            try {
+                FileInputStream fileInputStream = new FileInputStream(csvFile);
+                file = loader.readCSV(fileInputStream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                InputStream is = context.getResources().openRawResource(R.raw.inspectionreports_itr1);
+                file = loader.readCSV(is);
+            }
+        } else {
+            InputStream is = context.getResources().openRawResource(R.raw.inspectionreports_itr1);
+            file = loader.readCSV(is);
+        }
         parseFile(file);
         sortInspectionDetails();
     }

@@ -27,6 +27,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -42,6 +51,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // used rotate tutorial from https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         loadingScreen = findViewById(R.id.loadingScreen);
@@ -55,7 +65,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         checkForUpdates();
         setUpCancelButton();
         setUpDownloadButton();
-
         getLocationPermission();
     }
 

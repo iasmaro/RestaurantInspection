@@ -1,8 +1,11 @@
 package com.carbon.restaurantinspection.model;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,16 +13,29 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.carbon.restaurantinspection.service.FileDownloadClient;
+import com.carbon.restaurantinspection.ui.MapActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import androidx.core.app.ActivityCompat;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class UpdateDownloader {
     private static final String LAST_DOWNLOAD = "LastDownload";
@@ -36,7 +52,8 @@ public class UpdateDownloader {
     private long lastUpdate;
     private boolean restaurantsReady = false;
     private boolean inspectionsReady = false;
-    private boolean downloadComplete = false;
+    private boolean restaurantDownloadComplete = false;
+    private boolean inspectionDownloadComplete = false;
 
     public UpdateDownloader(Context context) {
         getRestaurant(context, RESTAURANTS_URL);
@@ -47,6 +64,7 @@ public class UpdateDownloader {
         Date date = new Date();
         SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
         lastUpdate = prefs.getLong(LAST_DOWNLOAD, DEFAULT_DATE.longValue());
+        Log.d("update", "" + lastUpdate);
         long hours = (date.getTime() - lastUpdate)/MILLISECS_TO_HOURS;
         return hours >= 20;
     }
@@ -115,43 +133,89 @@ public class UpdateDownloader {
 
     public void downloadUpdates(Context context) {
         if (inspectionsUpdateAvailable) {
-            downloadInspectionUpdates(context);
+            downloadNewUpdates(context, inspectionsDownloadURL);
+        } else {
+            inspectionDownloadComplete = true;
         }
         if (restaurantsUpdateAvailable) {
-            downloadRestaurantUpdates(context);
+            downloadNewUpdates(context, restaurantsDownloadURL);
+        } else {
+            restaurantDownloadComplete = true;
         }
     }
 
-    public void downloadRestaurantUpdates(Context context) {
-        // Download updates from city of surrey website
-        // allow user to cancel if necessary
-        // once download is complete, remove current data set
-        // rename newly downloaded data set
-        Date date = new Date();
-        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(LAST_DOWNLOAD, date.getTime());
+    public void downloadNewUpdates(final Context context, final String url) {
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("http://data.surrey.ca");
+
+        Retrofit retrofit = builder.build();
+        FileDownloadClient fileDownloadClient = retrofit.create(FileDownloadClient.class);
+        Call<ResponseBody> call = fileDownloadClient.downloadFile(url);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                File file;
+                File newFile;
+                if (url == restaurantsDownloadURL) {
+                    String fileName = "newRestaurants.csv";
+                    restaurantDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
+                    file = context.getFileStreamPath("restaurants.csv");
+                    if (file.isFile()) {
+                        file.delete();
+                    }
+                    newFile = context.getFileStreamPath(fileName);
+                } else {
+                    String fileName = "newInspections.csv";
+                    restaurantDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
+                    file = context.getFileStreamPath("inspections.csv");
+                    if (file.isFile()) {
+                        file.delete();
+                    }
+                    newFile = context.getFileStreamPath(fileName);
+                }
+                newFile.renameTo(file);
+                Date date = new Date();
+                SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putLong(LAST_DOWNLOAD, date.getTime());
+                editor.apply();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
-    public void downloadInspectionUpdates(Context context) {
-        // Download updates from city of surrey website
-        // allow user to cancel if necessary
-        // once download is complete, remove current data set
-        // rename newly downloaded data set
-        Date date = new Date();
-        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(LAST_DOWNLOAD, date.getTime());
+    private boolean writeResponseBodyToDisk(ResponseBody body, Context context, String name) {
+        try {
+            byte[] fileReader = new byte[4096];
+            InputStream inputStream = null;
+            inputStream = body.byteStream();
+            FileOutputStream outputStream;
+            outputStream = context.openFileOutput(name, Context.MODE_PRIVATE);
+            int read = inputStream.read(fileReader);
+            while (read != -1) {
+                outputStream.write(fileReader, 0, read);
+                read = inputStream.read(fileReader);
+            }
+            outputStream.close();
+            return true;
+        } catch (Exception e) {
+            Log.wtf("Download", "Error: "+ e);
+            return false;
+        }
     }
 
     public boolean downloadComplete() {
-        // report download progress to user
-        return downloadComplete;
+
+        return restaurantDownloadComplete && inspectionDownloadComplete;
     }
 
     public void cancelUpdate() {
-        // cancel updates
-        downloadComplete = true;
+        restaurantDownloadComplete = true;
+        inspectionDownloadComplete = true;
     }
 
     public boolean isReady() {
