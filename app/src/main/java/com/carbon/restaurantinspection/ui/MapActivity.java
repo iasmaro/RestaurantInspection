@@ -54,8 +54,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Hashtable <String, Integer> restaurantIndexHolder;
     private Marker currentMarker;
     private Marker myMarker;
-    private int index;
+    private double longitude;
+    private double latitude;
     public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
+    public static final Double INTENT_NAME1 = 0.1234;
+    private LatLng coords;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,38 +72,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         toolbarBackButton();
         //getIntents();
         getLocationPermission();
-        getIntents();
+        //getIntents();
     }
 //    public static Intent makeIntent(Context context) {
 //        Intent intent = new Intent(context, MapActivity.class);
 //        return intent;
 //    }
-    public static Intent makeIntentForMap(Context context, int index) {
-        Intent intent = new Intent(context, MapActivity.class);
-        intent.putExtra(INTENT_NAME, index);
-        return intent;
-    }
-    private void getIntents() {
-        Intent intent = getIntent();
-        index = intent.getIntExtra(INTENT_NAME, 0);
-        //match index with peg
-        //matchIndexToMarker();
-        String message = "The index is: " + index;
-        Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
-    }
-
-    //how to match index with the correct peg
-//    private void matchIndexToMarker() {
-//
-//        //go through all the markers
-//        //List<Restaurant> restaurantLists = RestaurantManager.getInstance(this).getRestaurantList();
-//        //int numOfRestaurants = restaurantLists.size();
-//        int numOfMarkers = markers.size();
-//        //for(int j = 0; j < numOfMarkers; j++) {
-//        for()
-//            Log.d(TAG, "matchIndexToMarker: ", );
-//        }
+//    public static Intent makeIntentForMap(Context context, double latitude, double longitude) {
+//        Intent intent = new Intent(context, MapActivity.class);
+//        //LatLng getLatLng = new LatLng(latitude, longitude);
+//        //String coordinates = getLatLng.toString();
+//        intent.putExtra(INTENT_NAME1, latitude, longitude);
+//        //intent.putExtra(INTENT_NAME1, longitude);
+//        return intent;
 //    }
+
+//    private void getIntents() {
+//        Intent intent = getIntent();
+//        latitude = intent.getDoubleExtra(INTENT_NAME, 0);
+//        longitude = intent.getDoubleExtra(INTENT_NAME, 0);
+//        String message = "Latitude: " + latitude + "longitude: " +longitude;
+//        Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
+//    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 41){
+            if(resultCode == 42){
+                String data1 = data.getStringExtra(INTENT_NAME);
+                String data2 = data.getStringExtra(TAG);
+                String message = "Latitude: " + data1 ;
+                Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onActivityResult: " + data1 + "    " + data2);
+            }
+        }
+    }
 
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -184,7 +191,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted == true) {
-            getCurrentLocation();
+
+            if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
+
+            } else {
+                getCurrentLocation();
+            }
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -195,9 +207,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             setRestaurantMarkers();
-
+            
             // checks if marker has been clicked and goes to RestaurantDetailsActivity if it has
             clickToRestaurantDetails();
+        }
+
+        if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
+            LatLng latLng11 = new LatLng(RestaurantDetailsActivity.lata, RestaurantDetailsActivity.longa);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
+            Log.d(TAG, "onStart: " + RestaurantDetailsActivity.lata + " " + RestaurantDetailsActivity.longa);
+            ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
         }
     }
 
@@ -225,10 +244,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-
     private void getCurrentLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         if(locationPermissionsGranted) {
 
             final Task location = fusedLocationProviderClient.getLastLocation();
@@ -387,6 +404,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             rendowWindowText(marker, view);
             return null;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
 
