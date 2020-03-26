@@ -1,11 +1,8 @@
 package com.carbon.restaurantinspection.model;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,24 +11,19 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.carbon.restaurantinspection.service.FileDownloadClient;
-import com.carbon.restaurantinspection.ui.MapActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import androidx.core.app.ActivityCompat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +46,8 @@ public class UpdateDownloader {
     private boolean inspectionsReady = false;
     private boolean restaurantDownloadComplete = false;
     private boolean inspectionDownloadComplete = false;
+    private Call<ResponseBody> restaurantsDownload;
+    private Call<ResponseBody> inspectionsDownload;
 
     public UpdateDownloader(Context context) {
         getRestaurant(context, RESTAURANTS_URL);
@@ -64,7 +58,6 @@ public class UpdateDownloader {
         Date date = new Date();
         SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
         lastUpdate = prefs.getLong(LAST_DOWNLOAD, DEFAULT_DATE.longValue());
-        Log.d("update", "" + lastUpdate);
         long hours = (date.getTime() - lastUpdate)/MILLISECS_TO_HOURS;
         return hours >= 20;
     }
@@ -76,10 +69,6 @@ public class UpdateDownloader {
                 restaurantsDownloadURL = restaurantsJson.getString("url");
                 Date inspectionsUpdate = getDate(inspectionsJson.getString("last_modified"));
                 inspectionsDownloadURL = inspectionsJson.getString("url");
-                Log.d("update", restaurantsUpdate.toString());
-                Log.d("update", restaurantsDownloadURL);
-                Log.d("update", inspectionsUpdate.toString());
-                Log.d("update", inspectionsDownloadURL);
                 restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastUpdate;
                 inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastUpdate;
                 updatesAvailable = restaurantsUpdateAvailable || inspectionsUpdateAvailable;
@@ -121,13 +110,13 @@ public class UpdateDownloader {
     }
     private Date getDate(String someDate){
         String correctDate = someDate.substring(0,10) + " " + someDate.substring(11);
-        Date inspecDate;
+        Date inspectionDate;
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            inspecDate = dateFormat.parse(correctDate);
-            return inspecDate;
+            inspectionDate = dateFormat.parse(correctDate);
+            return inspectionDate;
         } catch (ParseException e) {
-            return inspecDate = new Date();
+            return new Date();
         }
     }
 
@@ -150,7 +139,13 @@ public class UpdateDownloader {
 
         Retrofit retrofit = builder.build();
         FileDownloadClient fileDownloadClient = retrofit.create(FileDownloadClient.class);
-        Call<ResponseBody> call = fileDownloadClient.downloadFile(url);
+        Call<ResponseBody> call;
+        call = fileDownloadClient.downloadFile(url);
+        if (url == restaurantsDownloadURL) {
+            restaurantsDownload = call;
+        } else {
+            inspectionsDownload = call;
+        }
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -166,7 +161,7 @@ public class UpdateDownloader {
                     newFile = context.getFileStreamPath(fileName);
                 } else {
                     String fileName = "newInspections.csv";
-                    restaurantDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
+                    inspectionDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
                     file = context.getFileStreamPath("inspections.csv");
                     if (file.isFile()) {
                         file.delete();
@@ -174,18 +169,24 @@ public class UpdateDownloader {
                     newFile = context.getFileStreamPath(fileName);
                 }
                 newFile.renameTo(file);
-                Date date = new Date();
-                SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putLong(LAST_DOWNLOAD, date.getTime());
-                editor.apply();
+                updateSavedDate(context);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                if (!call.isCanceled()) {
+                    Log.wtf("UpdateDownloader", "Error:" + t);
+                }
             }
         });
+    }
+
+    private void updateSavedDate(Context context) {
+        Date date = new Date();
+        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(LAST_DOWNLOAD, date.getTime());
+        editor.apply();
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, Context context, String name) {
@@ -209,11 +210,15 @@ public class UpdateDownloader {
     }
 
     public boolean downloadComplete() {
-
         return restaurantDownloadComplete && inspectionDownloadComplete;
     }
 
     public void cancelUpdate() {
+        if (restaurantsDownload != null) {
+            restaurantsDownload.cancel();
+        } if (inspectionsDownload != null){
+            inspectionsDownload.cancel();
+        }
         restaurantDownloadComplete = true;
         inspectionDownloadComplete = true;
     }
