@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,15 +16,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import android.app.Dialog;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.model.UpdateDownloader;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
@@ -57,6 +70,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private UpdateDownloader updateDownloader;
+    private Button downloadButton;
+    private Button cancelButton;
+    private Dialog myDialog;
+    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -74,14 +92,145 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // used rotate tutorial from
+        // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         marker_icons = new Hashtable<>();
-
         restaurant_index_holder = new Hashtable<>();
-
+        myDialog = new Dialog(this);
+        startLoadingScreen();
+        updateDownloader = new UpdateDownloader(this);
+        checkForUpdates();
         toolbarBackButton();
+    }
+
+    private void setUpDownloadButton() {
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateDownloader.downloadUpdates(MapActivity.this);
+                final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
+                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext()
+                        , R.anim.rotate);
+                TextView message = myDialog.findViewById(R.id.loadingMessage);
+                message.setText(R.string.downloading);
+                LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
+                holder.removeView(downloadButton);
+                cancelButton.setGravity(Gravity.CENTER);
+                cancelDownload();
+                final Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingIndicator.startAnimation(rotate);
+                        if (!updateDownloader.downloadComplete() && !updateDownloader.downloadFailed()) {
+                            handler.postDelayed(this, 1000);
+                        } else if (updateDownloader.downloadComplete()){
+                            finishDownload();
+                        } else {
+                            downloadFailed();
+                        }
+                    }
+                };
+                handler.post(runnable);
+            }
+        });
+    }
+
+    private void downloadFailed() {
+        cancelButton.setText(R.string.finishButton);
+        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.downloadFailed);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
+        downloadLayout.removeView(loadingIndicator);
+        setUpCancelButton();
+    }
+
+    private void cancelDownload() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+                updateDownloader.cancelUpdate();
+            }
+        });
+    }
+
+    private void finishDownload() {
+        cancelButton.setText(R.string.finishButton);
+        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.finishDownload);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
+        downloadLayout.removeView(loadingIndicator);
+        setUpCancelButton();
+    }
+
+    private void setUpCancelButton() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+            }
+        });
+    }
+
+    public void checkForUpdates() {
+        Handler handler = new Handler();
+        if(!updateDownloader.isReady()) {
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                    TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+                    loadingIndicator.startAnimation(rotate);
+                    checkForUpdates();
+                }
+            }, 1000);
+        } else {
+            if (updateDownloader.updatesAvailable(MapActivity.this)){
+                updatesAvailable();
+            } else{
+                stopLoadingScreen();
+            }
+        }
+    }
+
+    public void updatesAvailable() {
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.updatesAvailable);
+        cancelButton.setVisibility(View.VISIBLE);
+        downloadButton.setVisibility(View.VISIBLE);
+        setUpCancelButton();
+        setUpDownloadButton();
+    }
+
+    public void startLoadingScreen() {
+        // used fragment tutorial from
+        // https://www.youtube.com/watch?v=0DH2tZjJtm0
+        myDialog.setContentView(R.layout.downloadscreen);
+        downloadButton = myDialog.findViewById(R.id.downloadButton);
+        cancelButton = myDialog.findViewById(R.id.cancelButton);
+        cancelButton.setVisibility(View.INVISIBLE);
+        downloadButton.setVisibility(View.INVISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.startAnimation(rotate);
+        myDialog.show();
+    }
+
+    public void stopLoadingScreen() {
+        myDialog.dismiss();
         getLocationPermission();
     }
 
@@ -296,47 +445,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             int num_of_restaurants = restaurantList.size();
 
             for(int i = 0; i < num_of_restaurants; i++) {
-
                 Restaurant restaurant = restaurantList.get(i);
-
                 String trackingNum = restaurant.getTrackingNumber();
 
                 List<InspectionDetail> inspectionDetailList = InspectionManager.getInstance(this)
                         .getInspections(trackingNum);
 
                 float latitude = (float) restaurant.getLatitude();
-
                 float longitude = (float) restaurant.getLongitude();
-
                 String name = restaurant.getName();
 
                 if(inspectionDetailList != null) {
 
                     int size = inspectionDetailList.size();
-
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
 
 
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
                 }
-
-
-                else{
+                else {
                     String address = restaurant.getPhysicalAddress();
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address, i);
                 }
-
-
             }
-
         }
     }
 
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(!title.equals("Current location")) {
@@ -366,21 +504,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     "Hazard level " + inspectionDetail.getHazardLevel();
 
             String hazardLevel = inspectionDetail.getHazardLevel();
-
             int image_id;
 
             if (hazardLevel.equals("High")) {
-
                 image_id = R.drawable.red_skull_crossbones;
             }
-
             else if (hazardLevel.equals("Moderate")) {
-
                 image_id = R.drawable.ic_warning_yellow_24dp;
             }
-
             else {
-
                 image_id = R.drawable.greencheckmark;
             }
 
@@ -398,10 +530,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             restaurant_index++;
 
         }
-
-
     }
-
 
     /**
      *  Class that creates the pop up display when a marker is clicked
@@ -412,9 +541,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         ExtraInfoWindowAdapter(Context context) {
             view = LayoutInflater.from(context).inflate(R.layout.extra_info_window, null);
-
         }
-
 
         private void rendowWindowText(final Marker marker, View view1) {
             String title = marker.getTitle();
@@ -442,8 +569,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
                 }
             }
-
         }
+
         @Override
         public View getInfoWindow(Marker marker) {
             rendowWindowText(marker, view);
@@ -560,4 +687,3 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 }
-
