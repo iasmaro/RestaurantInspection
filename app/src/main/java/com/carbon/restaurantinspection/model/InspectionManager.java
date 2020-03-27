@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Set;
 
-/*
+/**
   InspectionManager class is a singleton class containing inspection details of restaurants.
  */
 public class InspectionManager {

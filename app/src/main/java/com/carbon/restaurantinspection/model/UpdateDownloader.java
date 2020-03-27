@@ -29,6 +29,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
+/**
+ * Check city of Surrey server for updates.
+ * Download updates if any available and user decides to download them.
+ * Cancel ongoing download if user decides to cancel download.
+ */
 public class UpdateDownloader {
     private static final String LAST_RESTAURANT_DOWNLOAD = "LastDownload";
     private static final String LAST_INSPECTION_DOWNLOAD = "LastDownload";

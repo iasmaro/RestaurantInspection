@@ -1,18 +1,21 @@
 package com.carbon.restaurantinspection.model;
 
-        import android.content.Context;
+import android.content.Context;
 
-        import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.R;
 
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileNotFoundException;
-        import java.io.InputStream;
-        import java.util.ArrayList;
-        import java.util.Collections;
-        import java.util.Comparator;
-        import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
+/**
+ * RestaurantManager class is a singleton class that manages a list of Restaurants.
+ */
 public class RestaurantManager implements Iterable<Restaurant>{
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 

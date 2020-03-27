@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+/**
+ * Read CSV files and add each line into an ArrayList.
+ */
 public class CSVLoader {
     private ArrayList<String> csv = new ArrayList<>();
 
