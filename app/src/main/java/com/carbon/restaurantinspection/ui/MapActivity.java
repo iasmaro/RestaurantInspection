@@ -54,11 +54,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Hashtable <String, Integer> restaurantIndexHolder;
     private Marker currentMarker;
     private Marker myMarker;
-    private double longitude;
-    private double latitude;
     public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
-    public static final Double INTENT_NAME1 = 0.1234;
-    private LatLng coords;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,43 +66,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         restaurantIndexHolder = new Hashtable<>();
 
         toolbarBackButton();
-        //getIntents();
         getLocationPermission();
-        //getIntents();
-    }
-//    public static Intent makeIntent(Context context) {
-//        Intent intent = new Intent(context, MapActivity.class);
-//        return intent;
-//    }
-//    public static Intent makeIntentForMap(Context context, double latitude, double longitude) {
-//        Intent intent = new Intent(context, MapActivity.class);
-//        //LatLng getLatLng = new LatLng(latitude, longitude);
-//        //String coordinates = getLatLng.toString();
-//        intent.putExtra(INTENT_NAME1, latitude, longitude);
-//        //intent.putExtra(INTENT_NAME1, longitude);
-//        return intent;
-//    }
-
-//    private void getIntents() {
-//        Intent intent = getIntent();
-//        latitude = intent.getDoubleExtra(INTENT_NAME, 0);
-//        longitude = intent.getDoubleExtra(INTENT_NAME, 0);
-//        String message = "Latitude: " + latitude + "longitude: " +longitude;
-//        Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
-//    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 41){
-            if(resultCode == 42){
-                String data1 = data.getStringExtra(INTENT_NAME);
-                String data2 = data.getStringExtra(TAG);
-                String message = "Latitude: " + data1 ;
-                Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onActivityResult: " + data1 + "    " + data2);
-            }
-        }
     }
 
     private void toolbarBackButton() {
@@ -185,16 +145,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 41){
+            if(resultCode == 42){
+                String data1 = data.getStringExtra(INTENT_NAME);
+                String data2 = data.getStringExtra(TAG);
+                String message = "Latitude: " + data1 ;
+                Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onActivityResult: " + data1 + "    " + data2);
+            }
+        }
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted == true) {
 
-            if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
-
-            } else {
+            if(RestaurantDetailsActivity.lata == 0 && RestaurantDetailsActivity.longa == 0){
                 getCurrentLocation();
             }
 
@@ -207,7 +177,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             setRestaurantMarkers();
-            
+
             // checks if marker has been clicked and goes to RestaurantDetailsActivity if it has
             clickToRestaurantDetails();
         }
