@@ -42,6 +42,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <service android:name=".ui.MapActivity$LocationService"/>
 
     </application>
 
