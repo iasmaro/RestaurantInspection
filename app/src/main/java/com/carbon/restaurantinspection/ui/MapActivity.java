@@ -61,7 +61,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        //List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
 
@@ -152,9 +151,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if(resultCode == 42){
                 String data1 = data.getStringExtra(INTENT_NAME);
                 String data2 = data.getStringExtra(TAG);
-                String message = "Latitude: " + data1 ;
-                Toast.makeText(MapActivity.this, message, Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onActivityResult: " + data1 + "    " + data2);
             }
         }
     }
@@ -185,7 +181,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
             LatLng latLng11 = new LatLng(RestaurantDetailsActivity.lata, RestaurantDetailsActivity.longa);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
-            Log.d(TAG, "onStart: " + RestaurantDetailsActivity.lata + " " + RestaurantDetailsActivity.longa);
             ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
         }
     }
