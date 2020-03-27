@@ -16,13 +16,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    Button btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (isServicesOK()) {
+            finish();
             startActivity(new Intent(MainActivity.this, MapActivity.class));
         }
     }
@@ -32,10 +32,8 @@ public class MainActivity extends AppCompatActivity {
                 .isGooglePlayServicesAvailable(MainActivity.this);
 
         if (available == ConnectionResult.SUCCESS) {
-            //everything is okay
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //problem occurred but can be resolved
             Dialog dialog = GoogleApiAvailability.getInstance()
                     .getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
         } else {
