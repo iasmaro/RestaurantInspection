@@ -69,13 +69,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private Hashtable<LatLng, Integer> marker_icons;
 
+    // Hashtable that takes an integer as the key and returns the restaurant_index
     private Hashtable <Integer, Integer> restaurant_index_holder;
 
-    private int restaurant_index;
+    private int restaurant_index; // Stores the index associated with each restaurant
 
     static private ClusterManager<MyMarkerClass> clusterManager;
 
+    //array list of MyMarkerClass items (These represent markers.)
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
+
+    private RestaurantManager restaurantManager;
+
+    private List<Restaurant> restaurantList;
 
 
     @Override
@@ -100,7 +106,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void setRestaurantMarkers(){
 
-        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();
+        restaurantManager = RestaurantManager.getInstance(this);
+
+        restaurantList = restaurantManager.getRestaurantList();
 
         if(restaurantList != null){
 
@@ -128,14 +136,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
 
 
-                    moveCamera(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
+                    placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
                 }
 
 
                 else{
                     String address = restaurant.getPhysicalAddress();
-                    moveCamera(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address, i);
+                    placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address, i);
                 }
 
 
@@ -178,7 +186,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                             currentLocation.setLongitude(-122.8494);
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                            placeMarker(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
 
                                     DEFAULT_ZOOM, "Current location", "", 0);
 
@@ -200,10 +208,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 
-    // moves the camera to the location of the chosen restaurant given the restaurant has no
+    // places marker at the location of the chosen restaurant given the restaurant has no
     // inspections
 
-    private void moveCamera(LatLng latLng, float zoom, String title, String address, int index){
+    private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
@@ -224,11 +232,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 
-    // moves the camera to the location of the chosen restaurant given the restaurant has an
+    // places marker at the location of the chosen restaurant given the restaurant has an
     // inspection
 
-    private void moveCamera(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
-                            Restaurant restaurant, int index){
+    private void placeMarker(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
+                             Restaurant restaurant, int index){
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
@@ -257,6 +265,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
+
 
             myMarkerClassList.add(new MyMarkerClass(latLng1, restaurant.getName(), snippet,
                     image_id, index));
@@ -422,6 +431,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             }
 
+            //On info window click go to RestaurantDetails
 
             clusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.
                     OnClusterItemInfoWindowClickListener<MyMarkerClass>() {
@@ -432,6 +442,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
                             index);
+
                     startActivity(intent);
                 }
             });
@@ -444,6 +455,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             clusterManager.cluster();
 
+            // assigns custom view to clusterManager
             clusterManager.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
 
