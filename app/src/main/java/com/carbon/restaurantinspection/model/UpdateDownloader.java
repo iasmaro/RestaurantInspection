@@ -30,7 +30,8 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class UpdateDownloader {
-    private static final String LAST_DOWNLOAD = "LastDownload";
+    private static final String LAST_RESTAURANT_DOWNLOAD = "LastDownload";
+    private static final String LAST_INSPECTION_DOWNLOAD = "LastDownload";
     private static final int MILLISECS_TO_HOURS = 3600000;
     private static final BigInteger DEFAULT_DATE = new BigInteger("1574686607039");
     private static final String RESTAURANTS_URL = "http://data.surrey.ca/api/3/action/package_show?id=restaurants";
@@ -41,7 +42,8 @@ public class UpdateDownloader {
     private String inspectionsDownloadURL;
     private boolean restaurantsUpdateAvailable;
     private boolean inspectionsUpdateAvailable;
-    private long lastUpdate;
+    private long lastRestaurantUpdate;
+    private long lastInspectionUpdate;
     private boolean restaurantsReady = false;
     private boolean inspectionsReady = false;
     private boolean restaurantDownloadComplete = false;
@@ -56,10 +58,13 @@ public class UpdateDownloader {
 
     private boolean checkForUpdates(Context context) {
         Date date = new Date();
-        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
-        lastUpdate = prefs.getLong(LAST_DOWNLOAD, DEFAULT_DATE.longValue());
-        long hours = (date.getTime() - lastUpdate)/MILLISECS_TO_HOURS;
-        return hours >= 20;
+        SharedPreferences restaurantPrefs = context.getSharedPreferences(LAST_RESTAURANT_DOWNLOAD, Context.MODE_PRIVATE);
+        lastRestaurantUpdate = restaurantPrefs.getLong(LAST_RESTAURANT_DOWNLOAD, DEFAULT_DATE.longValue());
+        long restaurantHours = (date.getTime() - lastRestaurantUpdate)/MILLISECS_TO_HOURS;
+        SharedPreferences inspectionPrefs = context.getSharedPreferences(LAST_INSPECTION_DOWNLOAD, Context.MODE_PRIVATE);
+        lastInspectionUpdate = inspectionPrefs.getLong(LAST_INSPECTION_DOWNLOAD, DEFAULT_DATE.longValue());
+        long inspectionHours = (date.getTime() - lastRestaurantUpdate)/MILLISECS_TO_HOURS;
+        return restaurantHours >= 20 || inspectionHours >= 20;
     }
     public boolean updatesAvailable(Context context) {
         boolean updatesAvailable = false;
@@ -69,8 +74,8 @@ public class UpdateDownloader {
                 restaurantsDownloadURL = restaurantsJson.getString("url");
                 Date inspectionsUpdate = getDate(inspectionsJson.getString("last_modified"));
                 inspectionsDownloadURL = inspectionsJson.getString("url");
-                restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastUpdate;
-                inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastUpdate;
+                restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastRestaurantUpdate;
+                inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastInspectionUpdate;
                 updatesAvailable = restaurantsUpdateAvailable || inspectionsUpdateAvailable;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -105,9 +110,9 @@ public class UpdateDownloader {
                 Log.wtf("UpdateDownloader", "Error: "+ error);
             }
         });
-
         queue.add(jsonObjectRequest);
     }
+
     private Date getDate(String someDate){
         String correctDate = someDate.substring(0,10) + " " + someDate.substring(11);
         Date inspectionDate;
@@ -183,9 +188,9 @@ public class UpdateDownloader {
 
     private void updateSavedDate(Context context) {
         Date date = new Date();
-        SharedPreferences prefs = context.getSharedPreferences(LAST_DOWNLOAD, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(LAST_RESTAURANT_DOWNLOAD, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(LAST_DOWNLOAD, date.getTime());
+        editor.putLong(LAST_RESTAURANT_DOWNLOAD, date.getTime());
         editor.apply();
     }
 

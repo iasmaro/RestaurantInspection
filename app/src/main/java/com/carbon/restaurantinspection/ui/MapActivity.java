@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,10 +43,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private UpdateDownloader updateDownloader;
-    private LinearLayout loadingScreen;
     private Button downloadButton;
     private Button cancelButton;
-
+    private Dialog myDialog;
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap googleMap;
 
@@ -54,12 +54,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // used rotate tutorial from https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        loadingScreen = findViewById(R.id.loadingScreen);
-        downloadButton = findViewById(R.id.downloadButton);
-        cancelButton = findViewById(R.id.cancelButton);
-        loadingScreen.setVisibility(View.INVISIBLE);
-        downloadButton.setVisibility(View.INVISIBLE);
-        cancelButton.setVisibility(View.INVISIBLE);
+        myDialog = new Dialog(this);
         startLoadingScreen();
         updateDownloader = new UpdateDownloader(this);
         checkForUpdates();
@@ -73,12 +68,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 updateDownloader.downloadUpdates(MapActivity.this);
-                final TextView loadingIndicator = findViewById(R.id.loading_indicator);
+                final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
                 loadingIndicator.setVisibility(View.VISIBLE);
                 final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-                TextView message = findViewById(R.id.loadingMessage);
+                TextView message = myDialog.findViewById(R.id.loadingMessage);
                 message.setText(R.string.downloading);
-                LinearLayout holder = findViewById(R.id.buttonHolder);
+                LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
                 holder.removeView(downloadButton);
                 cancelButton.setGravity(Gravity.CENTER);
                 cancelDownload();
@@ -136,25 +131,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void updatesAvailable() {
-        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
         loadingIndicator.clearAnimation();
         loadingIndicator.setVisibility(View.INVISIBLE);
-        TextView message = findViewById(R.id.loadingMessage);
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
         message.setText(R.string.updatesAvailable);
         cancelButton.setVisibility(View.VISIBLE);
         downloadButton.setVisibility(View.VISIBLE);
     }
 
     public void startLoadingScreen() {
-        loadingScreen.setVisibility(View.VISIBLE);
+        myDialog.setContentView(R.layout.downloadscreen);
+        downloadButton = myDialog.findViewById(R.id.downloadButton);
+        cancelButton = myDialog.findViewById(R.id.cancelButton);
+        cancelButton.setVisibility(View.INVISIBLE);
+        downloadButton.setVisibility(View.INVISIBLE);
         Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        TextView loadingIndicator = findViewById(R.id.loading_indicator);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
         loadingIndicator.startAnimation(rotate);
+        myDialog.show();
     }
 
     public void stopLoadingScreen() {
-        ConstraintLayout mapLayout = findViewById(R.id.mapLayout);
-        mapLayout.removeView(loadingScreen);
+        myDialog.dismiss();
     }
 
     private void getLocationPermission(){
