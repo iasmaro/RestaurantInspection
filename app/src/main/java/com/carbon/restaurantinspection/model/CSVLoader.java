@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+/**
+ * Read CSV files and add each line into an ArrayList.
+ */
 public class CSVLoader {
     private ArrayList<String> csv = new ArrayList<>();
 
@@ -22,7 +25,9 @@ public class CSVLoader {
             reader.readLine();
 
             while ((line = reader.readLine()) != null) {
-                csv.add(line);
+                if (!line.equals(",,,,,,")) {
+                    csv.add(line);
+                }
             }
         } catch (IOException e) {
             Log.wtf("CSVLoader", "Error reading data file on line " + line, e);

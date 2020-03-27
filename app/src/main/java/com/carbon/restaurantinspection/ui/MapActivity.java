@@ -17,10 +17,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import android.app.Dialog;
+import android.os.Handler;
+import android.view.Gravity;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +53,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private UpdateDownloader updateDownloader;
+    private Button downloadButton;
+    private Button cancelButton;
+    private Dialog myDialog;
+    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -58,13 +71,127 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // used rotate tutorial from
+        // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        myDialog = new Dialog(this);
+        startLoadingScreen();
+        updateDownloader = new UpdateDownloader(this);
+        checkForUpdates();
+        setUpCancelButton();
+        setUpDownloadButton();
+        toolbarBackButton();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
+    }
 
-        toolbarBackButton();
+    private void setUpDownloadButton() {
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateDownloader.downloadUpdates(MapActivity.this);
+                final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
+                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext()
+                        , R.anim.rotate);
+                TextView message = myDialog.findViewById(R.id.loadingMessage);
+                message.setText(R.string.downloading);
+                LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
+                holder.removeView(downloadButton);
+                cancelButton.setGravity(Gravity.CENTER);
+                cancelDownload();
+                final Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingIndicator.startAnimation(rotate);
+                        if (!updateDownloader.downloadComplete()) {
+                            handler.postDelayed(this, 1000);
+                        } else {
+                            finishDownload();
+                        }
+                    }
+                };
+                handler.post(runnable);
+            }
+        });
+    }
+
+    private void cancelDownload() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+                updateDownloader.cancelUpdate();
+            }
+        });
+    }
+
+    private void finishDownload() {
+        cancelButton.setText(R.string.finishButton);
+        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.finishDownload);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
+        downloadLayout.removeView(loadingIndicator);
+        setUpCancelButton();
+    }
+
+    private void setUpCancelButton() {
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopLoadingScreen();
+            }
+        });
+    }
+
+    public void checkForUpdates() {
+        Handler handler = new Handler();
+        if(!updateDownloader.isReady()) {
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    checkForUpdates();
+                }
+            }, 1000);
+        } else {
+            if (updateDownloader.updatesAvailable(MapActivity.this)){
+                updatesAvailable();
+            } else{
+                stopLoadingScreen();
+            }
+        }
+    }
+
+    public void updatesAvailable() {
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        loadingIndicator.setVisibility(View.INVISIBLE);
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.updatesAvailable);
+        cancelButton.setVisibility(View.VISIBLE);
+        downloadButton.setVisibility(View.VISIBLE);
+    }
+
+    public void startLoadingScreen() {
+        // used fragment tutorial from
+        // https://www.youtube.com/watch?v=0DH2tZjJtm0
+        myDialog.setContentView(R.layout.downloadscreen);
+        downloadButton = myDialog.findViewById(R.id.downloadButton);
+        cancelButton = myDialog.findViewById(R.id.cancelButton);
+        cancelButton.setVisibility(View.INVISIBLE);
+        downloadButton.setVisibility(View.INVISIBLE);
+        Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.startAnimation(rotate);
+        myDialog.show();
+    }
+
+    public void stopLoadingScreen() {
+        myDialog.dismiss();
         getLocationPermission();
     }
 
@@ -376,4 +503,3 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onStart();
     }
 }
-

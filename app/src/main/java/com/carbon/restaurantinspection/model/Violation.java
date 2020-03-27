@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.Hashtable;
 
-/*
+/**
   Violation class models a violation found in an inspection report.
   It contains the violation's code, status, description and type.
  */
