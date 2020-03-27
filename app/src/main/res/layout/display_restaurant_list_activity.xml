@@ -2,18 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/num_issues_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
         android:fontFamily="sans-serif"
         android:text="@string/issues"
         android:textColor="#000000"
-        android:textStyle="bold"
+        android:textSize="17sp"
         app:layout_constraintStart_toEndOf="@+id/item_restaurant_icon"
         app:layout_constraintTop_toBottomOf="@+id/restaurant_name_textview" />
 
@@ -23,8 +25,8 @@
         android:layout_height="84dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.054"
+        app:layout_constraintTop_toTopOf="@+id/restaurant_name_textview"
+        app:layout_constraintVertical_bias="0.24"
         app:srcCompat="@drawable/a_w_restaurant_icon" />
 
     <TextView
@@ -35,6 +37,7 @@
         android:fontFamily="sans-serif"
         android:text="@string/recent_inspection_date"
         android:textColor="#000000"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@+id/num_issues_textview"
         app:layout_constraintTop_toBottomOf="@+id/num_issues_textview" />
 
@@ -46,6 +49,7 @@
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif"
         android:text="@string/hazard_level"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/item_hazard_icon"
         app:layout_constraintStart_toEndOf="@+id/item_hazard_icon"
         app:layout_constraintTop_toBottomOf="@+id/recent_inspection_date_textview"
@@ -64,11 +68,13 @@
         android:id="@+id/restaurant_name_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="40dp"
         android:fontFamily="sans-serif"
         android:text="@string/restaurant_name"
         android:textColor="#000000"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/item_restaurant_icon"
         app:layout_constraintTop_toTopOf="parent" />
 

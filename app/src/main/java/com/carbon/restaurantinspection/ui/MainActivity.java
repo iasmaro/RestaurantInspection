@@ -24,24 +24,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_main);
 
         if (isServicesOK()) {
             startActivity(new Intent(MainActivity.this, MapActivity.class));
         }
     }
 
-
-
     public boolean isServicesOK(){
         int available = GoogleApiAvailability.getInstance()
                 .isGooglePlayServicesAvailable(MainActivity.this);
 
         if (available == ConnectionResult.SUCCESS) {
-            //everything is okay
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //problem occurred but can be resolved
             Dialog dialog = GoogleApiAvailability.getInstance()
                     .getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
         } else {
