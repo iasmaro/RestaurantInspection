@@ -1,25 +1,18 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +28,6 @@ import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
-import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,10 +57,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private UpdateDownloader updateDownloader;
-    private Button downloadButton;
-    private Button cancelButton;
-    private Dialog myDialog;
     private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
@@ -94,137 +82,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         markerIcons = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
-        myDialog = new Dialog(this);
         getLocationPermission();
         toolbarBackButton();
-    }
-
-    private void setUpDownloadButton() {
-        downloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateDownloader.downloadUpdates(MapActivity.this);
-                final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-                loadingIndicator.setVisibility(View.VISIBLE);
-                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext()
-                        , R.anim.rotate);
-                TextView message = myDialog.findViewById(R.id.loadingMessage);
-                message.setText(R.string.downloading);
-                LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
-                holder.removeView(downloadButton);
-                cancelButton.setGravity(Gravity.CENTER);
-                cancelDownload();
-                final Handler handler = new Handler();
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingIndicator.startAnimation(rotate);
-                        if (!updateDownloader.downloadComplete() && !updateDownloader.downloadFailed()) {
-                            handler.postDelayed(this, 1000);
-                        } else if (updateDownloader.downloadComplete()){
-                            finishDownload();
-                        } else {
-                            downloadFailed();
-                        }
-                    }
-                };
-                handler.post(runnable);
-            }
-        });
-    }
-
-    private void downloadFailed() {
-        cancelButton.setText(R.string.finishButton);
-        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.downloadFailed);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
-        downloadLayout.removeView(loadingIndicator);
-        setUpCancelButton();
-    }
-
-    private void cancelDownload() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopLoadingScreen();
-                updateDownloader.cancelUpdate();
-            }
-        });
-    }
-
-    private void finishDownload() {
-        cancelButton.setText(R.string.finishButton);
-        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.finishDownload);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
-        downloadLayout.removeView(loadingIndicator);
-        setUpCancelButton();
-    }
-
-    private void setUpCancelButton() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopLoadingScreen();
-            }
-        });
-    }
-
-    public void checkForUpdates() {
-        Handler handler = new Handler();
-        if(!updateDownloader.isReady()) {
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-                    TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-                    loadingIndicator.startAnimation(rotate);
-                    checkForUpdates();
-                }
-            }, 1000);
-        } else {
-            if (updateDownloader.updatesAvailable(MapActivity.this)){
-                updatesAvailable();
-            } else{
-                stopLoadingScreen();
-            }
-        }
-    }
-
-    public void updatesAvailable() {
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        loadingIndicator.setVisibility(View.INVISIBLE);
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.updatesAvailable);
-        cancelButton.setVisibility(View.VISIBLE);
-        downloadButton.setVisibility(View.VISIBLE);
-        setUpCancelButton();
-        setUpDownloadButton();
-    }
-
-    public void startLoadingScreen() {
-        // used fragment tutorial from
-        // https://www.youtube.com/watch?v=0DH2tZjJtm0
-        myDialog.setContentView(R.layout.downloadscreen);
-        downloadButton = myDialog.findViewById(R.id.downloadButton);
-        cancelButton = myDialog.findViewById(R.id.cancelButton);
-        cancelButton.setVisibility(View.INVISIBLE);
-        downloadButton.setVisibility(View.INVISIBLE);
-        Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.startAnimation(rotate);
-        myDialog.show();
-    }
-
-    public void stopLoadingScreen() {
-        myDialog.dismiss();
-        initializeMap();
     }
 
     private void toolbarBackButton() {
@@ -260,14 +119,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void getLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
-        startLoadingScreen();
-        updateDownloader = new UpdateDownloader(this);
-        checkForUpdates();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 locationPermissionsGranted = true;
+                initializeMap();
             } else {
                 ActivityCompat.requestPermissions(this, permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
@@ -676,7 +533,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
-
-
-
 }
