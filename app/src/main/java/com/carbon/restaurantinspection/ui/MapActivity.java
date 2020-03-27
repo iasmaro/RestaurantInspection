@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -79,8 +78,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startLoadingScreen();
         updateDownloader = new UpdateDownloader(this);
         checkForUpdates();
-        setUpCancelButton();
-        setUpDownloadButton();
         toolbarBackButton();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
@@ -106,16 +103,30 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void run() {
                         loadingIndicator.startAnimation(rotate);
-                        if (!updateDownloader.downloadComplete()) {
+                        if (!updateDownloader.downloadComplete() && !updateDownloader.downloadFailed()) {
                             handler.postDelayed(this, 1000);
-                        } else {
+                        } else if (updateDownloader.downloadComplete()){
                             finishDownload();
+                        } else {
+                            downloadFailed();
                         }
                     }
                 };
                 handler.post(runnable);
             }
         });
+    }
+
+    private void downloadFailed() {
+        cancelButton.setText(R.string.finishButton);
+        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.downloadFailed);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
+        downloadLayout.removeView(loadingIndicator);
+        setUpCancelButton();
     }
 
     private void cancelDownload() {
@@ -154,6 +165,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(!updateDownloader.isReady()) {
             handler.postDelayed(new Runnable() {
                 public void run() {
+                    Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                    TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+                    loadingIndicator.startAnimation(rotate);
                     checkForUpdates();
                 }
             }, 1000);
@@ -174,6 +188,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         message.setText(R.string.updatesAvailable);
         cancelButton.setVisibility(View.VISIBLE);
         downloadButton.setVisibility(View.VISIBLE);
+        setUpCancelButton();
+        setUpDownloadButton();
     }
 
     public void startLoadingScreen() {
