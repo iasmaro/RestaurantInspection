@@ -81,7 +81,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         checkForUpdates();
         setUpCancelButton();
         setUpDownloadButton();
-
+        toolbarBackButton();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
     }
@@ -140,7 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setUpCancelButton();
     }
 
-        toolbarBackButton();
     private void setUpCancelButton() {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
