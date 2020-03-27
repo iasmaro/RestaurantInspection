@@ -69,6 +69,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Button downloadButton;
     private Button cancelButton;
     private Dialog myDialog;
+    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -422,7 +423,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng, float zoom){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
