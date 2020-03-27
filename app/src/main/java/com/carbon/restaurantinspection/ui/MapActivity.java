@@ -645,8 +645,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         private final int vectorID;
         private final int restaurant_index;
 
-        public MyMarkerClass(LatLng position, String title, String snippet, int vectorID,
-                             int restaurant_index) {
+        MyMarkerClass(LatLng position, String title, String snippet, int vectorID,
+                      int restaurant_index) {
             this.position = position;
             this.title = title;
             this.snippet = snippet;
@@ -669,11 +669,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return snippet;
         }
 
-        public int getVectorID(){
+        int getVectorID(){
             return vectorID;
         }
 
-        public int getRestaurant_index(){
+        int getRestaurant_index(){
             return restaurant_index;
         }
 
