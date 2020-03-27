@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -59,12 +60,16 @@ class InspectionDetailHolder {
  */
 public class RestaurantDetailsActivity extends AppCompatActivity {
     public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
+    public static final String TAG = "RestaurantDetailsActivity";
     private int index;
     private InspectionManager myInspectionManager;
     private List<InspectionDetailHolder> inspectionList = new ArrayList<>();
     private Restaurant restaurant;
     private String trackingNum;
     List<InspectionDetail> inspections;
+    public static double longa = 0;
+    public static double lata = 0;
+    public static int restIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +81,36 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_restaurant_details);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(restaurant.getName());
-
+        toolbarBackButton();
+        clickCoordsToMap();
         updateAddress();
         populateStringList();
         populateListView();
         onInspectionClick();
+    }
+
+    private void clickCoordsToMap() {
+        TextView coordinates = findViewById(R.id.Coordinates);
+        coordinates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RestaurantDetailsActivity.this, MapActivity.class);
+                intent.putExtra(INTENT_NAME, restaurant.getLatitude());
+                intent.putExtra(TAG, restaurant.getLongitude());
+                lata = restaurant.getLatitude();
+                longa = restaurant.getLongitude();
+                restIndex = index;
+                setResult(42);
+                finish();
+                startActivityForResult(intent, 41);
+            }
+        });
+    }
+
+    private void toolbarBackButton() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(restaurant.getName());
     }
 
     @Override
