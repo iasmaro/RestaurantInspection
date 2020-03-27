@@ -99,7 +99,7 @@ public class UpdateDownloader {
                 restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastRestaurantUpdate;
                 inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastInspectionUpdate;
                 updatesAvailable = restaurantsUpdateAvailable || inspectionsUpdateAvailable;
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

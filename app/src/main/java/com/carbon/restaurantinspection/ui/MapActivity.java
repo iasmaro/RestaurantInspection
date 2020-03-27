@@ -75,9 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         myDialog = new Dialog(this);
-        startLoadingScreen();
-        updateDownloader = new UpdateDownloader(this);
-        checkForUpdates();
+        getLocationPermission();
         toolbarBackButton();
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
@@ -208,7 +206,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void stopLoadingScreen() {
         myDialog.dismiss();
-        getLocationPermission();
+        initializeMap();
     }
 
     private void toolbarBackButton() {
@@ -244,14 +242,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void getLocationPermission() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
-
+        startLoadingScreen();
+        updateDownloader = new UpdateDownloader(this);
+        checkForUpdates();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 locationPermissionsGranted = true;
-                initializeMap();
-
             } else {
                 ActivityCompat.requestPermissions(this, permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
