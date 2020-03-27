@@ -25,7 +25,9 @@ public class CSVLoader {
             reader.readLine();
 
             while ((line = reader.readLine()) != null) {
-                csv.add(line);
+                if (!line.equals(",,,,,,")) {
+                    csv.add(line);
+                }
             }
         } catch (IOException e) {
             Log.wtf("CSVLoader", "Error reading data file on line " + line, e);

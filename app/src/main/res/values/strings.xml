@@ -14,6 +14,7 @@
     <string name="inspection">Inspection</string>
     <string name="longitudeValue">Longitude</string>
     <string name="latitudeValue">Latitude</string>
+    <string name="coordinates">Coordinates:</string>
     <string name="date_inspection_test">Date: May 3rd, 2019</string>
     <string name="type_inspection_test">Type: Routine</string>
     <string name="critical_issues__inspection_test">Critical issues: 4</string>

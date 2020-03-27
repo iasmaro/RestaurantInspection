@@ -197,7 +197,7 @@ public class UpdateDownloader {
         if (file.isFile()) {
             file.delete();
         }
-        newFile = context.getFileStreamPath(fileName);
+        newFile = context.getFileStreamPath(newFileName);
         newFile.renameTo(file);
     }
 

@@ -3,15 +3,12 @@ package com.carbon.restaurantinspection.ui;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 

@@ -16,21 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.app.Dialog;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -79,10 +71,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         // used rotate tutorial from
         // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         myDialog = new Dialog(this);
@@ -98,8 +89,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         markers = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
-
-        getLocationPermission();
     }
 
     private void setUpDownloadButton() {
@@ -208,9 +197,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void stopLoadingScreen() {
         myDialog.dismiss();
+        getLocationPermission();
     }
 
-    private void getLocationPermission(){
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
     private void setRestaurantMarkers() {
        List<Restaurant> restaurantList = RestaurantManager.getInstance(this).getRestaurantList();

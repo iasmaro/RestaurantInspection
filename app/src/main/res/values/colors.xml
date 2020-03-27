@@ -4,9 +4,6 @@
     <color name="colorPrimaryDark">#1C492A</color>
     <color name="colorAccent">#97BFAC</color>
     <color name="finishBlue">#2C8DDB</color>
-    <color name="colorPrimary">#b77845</color>
-    <color name="colorPrimaryDark">#5A3B21</color>
-    <color name="colorAccent">#959492</color>
     <color name="lowCriticalColour">#43A047</color>
     <color name="moderateCriticalColour">#CDAF2B</color>
     <color name="highCriticalColour">#E53935</color>
