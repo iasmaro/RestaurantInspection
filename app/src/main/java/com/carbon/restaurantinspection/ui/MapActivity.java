@@ -2,18 +2,14 @@ package com.carbon.restaurantinspection.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Layout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -27,15 +23,6 @@ import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -51,7 +38,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // used rotate tutorial from https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
+        // used rotate tutorial from
+        // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         myDialog = new Dialog(this);
@@ -70,7 +58,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 updateDownloader.downloadUpdates(MapActivity.this);
                 final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
                 loadingIndicator.setVisibility(View.VISIBLE);
-                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext()
+                        , R.anim.rotate);
                 TextView message = myDialog.findViewById(R.id.loadingMessage);
                 message.setText(R.string.downloading);
                 LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
@@ -85,7 +74,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         if (!updateDownloader.downloadComplete()) {
                             handler.postDelayed(this, 1000);
                         } else {
-                            stopLoadingScreen();
+                            finishDownload();
                         }
                     }
                 };
@@ -102,6 +91,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 updateDownloader.cancelUpdate();
             }
         });
+    }
+
+    private void finishDownload() {
+        cancelButton.setText(R.string.finishButton);
+        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
+        TextView message = myDialog.findViewById(R.id.loadingMessage);
+        message.setText(R.string.finishDownload);
+        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
+        loadingIndicator.clearAnimation();
+        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
+        downloadLayout.removeView(loadingIndicator);
+        setUpCancelButton();
     }
 
     private void setUpCancelButton() {
@@ -141,6 +142,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void startLoadingScreen() {
+        // used fragment tutorial from
+        // https://www.youtube.com/watch?v=0DH2tZjJtm0
         myDialog.setContentView(R.layout.downloadscreen);
         downloadButton = myDialog.findViewById(R.id.downloadButton);
         cancelButton = myDialog.findViewById(R.id.cancelButton);

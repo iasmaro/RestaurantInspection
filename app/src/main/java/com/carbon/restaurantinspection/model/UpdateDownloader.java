@@ -34,8 +34,11 @@ public class UpdateDownloader {
     private static final String LAST_INSPECTION_DOWNLOAD = "LastDownload";
     private static final int MILLISECS_TO_HOURS = 3600000;
     private static final BigInteger DEFAULT_DATE = new BigInteger("1574686607039");
-    private static final String RESTAURANTS_URL = "http://data.surrey.ca/api/3/action/package_show?id=restaurants";
-    private static final String INSPECTIONS_URL = "http://data.surrey.ca/api/3/action/package_show?id=fraser-health-restaurant-inspection-reports";
+    private static final String RESTAURANTS_URL =
+            "http://data.surrey.ca/api/3/action/package_show?id=restaurants";
+    private static final String INSPECTIONS_URL =
+            "http://data.surrey.ca/api/3/action/package_show?" +
+                    "id=fraser-health-restaurant-inspection-reports";
     private JSONObject restaurantsJson;
     private JSONObject inspectionsJson;
     private String restaurantsDownloadURL;
@@ -58,11 +61,15 @@ public class UpdateDownloader {
 
     private boolean checkForUpdates(Context context) {
         Date date = new Date();
-        SharedPreferences restaurantPrefs = context.getSharedPreferences(LAST_RESTAURANT_DOWNLOAD, Context.MODE_PRIVATE);
-        lastRestaurantUpdate = restaurantPrefs.getLong(LAST_RESTAURANT_DOWNLOAD, DEFAULT_DATE.longValue());
+        SharedPreferences restaurantPrefs = context
+                .getSharedPreferences(LAST_RESTAURANT_DOWNLOAD, Context.MODE_PRIVATE);
+        lastRestaurantUpdate = restaurantPrefs
+                .getLong(LAST_RESTAURANT_DOWNLOAD, DEFAULT_DATE.longValue());
         long restaurantHours = (date.getTime() - lastRestaurantUpdate)/MILLISECS_TO_HOURS;
-        SharedPreferences inspectionPrefs = context.getSharedPreferences(LAST_INSPECTION_DOWNLOAD, Context.MODE_PRIVATE);
-        lastInspectionUpdate = inspectionPrefs.getLong(LAST_INSPECTION_DOWNLOAD, DEFAULT_DATE.longValue());
+        SharedPreferences inspectionPrefs = context
+                .getSharedPreferences(LAST_INSPECTION_DOWNLOAD, Context.MODE_PRIVATE);
+        lastInspectionUpdate = inspectionPrefs
+                .getLong(LAST_INSPECTION_DOWNLOAD, DEFAULT_DATE.longValue());
         long inspectionHours = (date.getTime() - lastRestaurantUpdate)/MILLISECS_TO_HOURS;
         return restaurantHours >= 20 || inspectionHours >= 20;
     }
@@ -139,9 +146,10 @@ public class UpdateDownloader {
     }
 
     public void downloadNewUpdates(final Context context, final String url) {
+        // used retrofit download tutorial from
+        // https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://data.surrey.ca");
-
         Retrofit retrofit = builder.build();
         FileDownloadClient fileDownloadClient = retrofit.create(FileDownloadClient.class);
         Call<ResponseBody> call;
@@ -153,30 +161,20 @@ public class UpdateDownloader {
         }
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                File file;
-                File newFile;
+            public void onResponse(Call<ResponseBody> call,
+                                   retrofit2.Response<ResponseBody> response) {
                 if (url == restaurantsDownloadURL) {
-                    String fileName = "newRestaurants.csv";
-                    restaurantDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
-                    file = context.getFileStreamPath("restaurants.csv");
-                    if (file.isFile()) {
-                        file.delete();
-                    }
-                    newFile = context.getFileStreamPath(fileName);
+                    restaurantDownloadComplete = true;
+                    storeData("restaurants.csv", "newRestaurants.csv",
+                            context, response.body());
+                    updateSavedDate(context, LAST_RESTAURANT_DOWNLOAD);
                 } else {
-                    String fileName = "newInspections.csv";
-                    inspectionDownloadComplete = writeResponseBodyToDisk(response.body(), context, fileName);
-                    file = context.getFileStreamPath("inspections.csv");
-                    if (file.isFile()) {
-                        file.delete();
-                    }
-                    newFile = context.getFileStreamPath(fileName);
+                    inspectionDownloadComplete = true;
+                    storeData("inspections.csv", "newInspections.csv",
+                            context, response.body());
+                    updateSavedDate(context, LAST_INSPECTION_DOWNLOAD);
                 }
-                newFile.renameTo(file);
-                updateSavedDate(context);
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (!call.isCanceled()) {
@@ -186,11 +184,23 @@ public class UpdateDownloader {
         });
     }
 
-    private void updateSavedDate(Context context) {
+    private void storeData(String fileName, String newFileName, Context context, ResponseBody body) {
+        File file;
+        File newFile;
+        writeResponseBodyToDisk(body, context, newFileName);
+        file = context.getFileStreamPath(fileName);
+        if (file.isFile()) {
+            file.delete();
+        }
+        newFile = context.getFileStreamPath(fileName);
+        newFile.renameTo(file);
+    }
+
+    private void updateSavedDate(Context context, String pref) {
         Date date = new Date();
-        SharedPreferences prefs = context.getSharedPreferences(LAST_RESTAURANT_DOWNLOAD, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(pref, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(LAST_RESTAURANT_DOWNLOAD, date.getTime());
+        editor.putLong(pref, date.getTime());
         editor.apply();
     }
 
@@ -219,6 +229,8 @@ public class UpdateDownloader {
     }
 
     public void cancelUpdate() {
+        // used cancel request tutorial from
+        // https://futurestud.io/tutorials/retrofit-2-cancel-requests
         if (restaurantsDownload != null) {
             restaurantsDownload.cancel();
         } if (inspectionsDownload != null){
