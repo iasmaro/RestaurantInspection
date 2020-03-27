@@ -1,46 +1,41 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import android.app.Dialog;
-import android.os.Handler;
-import android.view.Gravity;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.model.UpdateDownloader;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
+import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -79,10 +74,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Hashtable<LatLng, Integer> marker_icons;
-    private Hashtable <Integer, Integer> restaurant_index_holder;
-    private int restaurant_index;
-    static private ClusterManager<MyMarkerClass> clusterManager;
+    private Hashtable<LatLng, Integer> markerIcons;
+    private Hashtable <Integer, Integer> restaurantIndexHolder;
+    private int restaurantIndex;
+    static private ClusterManager<MyMarkerClass> CLUSTER_MANAGER;
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
@@ -97,8 +92,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        marker_icons = new Hashtable<>();
-        restaurant_index_holder = new Hashtable<>();
+        markerIcons = new Hashtable<>();
+        restaurantIndexHolder = new Hashtable<>();
         myDialog = new Dialog(this);
         startLoadingScreen();
         updateDownloader = new UpdateDownloader(this);
@@ -325,13 +320,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted == true) {
-            clusterManager = new ClusterManager<>(this, this.googleMap);
+            CLUSTER_MANAGER = new ClusterManager<>(this, this.googleMap);
             final MarkerClusterRenderer renderer = new MarkerClusterRenderer(this,
-                    this.googleMap, clusterManager);
-            clusterManager.setRenderer(renderer);
-            this.googleMap.setOnCameraIdleListener(clusterManager);
-            this.googleMap.setOnMarkerClickListener(clusterManager);
-            this.googleMap.setOnInfoWindowClickListener(clusterManager);
+                    this.googleMap, CLUSTER_MANAGER);
+            CLUSTER_MANAGER.setRenderer(renderer);
+            this.googleMap.setOnCameraIdleListener(CLUSTER_MANAGER);
+            this.googleMap.setOnMarkerClickListener(CLUSTER_MANAGER);
+            this.googleMap.setOnInfoWindowClickListener(CLUSTER_MANAGER);
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -349,9 +344,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             clickCluster();
             clickClusterItem();
             setRestaurantMarkers();
-            clusterManager.addItems(myMarkerClassList);
-            clusterManager.cluster();
-            clusterManager.getMarkerCollection().setInfoWindowAdapter(
+            CLUSTER_MANAGER.addItems(myMarkerClassList);
+            CLUSTER_MANAGER.cluster();
+            CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
         }
 
@@ -363,12 +358,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void clickClusterItem() {
-        clusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.
+        CLUSTER_MANAGER.setOnClusterItemInfoWindowClickListener(new ClusterManager.
                 OnClusterItemInfoWindowClickListener<MyMarkerClass>() {
             @Override
             public void onClusterItemInfoWindowClick(MyMarkerClass item) {
 
-                int index = restaurant_index_holder.get(item.getRestaurant_index());
+                int index = restaurantIndexHolder.get(item.getRestaurant_index());
 
                 Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
                         index);
@@ -380,7 +375,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void clickCluster() {
-        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyMarkerClass>() {
+        CLUSTER_MANAGER.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyMarkerClass>() {
             @Override
             public boolean onClusterClick(Cluster<MyMarkerClass> cluster) {
                 if (cluster == null) return false;
@@ -484,11 +479,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             myMarkerClassList.add(new MyMarkerClass(latLng1, title, address,
                     R.drawable.ic_warning_yellow_24dp, index));
 
-            marker_icons.put(latLng, 0);
+            markerIcons.put(latLng, 0);
 
-            restaurant_index_holder.put(index, restaurant_index);
+            restaurantIndexHolder.put(index, restaurantIndex);
 
-            restaurant_index++;
+            restaurantIndex++;
         }
     }
 
@@ -523,11 +518,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             myMarkerClassList.add(new MyMarkerClass(latLng1, restaurant.getName(), snippet,
                     image_id, index));
 
-            marker_icons.put(latLng, image_id);
+            markerIcons.put(latLng, image_id);
 
-            restaurant_index_holder.put(index, restaurant_index);
+            restaurantIndexHolder.put(index, restaurantIndex);
 
-            restaurant_index++;
+            restaurantIndex++;
 
         }
     }
@@ -561,8 +556,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             ImageView imageView = view1.findViewById(R.id.hazard_level);
 
 
-            if (marker.getId() != null && marker_icons != null && marker_icons.size() > 0) {
-                int image_id = marker_icons.get(marker.getPosition());
+            if (marker.getId() != null && markerIcons != null && markerIcons.size() > 0) {
+                int image_id = markerIcons.get(marker.getPosition());
                 if (image_id != 0) {
                     imageView.setImageResource(image_id);
                 } else {
