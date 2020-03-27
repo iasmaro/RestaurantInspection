@@ -40,9 +40,9 @@ public class UpdateDownloader {
     private static final int MILLISECS_TO_HOURS = 3600000;
     private static final BigInteger DEFAULT_DATE = new BigInteger("1574686607039");
     private static final String RESTAURANTS_URL =
-            "http://data.surrey.ca/api/3/action/package_show?id=restaurants";
+            "https://data.surrey.ca/api/3/action/package_show?id=restaurants";
     private static final String INSPECTIONS_URL =
-            "http://data.surrey.ca/api/3/action/package_show?" +
+            "https://data.surrey.ca/api/3/action/package_show?" +
                     "id=fraser-health-restaurant-inspection-reports";
     private JSONObject restaurantsJson;
     private JSONObject inspectionsJson;
@@ -56,6 +56,8 @@ public class UpdateDownloader {
     private boolean inspectionsReady = false;
     private boolean restaurantDownloadComplete = false;
     private boolean inspectionDownloadComplete = false;
+    private boolean restaurantDownloadFail = false;
+    private boolean inspectionDownloadFail = false;
     private Call<ResponseBody> restaurantsDownload;
     private Call<ResponseBody> inspectionsDownload;
 
@@ -84,12 +86,20 @@ public class UpdateDownloader {
             try {
                 Date restaurantsUpdate = getDate(restaurantsJson.getString("last_modified"));
                 restaurantsDownloadURL = restaurantsJson.getString("url");
+                if (restaurantsDownloadURL.contains("http:")){
+                    restaurantsDownloadURL = restaurantsDownloadURL
+                            .replace("http:", "https:");
+                }
                 Date inspectionsUpdate = getDate(inspectionsJson.getString("last_modified"));
                 inspectionsDownloadURL = inspectionsJson.getString("url");
+                if (inspectionsDownloadURL.contains("http:")){
+                    inspectionsDownloadURL = inspectionsDownloadURL
+                            .replace("http:", "https:");
+                }
                 restaurantsUpdateAvailable = restaurantsUpdate.getTime() > lastRestaurantUpdate;
                 inspectionsUpdateAvailable = inspectionsUpdate.getTime() > lastInspectionUpdate;
                 updatesAvailable = restaurantsUpdateAvailable || inspectionsUpdateAvailable;
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -120,6 +130,8 @@ public class UpdateDownloader {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.wtf("UpdateDownloader", "Error: "+ error);
+                inspectionsReady = true;
+                restaurantsReady = true;
             }
         });
         queue.add(jsonObjectRequest);
@@ -154,7 +166,7 @@ public class UpdateDownloader {
         // used retrofit download tutorial from
         // https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl("http://data.surrey.ca");
+                .baseUrl("https://data.surrey.ca");
         Retrofit retrofit = builder.build();
         FileDownloadClient fileDownloadClient = retrofit.create(FileDownloadClient.class);
         Call<ResponseBody> call;
@@ -184,6 +196,11 @@ public class UpdateDownloader {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (!call.isCanceled()) {
                     Log.wtf("UpdateDownloader", "Error:" + t);
+                    if (url == restaurantsDownloadURL) {
+                        restaurantDownloadFail = true;
+                    } else {
+                        inspectionDownloadFail = true;
+                    }
                 }
             }
         });
@@ -231,6 +248,9 @@ public class UpdateDownloader {
 
     public boolean downloadComplete() {
         return restaurantDownloadComplete && inspectionDownloadComplete;
+    }
+    public boolean downloadFailed() {
+        return restaurantDownloadFail || inspectionDownloadFail;
     }
 
     public void cancelUpdate() {

@@ -36,7 +36,7 @@ public class Restaurant {
     }
 
     public String getPhysicalAddress() {
-        return physicalAddress;
+        return physicalAddress + ", " + city;
     }
 
     public String getCity() {
