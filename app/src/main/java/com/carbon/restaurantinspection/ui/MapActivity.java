@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +53,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
@@ -328,7 +331,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            if(RestaurantDetailsActivity.lata == 0 && RestaurantDetailsActivity.longa == 0){
+            if(RestaurantDetailsActivity.latatitude == 0 && RestaurantDetailsActivity.longatude == 0){
                 getCurrentLocation();
             }
 
@@ -346,12 +349,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             CLUSTER_MANAGER.cluster();
             CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
-        }
 
-        if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
-            LatLng latLng11 = new LatLng(RestaurantDetailsActivity.lata, RestaurantDetailsActivity.longa);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
-            ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
+        }
+        LatLng latLng11 = new LatLng(RestaurantDetailsActivity.latatitude, RestaurantDetailsActivity.longatude);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, 20f));
+
+
+        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers().isEmpty());
+        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getMarkerCollection().getMarkers().isEmpty());
+
+        for(Marker marker: CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers()) {
+            if(RestaurantDetailsActivity.latatitude == marker.getPosition().latitude &&
+                    RestaurantDetailsActivity.longatude == marker.getPosition().longitude
+                    && RestaurantDetailsActivity.restaurantName == marker.getTitle()) {
+                marker.showInfoWindow();
+                Log.d(TAG, "onMapReady: MARKER " + marker.getPosition().latitude +
+                        "   Marker longatitude" + marker.getPosition().longitude );
+            }
         }
     }
 
@@ -453,7 +467,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     int size = inspectionDetailList.size();
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
 
-
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
                 }
@@ -463,6 +476,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }
+
     }
 
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
@@ -483,6 +497,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             restaurantIndex++;
         }
+
     }
 
     /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
@@ -676,10 +691,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//    }
-
 }
