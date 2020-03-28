@@ -306,16 +306,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 41){
-            if(resultCode == 42){
-                String data1 = data.getStringExtra(INTENT_NAME);
-                String data2 = data.getStringExtra(TAG);
-            }
-        }
-    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -374,16 +365,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 OnClusterItemInfoWindowClickListener<MyMarkerClass>() {
             @Override
             public void onClusterItemInfoWindowClick(MyMarkerClass item) {
-
                 int index = restaurantIndexHolder.get(item.getRestaurant_index());
-
                 Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
                         index);
-
                 startActivity(intent);
             }
         });
-
     }
 
     private void clickCluster() {
@@ -391,29 +378,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public boolean onClusterClick(Cluster<MyMarkerClass> cluster) {
                 if (cluster == null) return false;
-
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
                 for (MyMarkerClass user : cluster.getItems())
-
                     builder.include(user.getPosition());
 
                 LatLngBounds bounds = builder.build();
-
                 try {
-
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-
                 } catch (Exception e) {
-
                     e.printStackTrace();
-
                 }
-
                 return true;
             }
         });
-
     }
 
     private void getCurrentLocation() {
@@ -444,11 +422,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
     private void setRestaurantMarkers() {
         restaurantManager = RestaurantManager.getInstance(this);
-
         restaurantList = restaurantManager.getRestaurantList();
-
         if(restaurantList != null){
-
             int num_of_restaurants = restaurantList.size();
 
             for(int i = 0; i < num_of_restaurants; i++) {
@@ -466,7 +441,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                     int size = inspectionDetailList.size();
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
-
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
                 }
@@ -476,41 +450,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }
-
     }
 
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
         if(!title.equals("Current location")) {
-
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
-
             myMarkerClassList.add(new MyMarkerClass(latLng1, title, address,
                     R.drawable.ic_warning_yellow_24dp, index));
-
             markerIcons.put(latLng, 0);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
         }
-
     }
 
     /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
      inspection **/
     private void placeMarker(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
                              Restaurant restaurant, int index){
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(inspectionDetail != null){
             String snippet = "Address: " + restaurant.getPhysicalAddress() + "\n\n" +
                     "Hazard level " + inspectionDetail.getHazardLevel();
-
             String hazardLevel = inspectionDetail.getHazardLevel();
             int image_id;
 
@@ -524,19 +488,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 image_id = R.drawable.greencheckmark;
             }
 
-
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
-
-
             myMarkerClassList.add(new MyMarkerClass(latLng1, restaurant.getName(), snippet,
                     image_id, index));
-
             markerIcons.put(latLng, image_id);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
-
         }
     }
 
@@ -544,9 +501,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      *  Class that creates the pop up display when a marker is clicked
      */
     class ExtraInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
-
         private final View view;
-
         ExtraInfoWindowAdapter(Context context) {
             view = LayoutInflater.from(context).inflate(R.layout.extra_info_window, null);
         }
@@ -605,7 +560,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             MyMarkerClass> {
 
         private static final int MARKER_DIMENSION = 90;
-
         private final IconGenerator iconGenerator;
         private final ImageView markerImageView;
 
@@ -614,14 +568,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             super(context, map, clusterManager);
 
             iconGenerator = new IconGenerator(context);
-
             markerImageView = new ImageView(context);
-
             markerImageView.setLayoutParams(new ViewGroup.LayoutParams(MARKER_DIMENSION,
                     MARKER_DIMENSION));
-
             iconGenerator.setContentView(markerImageView);
-
         }
 
         @Override
@@ -629,15 +579,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                                    MarkerOptions markerOptions) {
 
             markerImageView.setImageResource(item.getVectorID());
-
             Bitmap icon = iconGenerator.makeIcon();
-
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-
             markerOptions.title(item.getTitle());
-
             markerOptions.snippet(item.getSnippet());
-
         }
 
         @Override
@@ -689,6 +634,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         int getRestaurant_index(){
             return restaurant_index;
         }
-
     }
 }
