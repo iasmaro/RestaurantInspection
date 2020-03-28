@@ -179,17 +179,8 @@ public class RestaurantListActivity extends AppCompatActivity {
             if (restaurantName.contains("A&W")){
                 restaurantIcon.setImageResource(R.drawable.a_w_restaurant_icon);
             }
-            else if(restaurantName.contains("Seafood")) {
-                restaurantIcon.setImageResource(R.drawable.seafood_icon);
-            }
-            else if(restaurantName.contains("Sushi")) {
-                restaurantIcon.setImageResource(R.drawable.sushi_icon);
-            }
-            else if(restaurantName.contains("Pizza")) {
-                restaurantIcon.setImageResource(R.drawable.pizza_icon);
-            }
-            else if(restaurantName.contains("Chicken")) {
-                restaurantIcon.setImageResource(R.drawable.chicken_icon);
+            else if(restaurantName.contains("Blenz Coffee")) {
+                restaurantIcon.setImageResource(R.drawable.blenz_icon);
             }
             else if(restaurantName.contains("McDonald's")) {
                 restaurantIcon.setImageResource(R.drawable.macdonald_icon);
@@ -212,8 +203,11 @@ public class RestaurantListActivity extends AppCompatActivity {
             else if(restaurantName.contains("Domino's")) {
                 restaurantIcon.setImageResource(R.drawable.dominos_icon);
             }
+            else if(restaurantName.contains("7-Eleven")) {
+                restaurantIcon.setImageResource(R.drawable.seveneleven_icon);
+            }
             else {
-                restaurantIcon.setImageResource(R.drawable.beer_icon);
+                restaurantIcon.setImageResource(R.drawable.store_icon);
             }
         }
 

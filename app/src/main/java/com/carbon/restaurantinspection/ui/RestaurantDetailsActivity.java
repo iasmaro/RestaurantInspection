@@ -67,9 +67,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private String trackingNum;
     List<InspectionDetail> inspections;
-    public static double longa = 0;
-    public static double lata = 0;
-    public static int restIndex = -1;
+    public static double longatude = 0;
+    public static double latitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
