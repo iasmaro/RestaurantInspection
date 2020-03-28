@@ -67,9 +67,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private String trackingNum;
     List<InspectionDetail> inspections;
-    public static double longatude = 0;
-    public static double latatitude = 0;
-    public static String restaurantName;
+    public static double longa = 0;
+    public static double lata = 0;
+    public static int restIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,19 +94,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         coordinates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(RestaurantDetailsActivity.this, MapActivity.class);
-                //intent.putExtra(INTENT_NAME, restaurant.getLatitude());
-                //intent.putExtra(TAG, restaurant.getLongitude());
-                //latatitude = restaurant.getLatitude();
-                //longatude = restaurant.getLongitude();
-                //restaurantName = restaurant.getName();
-
                 Intent intent = MapActivity.makeIntent(RestaurantDetailsActivity.this, index);
                 startActivity(intent);
-                //setResult(42);
                 finish();
-                //startActivityForResult(intent, 41);
-
             }
         });
     }

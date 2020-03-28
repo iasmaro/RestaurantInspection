@@ -1,7 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,17 +9,11 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +29,6 @@ import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
-import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -60,48 +52,29 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-/**Gets permission for location usage on device, and gets the user's current and real-time location.
- * Sets markers of restaurants on the map **/
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private UpdateDownloader updateDownloader;
-    private Button downloadButton;
-    private Button cancelButton;
-    private Dialog myDialog;
     private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Hashtable<LatLng, Integer> markerIcons;
-    private Hashtable<Integer, Integer> restaurantIndexHolder;
+    private Hashtable <Integer, Integer> restaurantIndexHolder;
     private int restaurantIndex;
     static private ClusterManager<MyMarkerClass> CLUSTER_MANAGER;
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
-    public static Hashtable<Integer, Marker> markerHashTable;
-    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
-    public int index ;
+    private MarkerClusterRenderer renderer;
+    private int index = -1;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        // used rotate tutorial from
-        // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-        markerHashTable = new Hashtable<>();
-        markerIcons = new Hashtable<>();
-        getIntents();
-        restaurantIndexHolder = new Hashtable<>();
-        myDialog = new Dialog(this);
-        getLocationPermission();
-        toolbarBackButton();
-    }
+
+    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -109,143 +82,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return intent;
     }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // used rotate tutorial from
+        // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+        getIntents();
+        markerIcons = new Hashtable<>();
+        restaurantIndexHolder = new Hashtable<>();
+        getLocationPermission();
+        toolbarBackButton();
+    }
+
     private void getIntents() {
         Intent intent = getIntent();
         index = intent.getIntExtra(INTENT_NAME, -1);
-    }
-
-
-    private void setUpDownloadButton() {
-        downloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateDownloader.downloadUpdates(MapActivity.this);
-                final TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-                loadingIndicator.setVisibility(View.VISIBLE);
-                final Animation rotate = AnimationUtils.loadAnimation(getApplicationContext()
-                        , R.anim.rotate);
-                TextView message = myDialog.findViewById(R.id.loadingMessage);
-                message.setText(R.string.downloading);
-                LinearLayout holder = myDialog.findViewById(R.id.buttonHolder);
-                holder.removeView(downloadButton);
-                cancelButton.setGravity(Gravity.CENTER);
-                cancelDownload();
-                final Handler handler = new Handler();
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingIndicator.startAnimation(rotate);
-                        if (!updateDownloader.downloadComplete() && !updateDownloader.downloadFailed()) {
-                            handler.postDelayed(this, 1000);
-                        } else if (updateDownloader.downloadComplete()) {
-                            finishDownload();
-                        } else {
-                            downloadFailed();
-                        }
-                    }
-                };
-                handler.post(runnable);
-            }
-        });
-    }
-
-    private void downloadFailed() {
-        cancelButton.setText(R.string.finishButton);
-        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.downloadFailed);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
-        downloadLayout.removeView(loadingIndicator);
-        setUpCancelButton();
-    }
-
-
-    private void cancelDownload() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopLoadingScreen();
-                updateDownloader.cancelUpdate();
-            }
-        });
-    }
-
-    private void finishDownload() {
-        cancelButton.setText(R.string.finishButton);
-        cancelButton.setBackgroundColor(getResources().getColor(R.color.finishBlue, null));
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.finishDownload);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        LinearLayout downloadLayout = myDialog.findViewById(R.id.downloadLayout);
-        downloadLayout.removeView(loadingIndicator);
-        setUpCancelButton();
-    }
-
-    private void setUpCancelButton() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopLoadingScreen();
-            }
-        });
-    }
-
-    public void checkForUpdates() {
-        Handler handler = new Handler();
-        if (!updateDownloader.isReady()) {
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-                    TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-                    loadingIndicator.startAnimation(rotate);
-                    checkForUpdates();
-                }
-            }, 1000);
-        } else {
-            if (updateDownloader.updatesAvailable(MapActivity.this)) {
-                updatesAvailable();
-            } else {
-                stopLoadingScreen();
-            }
-        }
-    }
-
-    public void updatesAvailable() {
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.clearAnimation();
-        loadingIndicator.setVisibility(View.INVISIBLE);
-        TextView message = myDialog.findViewById(R.id.loadingMessage);
-        message.setText(R.string.updatesAvailable);
-        cancelButton.setVisibility(View.VISIBLE);
-        downloadButton.setVisibility(View.VISIBLE);
-        setUpCancelButton();
-        setUpDownloadButton();
-    }
-
-    public void startLoadingScreen() {
-        // used fragment tutorial from
-        // https://www.youtube.com/watch?v=0DH2tZjJtm0
-        myDialog.setContentView(R.layout.downloadscreen);
-        downloadButton = myDialog.findViewById(R.id.downloadButton);
-        cancelButton = myDialog.findViewById(R.id.cancelButton);
-        cancelButton.setVisibility(View.INVISIBLE);
-        downloadButton.setVisibility(View.INVISIBLE);
-        Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        TextView loadingIndicator = myDialog.findViewById(R.id.loading_indicator);
-        loadingIndicator.startAnimation(rotate);
-        myDialog.show();
-    }
-
-    public void stopLoadingScreen() {
-        myDialog.dismiss();
-        initializeMap();
-    }
-
-    @Override
-    public void onMapLoaded() {
     }
 
     private void toolbarBackButton() {
@@ -263,34 +115,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_map, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.back:
-                startActivity(new Intent(this, RestaurantListActivity.class));
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void getLocationPermission() {
-        // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
-        // https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
-        startLoadingScreen();
-        updateDownloader = new UpdateDownloader(this);
-        checkForUpdates();
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 locationPermissionsGranted = true;
+                initializeMap();
             } else {
                 ActivityCompat.requestPermissions(this, permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
@@ -304,12 +137,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        // reference code from Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
-        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         locationPermissionsGranted = false;
 
-        if (requestCode == 1234) {
-            if (grantResults.length > 0) {
+        if (requestCode == 1234){
+            if(grantResults.length > 0) {
                 for (int grantResult : grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         locationPermissionsGranted = false;
@@ -331,13 +162,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // reference code from Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
-        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted) {
             CLUSTER_MANAGER = new ClusterManager<>(this, this.googleMap);
-            final MarkerClusterRenderer renderer = new MarkerClusterRenderer(this,
+            renderer = new MarkerClusterRenderer(this,
                     this.googleMap, CLUSTER_MANAGER);
             CLUSTER_MANAGER.setRenderer(renderer);
             this.googleMap.setOnCameraIdleListener(CLUSTER_MANAGER);
@@ -346,8 +175,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            //if(RestaurantDetailsActivity.latatitude == 0 && RestaurantDetailsActivity.longatude == 0){
-            if (index == -1) {
+            if(RestaurantDetailsActivity.lata == 0 && RestaurantDetailsActivity.longa == 0){
                 getCurrentLocation();
             }
 
@@ -367,6 +195,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
         }
+
+        if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
+            LatLng latLng11 = new LatLng(RestaurantDetailsActivity.lata, RestaurantDetailsActivity.longa);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
+            ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
+        }
+        if (index > -1) {
+            displayRestaurantOnMap();
+        }
+    }
+
+    private void displayRestaurantOnMap() {
+        final Handler handler = new Handler();
+        final MyMarkerClass myMarkerClass = myMarkerClassList.get(index);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (renderer.getMarker(myMarkerClass) == null) {
+                    LatLng latLng = myMarkerClass.position;
+                    moveCamera(latLng, 20f);
+                    handler.postDelayed(this, 100);
+                } else {
+                    renderer.getMarker(myMarkerClass).showInfoWindow();
+                }
+            }
+        };
+        handler.post(runnable);
     }
 
     private void clickClusterItem() {
@@ -374,42 +229,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 OnClusterItemInfoWindowClickListener<MyMarkerClass>() {
             @Override
             public void onClusterItemInfoWindowClick(MyMarkerClass item) {
-
                 int index = restaurantIndexHolder.get(item.getRestaurant_index());
-
-                Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
-                        index);
-
+                Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this, index);
                 startActivity(intent);
             }
         });
-
     }
 
     private void clickCluster() {
         CLUSTER_MANAGER.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyMarkerClass>() {
             @Override
             public boolean onClusterClick(Cluster<MyMarkerClass> cluster) {
-                if (cluster == null) return false;
-
+                if (cluster == null) {
+                    return false;
+                }
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                for (MyMarkerClass user : cluster.getItems())
-
+                for (MyMarkerClass user : cluster.getItems()) {
                     builder.include(user.getPosition());
+                }
 
                 LatLngBounds bounds = builder.build();
 
                 try {
-
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-
                 } catch (Exception e) {
-
                     e.printStackTrace();
-
                 }
-
                 return true;
             }
         });
@@ -444,14 +290,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
     private void setRestaurantMarkers() {
         restaurantManager = RestaurantManager.getInstance(this);
-
         restaurantList = restaurantManager.getRestaurantList();
 
         if(restaurantList != null){
+            int numOfRestaurants = restaurantList.size();
 
-            int num_of_restaurants = restaurantList.size();
-
-            for(int i = 0; i < num_of_restaurants; i++) {
+            for(int i = 0; i < numOfRestaurants; i++) {
                 Restaurant restaurant = restaurantList.get(i);
                 String trackingNum = restaurant.getTrackingNumber();
 
@@ -463,15 +307,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String name = restaurant.getName();
 
                 if(inspectionDetailList != null) {
-
                     int size = inspectionDetailList.size();
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
 
-
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
-                }
-                else {
+                } else {
                     String address = restaurant.getPhysicalAddress();
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address, i);
                 }
@@ -485,16 +326,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(!title.equals("Current location")) {
-
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
 
             myMarkerClassList.add(new MyMarkerClass(latLng1, title, address,
-                    R.drawable.ic_warning_yellow_24dp, index));
-
+                    R.drawable.safepeg, index));
             markerIcons.put(latLng, 0);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
         }
     }
@@ -512,29 +349,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             String hazardLevel = inspectionDetail.getHazardLevel();
             int image_id;
-
             if (hazardLevel.equals("High")) {
-                image_id = R.drawable.red_skull_crossbones;
-            }
-            else if (hazardLevel.equals("Moderate")) {
-                image_id = R.drawable.ic_warning_yellow_24dp;
-            }
-            else {
-                image_id = R.drawable.greencheckmark;
+                image_id = R.drawable.highpeg;
+            } else if (hazardLevel.equals("Moderate")) {
+                image_id = R.drawable.midpeg;
+            } else {
+                image_id = R.drawable.safepeg;
             }
 
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
 
-
             myMarkerClassList.add(new MyMarkerClass(latLng1, restaurant.getName(), snippet,
                     image_id, index));
-
             markerIcons.put(latLng, image_id);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
-
         }
     }
 
@@ -565,7 +394,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
 
             ImageView imageView = view1.findViewById(R.id.hazard_level);
-
 
             if (marker.getId() != null && markerIcons != null && markerIcons.size() > 0) {
                 int image_id = markerIcons.get(marker.getPosition());
@@ -633,9 +461,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
             markerOptions.title(item.getTitle());
-
             markerOptions.snippet(item.getSnippet());
-
         }
 
         @Override
@@ -689,7 +515,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
-
-
-
 }
