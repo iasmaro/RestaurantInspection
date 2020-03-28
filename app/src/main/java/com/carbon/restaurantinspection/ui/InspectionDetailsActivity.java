@@ -187,22 +187,18 @@ public class InspectionDetailsActivity extends AppCompatActivity {
 
         private int findResourceID(Violation currentViolation){
             String type = currentViolation.getType();
-            if (type != null) {
-                if (type.equals("Permit")){
-                    return R.drawable.permit;
-                } else if (type.equals("Food")){
-                    return R.drawable.food;
-                } else if (type.equals("Foodsafe")){
-                    return R.drawable.permit;
-                } else if (type.equals("Pest")){
-                    return R.drawable.pest;
-                } else if (type.equals("Hygiene")){
-                    return R.drawable.hygiene;
-                } else {
-                    return R.drawable.equipment;
-                }
+            if (type.equals("Permit")){
+                return R.drawable.permit;
+            } else if (type.equals("Food")){
+                return R.drawable.food;
+            } else if (type.equals("Foodsafe")){
+                return R.drawable.permit;
+            } else if (type.equals("Pest")){
+                return R.drawable.pest;
+            } else if (type.equals("Hygiene")){
+                return R.drawable.hygiene;
             } else {
-                return 0;
+                return R.drawable.equipment;
             }
         }
     }
