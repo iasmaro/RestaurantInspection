@@ -9,21 +9,18 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -47,7 +44,6 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -72,9 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<Restaurant> restaurantList;
     private MarkerClusterRenderer renderer;
     private int index = -1;
-
-
-    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
+    public static final String INTENT_NAME = "Map Activity";
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -116,6 +110,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void getLocationPermission() {
+        // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        //https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
@@ -137,6 +133,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+
+        // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        //https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
         locationPermissionsGranted = false;
 
         if (requestCode == 1234){
@@ -155,6 +154,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void initializeMap() {
+        // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        // https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -162,6 +163,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        // https://www.youtube.com/playlist?list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt
+        // https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=0s
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted) {
@@ -175,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            if(RestaurantDetailsActivity.lata == 0 && RestaurantDetailsActivity.longa == 0){
+            if(RestaurantDetailsActivity.latitude == 0 && RestaurantDetailsActivity.longatude == 0){
                 getCurrentLocation();
             }
 
@@ -194,12 +198,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             CLUSTER_MANAGER.cluster();
             CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
-        }
-
-        if(RestaurantDetailsActivity.lata != 0 && RestaurantDetailsActivity.longa != 0){
-            LatLng latLng11 = new LatLng(RestaurantDetailsActivity.lata, RestaurantDetailsActivity.longa);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
-            ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
         }
         if (index > -1) {
             displayRestaurantOnMap();
@@ -244,13 +242,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     return false;
                 }
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
                 for (MyMarkerClass user : cluster.getItems()) {
                     builder.include(user.getPosition());
                 }
-
                 LatLngBounds bounds = builder.build();
-
                 try {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
                 } catch (Exception e) {
@@ -259,10 +254,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return true;
             }
         });
-
     }
 
     private void getCurrentLocation() {
+        // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        // https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=0s
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if(locationPermissionsGranted) {
 
@@ -284,6 +280,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void moveCamera(LatLng latLng, float zoom){
+        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=0s
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
 
@@ -422,11 +419,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             rendowWindowText(marker, view);
             return null;
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /**
