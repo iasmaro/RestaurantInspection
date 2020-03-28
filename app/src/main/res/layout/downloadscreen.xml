@@ -35,19 +35,21 @@
         android:layout_gravity="center"
         android:orientation="horizontal"
         android:background="#ffffff">
+
         <Button
             android:id="@+id/downloadButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#18C021"
+            android:background="@color/lowCriticalColour"
             android:padding="10dp"
-            android:layout_margin="10dp"
             android:text="@string/downloadButton"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
+
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
@@ -55,7 +57,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#FF5722"
+            android:background="@color/highCriticalColour"
             android:padding="10dp"
             android:text="@string/cancelButton"
             android:textColor="#FFFFFF"
