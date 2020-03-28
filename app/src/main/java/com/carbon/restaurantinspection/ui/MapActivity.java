@@ -371,9 +371,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (marker.getId() != null && markerIcons != null && markerIcons.size() > 0) {
                 int image_id = markerIcons.get(marker.getPosition());
                 if (image_id != 0) {
-                    imageView.setImageResource(image_id);
+                    if (image_id == R.drawable.safepeg) {
+                        imageView.setImageResource(R.drawable.greencheckmark);
+                    } else if (image_id == R.drawable.midpeg) {
+                        imageView.setImageResource(R.drawable.yellow_caution);
+                    } else {
+                        imageView.setImageResource(R.drawable.red_skull_crossbones);
+                    }
                 } else {
-                    imageView.setImageResource(R.drawable.ic_warning_yellow_24dp);
+                    imageView.setImageResource(R.drawable.error_icon);
                 }
             }
         }
@@ -433,7 +439,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            return cluster.getSize() > 1;
+            return cluster.getSize() > 2;
         }
     }
 
