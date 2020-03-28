@@ -59,7 +59,7 @@ import java.util.List;
 
 /**Gets permission for location usage on device, and gets the user's current and real-time location.
  * Sets markers of restaurants on the map **/
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
     private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -74,12 +74,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Hashtable<LatLng, Integer> markerIcons;
-    private Hashtable <Integer, Integer> restaurantIndexHolder;
+    private Hashtable<Integer, Integer> restaurantIndexHolder;
     private int restaurantIndex;
     static private ClusterManager<MyMarkerClass> CLUSTER_MANAGER;
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
+    public static Hashtable<Integer, Marker> markerHashTable;
+    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
+    public int index ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,13 +90,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        markerHashTable = new Hashtable<>();
         markerIcons = new Hashtable<>();
+        getIntents();
         restaurantIndexHolder = new Hashtable<>();
         myDialog = new Dialog(this);
         getLocationPermission();
         toolbarBackButton();
     }
+
+    public static Intent makeIntent(Context context, int index) {
+        Intent intent = new Intent(context, MapActivity.class);
+        intent.putExtra(INTENT_NAME, index);
+        return intent;
+    }
+
+    private void getIntents() {
+        Intent intent = getIntent();
+        index = intent.getIntExtra(INTENT_NAME, -1);
+        Log.d(TAG, "getIntents: " + index);
+    }
+
 
     private void setUpDownloadButton() {
         downloadButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         loadingIndicator.startAnimation(rotate);
                         if (!updateDownloader.downloadComplete() && !updateDownloader.downloadFailed()) {
                             handler.postDelayed(this, 1000);
-                        } else if (updateDownloader.downloadComplete()){
+                        } else if (updateDownloader.downloadComplete()) {
                             finishDownload();
                         } else {
                             downloadFailed();
@@ -140,6 +157,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         downloadLayout.removeView(loadingIndicator);
         setUpCancelButton();
     }
+
 
     private void cancelDownload() {
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +192,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void checkForUpdates() {
         Handler handler = new Handler();
-        if(!updateDownloader.isReady()) {
+        if (!updateDownloader.isReady()) {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     Animation rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
@@ -184,9 +202,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }, 1000);
         } else {
-            if (updateDownloader.updatesAvailable(MapActivity.this)){
+            if (updateDownloader.updatesAvailable(MapActivity.this)) {
                 updatesAvailable();
-            } else{
+            } else {
                 stopLoadingScreen();
             }
         }
@@ -223,12 +241,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         initializeMap();
     }
 
+    @Override
+    public void onMapLoaded() {
+        Log.d("onMapLoaded", markerHashTable.keySet().size() + "");
+    }
+
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Map");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
@@ -268,7 +291,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 locationPermissionsGranted = true;
             } else {
                 ActivityCompat.requestPermissions(this, permissions,
@@ -287,8 +310,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         locationPermissionsGranted = false;
 
-        if (requestCode == 1234){
-            if(grantResults.length > 0) {
+        if (requestCode == 1234) {
+            if (grantResults.length > 0) {
                 for (int grantResult : grantResults) {
                     if (grantResult != PackageManager.PERMISSION_GRANTED) {
                         locationPermissionsGranted = false;
@@ -325,9 +348,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            if(RestaurantDetailsActivity.latatitude == 0 && RestaurantDetailsActivity.longatude == 0){
+            //if(RestaurantDetailsActivity.latatitude == 0 && RestaurantDetailsActivity.longatude == 0){
+            if (index == -1) {
                 getCurrentLocation();
             }
+
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -343,25 +368,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             CLUSTER_MANAGER.cluster();
             CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
                     new ExtraInfoWindowAdapter(this));
-
-        }
-        LatLng latLng11 = new LatLng(RestaurantDetailsActivity.latatitude, RestaurantDetailsActivity.longatude);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, 21f));
-
-
-        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers().isEmpty());
-        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getMarkerCollection().getMarkers().isEmpty());
-
-        for(Marker marker: CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers()) {
-            if(RestaurantDetailsActivity.latatitude == marker.getPosition().latitude &&
-                    RestaurantDetailsActivity.longatude == marker.getPosition().longitude
-                    && RestaurantDetailsActivity.restaurantName == marker.getTitle()) {
-                marker.showInfoWindow();
-                Log.d(TAG, "onMapReady: MARKER " + marker.getPosition().latitude +
-                        "   Marker longatitude" + marker.getPosition().longitude );
-            }
         }
     }
+
+//        LatLng latLng11 = new LatLng(RestaurantDetailsActivity.latatitude, RestaurantDetailsActivity.longatude);
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, 21f));
+//
+//
+//        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers().isEmpty());
+//        Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getMarkerCollection().getMarkers().isEmpty());
+//
+//        for(Marker marker: CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers()) {
+//            if(RestaurantDetailsActivity.latatitude == marker.getPosition().latitude &&
+//                    RestaurantDetailsActivity.longatude == marker.getPosition().longitude
+//                    && RestaurantDetailsActivity.restaurantName == marker.getTitle()) {
+//                marker.showInfoWindow();
+//                Log.d(TAG, "onMapReady: MARKER " + marker.getPosition().latitude +
+//                        "   Marker longatitude" + marker.getPosition().longitude );
+//            }
+//        }
+//}
 
     private void clickClusterItem() {
         CLUSTER_MANAGER.setOnClusterItemInfoWindowClickListener(new ClusterManager.
@@ -420,6 +446,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void moveCamera(LatLng latLng, float zoom){
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        Log.d("moveCamera", markerHashTable.keySet().size() + "");
     }
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
@@ -453,6 +480,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             }
         }
+        Log.d("setRestaurantMarkers", markerHashTable.keySet().size() + "");
     }
 
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
@@ -467,6 +495,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             restaurantIndexHolder.put(index, restaurantIndex);
             restaurantIndex++;
         }
+        Log.d("placeMarker", markerHashTable.keySet().size() + "");
     }
 
     /** moves the camera to the location of the chosen restaurant given the restaurant HAS an
@@ -498,6 +527,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             restaurantIndexHolder.put(index, restaurantIndex);
             restaurantIndex++;
         }
+        Log.d("placeMarker", markerHashTable.keySet().size() + "");
     }
 
     /**
@@ -550,10 +580,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     /**
      * Renderer is required for ClusterManager. Particularly to change the marker icon.
@@ -586,6 +612,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             markerOptions.title(item.getTitle());
             markerOptions.snippet(item.getSnippet());
+        }
+        @Override
+        protected void onClusterRendered(Cluster <MyMarkerClass> cluster, Marker marker) {
+            super.onClusterRendered(cluster, marker);
+            for(MyMarkerClass myMarkerClass: cluster.getItems()) {
+                markerHashTable = new Hashtable<>();
+                MapActivity.markerHashTable.put(myMarkerClass.restaurant_index, marker);
+            }
         }
 
         @Override
