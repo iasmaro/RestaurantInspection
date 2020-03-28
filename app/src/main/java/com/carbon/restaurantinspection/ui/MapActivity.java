@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,9 +70,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
+    private MarkerClusterRenderer renderer;
+    private int index = -1;
 
 
     public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
+
+    public static Intent makeIntent(Context context, int index) {
+        Intent intent = new Intent(context, MapActivity.class);
+        intent.putExtra(INTENT_NAME, index);
+        return intent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,11 +88,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // https://www.tutlane.com/tutorial/android/android-rotate-animations-clockwise-anti-clockwise-with-examples
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        getIntents();
         markerIcons = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
         getLocationPermission();
         toolbarBackButton();
+    }
+
+    private void getIntents() {
+        Intent intent = getIntent();
+        index = intent.getIntExtra(INTENT_NAME, -1);
     }
 
     private void toolbarBackButton() {
@@ -160,7 +175,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         if (locationPermissionsGranted) {
             CLUSTER_MANAGER = new ClusterManager<>(this, this.googleMap);
-            final MarkerClusterRenderer renderer = new MarkerClusterRenderer(this,
+            renderer = new MarkerClusterRenderer(this,
                     this.googleMap, CLUSTER_MANAGER);
             CLUSTER_MANAGER.setRenderer(renderer);
             this.googleMap.setOnCameraIdleListener(CLUSTER_MANAGER);
@@ -195,6 +210,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, DEFAULT_ZOOM));
             ExtraInfoWindowAdapter viewWin = new ExtraInfoWindowAdapter(MapActivity.this);
         }
+        if (index > -1) {
+            displayRestaurantOnMap();
+        }
+    }
+
+    private void displayRestaurantOnMap() {
+        final Handler handler = new Handler();
+        final MyMarkerClass myMarkerClass = myMarkerClassList.get(index);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (renderer.getMarker(myMarkerClass) == null) {
+                    handler.postDelayed(this, 1000);
+                } else {
+                    LatLng latLng = myMarkerClass.position;
+                    moveCamera(latLng, 20f);
+                    renderer.getMarker(myMarkerClass).showInfoWindow();
+                }
+            }
+        };
+        handler.post(runnable);
     }
 
     private void clickClusterItem() {

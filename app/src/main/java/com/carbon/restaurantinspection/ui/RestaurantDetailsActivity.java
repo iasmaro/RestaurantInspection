@@ -94,15 +94,9 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         coordinates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RestaurantDetailsActivity.this, MapActivity.class);
-                intent.putExtra(INTENT_NAME, restaurant.getLatitude());
-                intent.putExtra(TAG, restaurant.getLongitude());
-                lata = restaurant.getLatitude();
-                longa = restaurant.getLongitude();
-                restIndex = index;
-                setResult(42);
+                Intent intent = MapActivity.makeIntent(RestaurantDetailsActivity.this, index);
+                startActivity(intent);
                 finish();
-                startActivityForResult(intent, 41);
             }
         });
     }
