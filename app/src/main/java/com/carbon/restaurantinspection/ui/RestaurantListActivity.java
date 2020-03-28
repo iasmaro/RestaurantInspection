@@ -108,14 +108,17 @@ public class RestaurantListActivity extends AppCompatActivity {
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
             String numIssuesDisplay = "# Issues: " + unavailable;
             numIssuesText.setText(numIssuesDisplay);
+            numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
             String inspectionDateContent = "Recent Inspection: " + unavailable;
             inspectionDateText.setText(inspectionDateContent);
+            inspectionDateText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
             String hazardLevelDisplay = "Hazard Level: " + unavailable;
             hazardLevelText.setText(hazardLevelDisplay);
+            hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             ImageView hazardLevelIcon = itemView.findViewById(R.id.item_hazard_icon);
             hazardLevelIcon.setImageResource(R.drawable.error_icon);
@@ -129,11 +132,13 @@ public class RestaurantListActivity extends AppCompatActivity {
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
             String numIssuesDisplay = "# Issues: " + totalIssues;
             numIssuesText.setText(numIssuesDisplay);
+            numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String date = inspections.get(0).getInspectionDate();
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
             String dateDisplay = "Recent Inspection: " + date;
             dateText.setText(dateDisplay);
+            dateText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String hazardLevel = inspections.get(0).getHazardLevel();
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);

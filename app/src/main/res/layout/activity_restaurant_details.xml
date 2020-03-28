@@ -24,32 +24,15 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
-            android:id="@+id/inspectionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="142dp"
-            android:layout_marginEnd="143dp"
-            android:layout_marginBottom="4dp"
-            android:fontFamily="sans-serif"
-            android:text="@string/inspection"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
             android:id="@+id/Address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
             android:text="@string/address1"
             android:textColor="#000000"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:typeface="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,12 +41,12 @@
             android:id="@+id/Coordinates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="15dp"
             android:fontFamily="sans-serif"
             android:text="@string/coordinates"
             android:textColor="#000000"
-            android:textSize="18sp"
+            android:textSize="17sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Address" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -78,22 +61,40 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutListView"
-        android:layout_width="359dp"
-        android:layout_height="431dp"
+        android:layout_width="360dp"
+        android:layout_height="504dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutTextViews">
+        app:layout_constraintTop_toBottomOf="@+id/layoutTextViews"
+        app:layout_constraintVertical_bias="0.305">
+
+        <TextView
+            android:id="@+id/inspectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="142dp"
+            android:layout_marginEnd="143dp"
+            android:layout_marginBottom="464dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/inspection"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ListView
             android:id="@+id/list"
-            android:layout_width="351dp"
-            android:layout_height="409dp"
+            android:layout_width="350dp"
+            android:layout_height="438dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="16dp"

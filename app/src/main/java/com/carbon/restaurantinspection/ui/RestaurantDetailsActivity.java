@@ -192,17 +192,16 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         TextView address = findViewById(R.id.Address);
         TextView latitude1 = findViewById(R.id.Coordinates);
         String str = restaurant.getPhysicalAddress();
-        address.setText("Address:  " + str);
+        address.setText("Address: " + str);
         String longitude = Double.toString(restaurant.getLongitude());
         String latitude = Double.toString(restaurant.getLatitude());
-        latitude1.setText("Coordinates:   (" + longitude + ",  " + latitude + ")");
+        latitude1.setText("Coordinates: " + longitude + ",  " + latitude);
     }
 
     private void getIntents() {
         Intent intent = getIntent();
         index = intent.getIntExtra(INTENT_NAME, 0);
     }
-
 
     /**
      * MyListAdapter was formatted to be able to display the necessary information in the listView
