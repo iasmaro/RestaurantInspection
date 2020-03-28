@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+/**Gets permission for location usage on device, and gets the user's current and real-time location.
+ * Sets markers of restaurants on the map **/
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
@@ -238,12 +240,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
+        // https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         getMenuInflater().inflate(R.menu.menu_map, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
+        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         switch (item.getItemId()) {
             case R.id.back:
                 startActivity(new Intent(this, RestaurantListActivity.class));
@@ -252,6 +258,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void getLocationPermission() {
+        // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
+        // https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
         startLoadingScreen();
@@ -275,6 +283,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        // reference code from Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         locationPermissionsGranted = false;
 
         if (requestCode == 1234){
@@ -300,6 +310,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        // reference code from Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
+        //https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=6&t=588s
         this.googleMap = googleMap;
 
         if (locationPermissionsGranted == true) {
@@ -334,7 +346,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         }
         LatLng latLng11 = new LatLng(RestaurantDetailsActivity.latatitude, RestaurantDetailsActivity.longatude);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, 20f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng11, 21f));
 
 
         Log.d(TAG, "onMapReady: " + CLUSTER_MANAGER.getClusterMarkerCollection().getMarkers().isEmpty());

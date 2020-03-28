@@ -11,11 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.carbon.restaurantinspection.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-
+/** Set up the map view and ensure services from google maps API**/
 public class MainActivity extends AppCompatActivity {
-
+    // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
+    //https://www.youtube.com/watch?v=urLA8z6-l3k&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=2
+    //https://www.youtube.com/watch?v=M0bYvXlhgSI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=3
     private static final int ERROR_DIALOG_REQUEST = 9001;
-
 
     Button btn;
     @Override
