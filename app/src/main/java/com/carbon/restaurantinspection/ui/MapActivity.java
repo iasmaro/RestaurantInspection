@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -398,8 +399,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Renderer is required for ClusterManager. Particularly to change the marker icon.
      */
-    public static class MarkerClusterRenderer extends DefaultClusterRenderer<
-            MyMarkerClass> {
+    public class MarkerClusterRenderer extends DefaultClusterRenderer<MyMarkerClass> {
 
         private static final int MARKER_DIMENSION = 90;
         private final IconGenerator iconGenerator;
@@ -419,9 +419,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         protected void onBeforeClusterItemRendered(MapActivity.MyMarkerClass item,
                                                    MarkerOptions markerOptions) {
 
-            markerImageView.setImageResource(item.getVectorID());
-            Bitmap icon = iconGenerator.makeIcon();
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+//          //Bitmap resizing taken from:
+//          https://stackoverflow.com/questions/35718103/how-to-specify-the-size-of-the-icon-on-the-marker-in-google-maps-v2-android
+            int height = 100;
+            int width = 100;
+            Bitmap b = BitmapFactory.decodeResource(getResources(), item.getVectorID());
+            Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
             markerOptions.title(item.getTitle());
             markerOptions.snippet(item.getSnippet());
         }
