@@ -159,16 +159,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 41){
-            if(resultCode == 42){
-                String data1 = data.getStringExtra(INTENT_NAME);
-                String data2 = data.getStringExtra(TAG);
-            }
-        }
-    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -222,10 +213,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void run() {
                 if (renderer.getMarker(myMarkerClass) == null) {
-                    handler.postDelayed(this, 1000);
-                } else {
                     LatLng latLng = myMarkerClass.position;
                     moveCamera(latLng, 20f);
+                    handler.postDelayed(this, 100);
+                } else {
                     renderer.getMarker(myMarkerClass).showInfoWindow();
                 }
             }
