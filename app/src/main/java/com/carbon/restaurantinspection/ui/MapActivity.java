@@ -174,7 +174,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-        if (locationPermissionsGranted == true) {
+        if (locationPermissionsGranted) {
             CLUSTER_MANAGER = new ClusterManager<>(this, this.googleMap);
             final MarkerClusterRenderer renderer = new MarkerClusterRenderer(this,
                     this.googleMap, CLUSTER_MANAGER);
@@ -189,9 +189,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 getCurrentLocation();
             }
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission
+                    .ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission
+                    .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             googleMap.setMyLocationEnabled(true);
@@ -217,42 +218,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 OnClusterItemInfoWindowClickListener<MyMarkerClass>() {
             @Override
             public void onClusterItemInfoWindowClick(MyMarkerClass item) {
-
                 int index = restaurantIndexHolder.get(item.getRestaurant_index());
-
-                Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this,
-                        index);
-
+                Intent intent = RestaurantDetailsActivity.makeIntent(MapActivity.this, index);
                 startActivity(intent);
             }
         });
-
     }
 
     private void clickCluster() {
         CLUSTER_MANAGER.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyMarkerClass>() {
             @Override
             public boolean onClusterClick(Cluster<MyMarkerClass> cluster) {
-                if (cluster == null) return false;
-
+                if (cluster == null) {
+                    return false;
+                }
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                for (MyMarkerClass user : cluster.getItems())
-
+                for (MyMarkerClass user : cluster.getItems()) {
                     builder.include(user.getPosition());
+                }
 
                 LatLngBounds bounds = builder.build();
 
                 try {
-
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-
                 } catch (Exception e) {
-
                     e.printStackTrace();
-
                 }
-
                 return true;
             }
         });
@@ -287,14 +279,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
     private void setRestaurantMarkers() {
         restaurantManager = RestaurantManager.getInstance(this);
-
         restaurantList = restaurantManager.getRestaurantList();
 
         if(restaurantList != null){
+            int numOfRestaurants = restaurantList.size();
 
-            int num_of_restaurants = restaurantList.size();
-
-            for(int i = 0; i < num_of_restaurants; i++) {
+            for(int i = 0; i < numOfRestaurants; i++) {
                 Restaurant restaurant = restaurantList.get(i);
                 String trackingNum = restaurant.getTrackingNumber();
 
@@ -306,15 +296,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String name = restaurant.getName();
 
                 if(inspectionDetailList != null) {
-
                     int size = inspectionDetailList.size();
                     InspectionDetail inspectionDetail = inspectionDetailList.get(size - 1);
 
-
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, inspectionDetail,
                             restaurant, i);
-                }
-                else {
+                } else {
                     String address = restaurant.getPhysicalAddress();
                     placeMarker(new LatLng(latitude, longitude), DEFAULT_ZOOM, name, address, i);
                 }
@@ -328,16 +315,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(!title.equals("Current location")) {
-
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
 
             myMarkerClassList.add(new MyMarkerClass(latLng1, title, address,
                     R.drawable.ic_warning_yellow_24dp, index));
-
             markerIcons.put(latLng, 0);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
         }
     }
@@ -355,30 +338,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             String hazardLevel = inspectionDetail.getHazardLevel();
             int image_id;
-
             if (hazardLevel.equals("High")) {
                 image_id = R.drawable.red_skull_crossbones;
-            }
-            else if (hazardLevel.equals("Moderate")) {
+            } else if (hazardLevel.equals("Moderate")) {
                 image_id = R.drawable.ic_warning_yellow_24dp;
-            }
-            else {
+            } else {
                 image_id = R.drawable.greencheckmark;
             }
 
-
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
-
 
             myMarkerClassList.add(new MyMarkerClass(latLng1, restaurant.getName(), snippet,
                     image_id, index));
-
             markerIcons.put(latLng, image_id);
-
             restaurantIndexHolder.put(index, restaurantIndex);
-
             restaurantIndex++;
-
         }
     }
 
@@ -409,7 +383,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
 
             ImageView imageView = view1.findViewById(R.id.hazard_level);
-
 
             if (marker.getId() != null && markerIcons != null && markerIcons.size() > 0) {
                 int image_id = markerIcons.get(marker.getPosition());
@@ -442,28 +415,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /**
      * Renderer is required for ClusterManager. Particularly to change the marker icon.
      */
-
     public static class MarkerClusterRenderer extends DefaultClusterRenderer<
             MyMarkerClass> {
 
         private static final int MARKER_DIMENSION = 90;
-
         private final IconGenerator iconGenerator;
         private final ImageView markerImageView;
 
         MarkerClusterRenderer(Context context, GoogleMap map,
                               ClusterManager<MyMarkerClass> clusterManager) {
             super(context, map, clusterManager);
-
             iconGenerator = new IconGenerator(context);
-
             markerImageView = new ImageView(context);
-
             markerImageView.setLayoutParams(new ViewGroup.LayoutParams(MARKER_DIMENSION,
                     MARKER_DIMENSION));
-
             iconGenerator.setContentView(markerImageView);
-
         }
 
         @Override
@@ -471,15 +437,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                                    MarkerOptions markerOptions) {
 
             markerImageView.setImageResource(item.getVectorID());
-
             Bitmap icon = iconGenerator.makeIcon();
-
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-
             markerOptions.title(item.getTitle());
-
             markerOptions.snippet(item.getSnippet());
-
         }
 
         @Override
