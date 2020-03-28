@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/contraintLayoutImageList"
         android:layout_width="399dp"
-        android:layout_height="332dp"
+        android:layout_height="356dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="45dp"
         android:layout_marginEnd="10dp"
@@ -19,7 +19,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contraintLayoutTextViews">
+        app:layout_constraintTop_toBottomOf="@+id/contraintLayoutTextViews"
+        app:layout_constraintVertical_bias="0.19">
 
         <ImageView
             android:id="@+id/inspection_hazardImage"
@@ -37,7 +38,7 @@
         <ListView
             android:id="@+id/inspection_listView"
             android:layout_width="331dp"
-            android:layout_height="196dp"
+            android:layout_height="226dp"
             android:layout_marginStart="35dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="36dp"

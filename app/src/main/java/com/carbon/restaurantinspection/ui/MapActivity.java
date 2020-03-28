@@ -318,7 +318,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
 
             myMarkerClassList.add(new MyMarkerClass(latLng1, title, address,
-                    R.drawable.ic_warning_yellow_24dp, index));
+                    R.drawable.safepeg, index));
             markerIcons.put(latLng, 0);
             restaurantIndexHolder.put(index, restaurantIndex);
             restaurantIndex++;
@@ -339,11 +339,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             String hazardLevel = inspectionDetail.getHazardLevel();
             int image_id;
             if (hazardLevel.equals("High")) {
-                image_id = R.drawable.red_skull_crossbones;
+                image_id = R.drawable.highpeg;
             } else if (hazardLevel.equals("Moderate")) {
-                image_id = R.drawable.ic_warning_yellow_24dp;
+                image_id = R.drawable.midpeg;
             } else {
-                image_id = R.drawable.greencheckmark;
+                image_id = R.drawable.safepeg;
             }
 
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
