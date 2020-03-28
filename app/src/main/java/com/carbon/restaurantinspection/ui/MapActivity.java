@@ -23,14 +23,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -53,11 +51,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
-import com.google.maps.android.collections.MarkerManager;
 import com.google.maps.android.ui.IconGenerator;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -72,7 +67,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Button downloadButton;
     private Button cancelButton;
     private Dialog myDialog;
-    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -84,9 +78,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<MyMarkerClass> myMarkerClassList = new ArrayList<>();
     private RestaurantManager restaurantManager;
     private List<Restaurant> restaurantList;
-
-
-    public static final String INTENT_NAME = "com/carbon/restaurantinspection/model/MainActivity.java:30";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
