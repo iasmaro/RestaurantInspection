@@ -75,7 +75,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.back:
-              startActivity(new Intent(this, RestaurantDetailsActivity.class));
+              finish();
         }
         return super.onOptionsItemSelected(item);
     }
