@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.carbon.restaurantinspection.ui.InspectionDetailsActivity;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Favourites {
@@ -13,10 +14,20 @@ public class Favourites {
 
     public static void addRestaurantToFavourites(String trackingNumber) {
         favouriteList.add(trackingNumber);
-        System.out.println("here");System.out.println("here");System.out.println("here");System.out.println("here");
-        for (int i = 0; i < favouriteList.size(); i++) {
-            System.out.println(favouriteList.get(i));
+    }
+
+    public static boolean isRestaurantInFavourites(String trackingNumber) {
+        int i = 0;
+        for (String restaurant : favouriteList) {
+            if (restaurant.equals(trackingNumber)) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    public static void removeRestaurantToFavourites(String trackingNumber) {
+        favouriteList.remove(trackingNumber);
     }
 
     private void extractDataFromIntent() {

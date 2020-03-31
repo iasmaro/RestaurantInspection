@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="11dp"
             android:fontFamily="sans-serif"
             android:text="@string/coordinates"
             android:textColor="#000000"
@@ -50,13 +50,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Address" />
 
-        <CheckBox
-            android:id="@+id/favouriteBox"
+        <Switch
+            android:id="@+id/favouriteSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="11dp"
             android:text="@string/favourite"
+            android:textSize="17sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Coordinates" />
     </androidx.constraintlayout.widget.ConstraintLayout>

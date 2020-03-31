@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.carbon.restaurantinspection.model.Favourites.addRestaurantToFavourites;
+import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
+import static com.carbon.restaurantinspection.model.Favourites.removeRestaurantToFavourites;
 
 /**
  * Class makes it easier to display an icon beside the inspections
@@ -78,14 +79,12 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_restaurant_details);
 
         getIntents();
         RestaurantManager restManager = RestaurantManager.getInstance(this);
         myInspectionManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
-        setContentView(R.layout.activity_restaurant_details);
-
-        setUpCheckBox();
 
         toolbarBackButton();
         clickCoordsToMap();
@@ -93,15 +92,31 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         populateStringList();
         populateListView();
         onInspectionClick();
+
+        setUpCheckBox();
+        setUpCheckBoxClick();
     }
 
     private void setUpCheckBox() {
-        CheckBox checkBox = findViewById(R.id.favouriteBox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final Switch favouriteSwitch = findViewById(R.id.favouriteSwitch);
+        if(isRestaurantInFavourites(trackingNum)){
+            favouriteSwitch.setChecked(true);
+        } else {
+            favouriteSwitch.setChecked(false);
+        }
+    }
+
+    private void setUpCheckBoxClick() {
+        final Switch favouriteSwitch = findViewById(R.id.favouriteSwitch);
+        favouriteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     addRestaurantToFavourites(trackingNum);
+                    favouriteSwitch.setChecked(true);
+                } else {
+                    removeRestaurantToFavourites(trackingNum);
+                    favouriteSwitch.setChecked(false);
                 }
             }
         });
