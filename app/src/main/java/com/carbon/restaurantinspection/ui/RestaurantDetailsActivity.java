@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +27,8 @@ import com.carbon.restaurantinspection.model.RestaurantManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.carbon.restaurantinspection.model.Favourites.addRestaurantToFavourites;
 
 /**
  * Class makes it easier to display an icon beside the inspections
@@ -69,6 +73,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     List<InspectionDetail> inspections;
     public static double longatude = 0;
     public static double latitude = 0;
+//    private ArrayList<String> favouriteList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +85,26 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         restaurant = restManager.getRestaurant(index);
         setContentView(R.layout.activity_restaurant_details);
 
+        setUpCheckBox();
+
         toolbarBackButton();
         clickCoordsToMap();
         updateAddress();
         populateStringList();
         populateListView();
         onInspectionClick();
+    }
+
+    private void setUpCheckBox() {
+        CheckBox checkBox = findViewById(R.id.favouriteBox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    addRestaurantToFavourites(trackingNum);
+                }
+            }
+        });
     }
 
     private void clickCoordsToMap() {

@@ -35,4 +35,5 @@
     <string name="item_view_critical_issues">critical issues</string>
     <string name="item_view_non_critical_issues">non-critical issues</string>
     <string name="back">Back</string>
+    <string name="favourite">Favourite</string>
 </resources>
