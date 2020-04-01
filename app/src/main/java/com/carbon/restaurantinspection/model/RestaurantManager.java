@@ -18,6 +18,7 @@ import java.util.Iterator;
  */
 public class RestaurantManager implements Iterable<Restaurant>{
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
+    private ArrayList<Restaurant> searchList = new ArrayList<>();
 
     private static RestaurantManager instance;
 
@@ -35,6 +36,15 @@ public class RestaurantManager implements Iterable<Restaurant>{
         }
         parseFile(file);
         sortRestaurants();
+    }
+
+    public ArrayList<Restaurant> searchRestaurants(String search) {
+        for (Restaurant restaurant : restaurantList) {
+            if (restaurant.getName().contains(search)) {
+                searchList.add(restaurant);
+            }
+        }
+        return searchList;
     }
 
     private void sortRestaurants() {
