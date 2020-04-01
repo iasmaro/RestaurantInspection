@@ -11,12 +11,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
  * RestaurantManager class is a singleton class that manages a list of Restaurants.
  */
 public class RestaurantManager implements Iterable<Restaurant>{
+    private Hashtable<String, Restaurant> restaurantHashtable = new Hashtable<>();
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
     private ArrayList<Restaurant> searchList = new ArrayList<>();
 
@@ -45,6 +47,10 @@ public class RestaurantManager implements Iterable<Restaurant>{
             }
         }
         return searchList;
+    }
+
+    public void clearSearch() {
+        searchList.clear();
     }
 
     private void sortRestaurants() {
@@ -104,6 +110,7 @@ public class RestaurantManager implements Iterable<Restaurant>{
         Restaurant restaurant = new Restaurant(trackingNumber, restaurantName, restaurantAddress,
                 restaurantCity, type, latitude, longitude);
         restaurantList.add(restaurant);
+        restaurantHashtable.put(trackingNumber, restaurant);
     }
 
     public static RestaurantManager getInstance(Context context) {
@@ -127,6 +134,13 @@ public class RestaurantManager implements Iterable<Restaurant>{
         this.restaurantList = restaurantList;
     }
 
+    public ArrayList<Restaurant> getFiltered (ArrayList<String> trackingNumbers) {
+        ArrayList<Restaurant> filtered = new ArrayList<>();
+        for (String trackingNumber: trackingNumbers) {
+            filtered.add(restaurantHashtable.get(trackingNumber));
+        }
+        return filtered;
+    }
 
     // Supports adding restaurants
     public void add(Restaurant restaurant) {

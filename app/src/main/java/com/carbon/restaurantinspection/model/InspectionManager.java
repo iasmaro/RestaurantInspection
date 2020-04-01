@@ -129,4 +129,24 @@ public class InspectionManager {
     public ArrayList<InspectionDetail> getInspections(String trackingNumber) {
         return inspections.get(trackingNumber);
     }
+
+    public ArrayList<String> filterLessRestaurants(int max) {
+        ArrayList<String> restaurants = new ArrayList<>();
+        for (String key: inspections.keySet()) {
+            if (inspections.get(key).get(0).getNumCritical() <= max) {
+                restaurants.add(key);
+            }
+        }
+        return restaurants;
+    }
+
+    public ArrayList<String> filterGreaterRestaurants(int max) {
+        ArrayList<String> restaurants = new ArrayList<>();
+        for (String key: inspections.keySet()) {
+            if (inspections.get(key).get(0).getNumCritical() >= max) {
+                restaurants.add(key);
+            }
+        }
+        return restaurants;
+    }
 }
