@@ -19,12 +19,24 @@ public class Favourites {
 
     public static void addRestaurantToFavourites(String trackingNumber) {
         favouriteList.add(trackingNumber);
+        System.out.println("addRes1taurantToFavourites");System.out.println("addRestau6rantToFavourites");System.out.println("addRestaurantToFavouri9tes");System.out.println("addR78estaurantToFavourites");System.out.println("a21ddRestaurantToFavourites");
+        System.out.println("addRest4aurantToFavourites");System.out.println("addRestau8rantToFavourites");System.out.println("addRestaurantToFavouri9es");System.out.println("addRe89staurantToFavourites");System.out.println("a23ddRestaurantToFavourites");
+        printList();
         editor.putString(FAVOURITE_PREFS, arrayListToString());
         editor.apply();
     }
 
+    public static void printList() {
+        for (String restaurant : favouriteList) {
+            System.out.println(restaurant);
+        }
+    }
+
     public static void removeRestaurantToFavourites(String trackingNumber) {
+        System.out.println("removeRestaurantToFavourites1");System.out.println("removeRestaurantT2oFavourites");System.out.println("removeRestauran4tToFavourites");System.out.println("remo6veRestaurantToFavourites");System.out.println("removeRestaura8ntToFavourites");
+        System.out.println("removeRestaurantToFavouri4tes");System.out.println("removeRestauran3tToFavourites");System.out.println("removeRestaura5ntToFavourites");System.out.println("remo7veRestaurantToFavourites");System.out.println("removeRestauran7tToFavourites");
         favouriteList.remove(trackingNumber);
+        printList();
         editor.putString(FAVOURITE_PREFS, arrayListToString());
         editor.apply();
     }

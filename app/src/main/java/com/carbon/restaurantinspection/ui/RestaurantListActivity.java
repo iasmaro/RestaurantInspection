@@ -1,6 +1,7 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
@@ -20,6 +23,9 @@ import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
+import static com.carbon.restaurantinspection.model.Favourites.printList;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
  * For each restaurant, it shows the inspection information which includes
@@ -62,6 +68,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         ListView list = findViewById(R.id.restaurant_list_view);
         list.setAdapter(adapter);
     }
+
     private void setupClickableRestaurants() {
         ListView list = findViewById(R.id.restaurant_list_view);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,8 +96,10 @@ public class RestaurantListActivity extends AppCompatActivity {
             }
 
             String restaurantName = restaurantManager.getRestaurant(position).getName();
+            String trackingNumber = restaurantManager.getRestaurant(position).getTrackingNumber();
 
             setRestaurantNameAndIcon(restaurantName, itemView);
+            setBackground(trackingNumber, itemView);
 
             ArrayList<InspectionDetail> inspections = getInspectionArrayList(position);
             if (inspections != null) {
@@ -100,6 +109,27 @@ public class RestaurantListActivity extends AppCompatActivity {
                 inspectionsIsNull(null, itemView);
             }
             return itemView;
+        }
+
+        private void setBackground(String trackingNumber, View itemView) {
+            System.out.println("list is: ");
+            printList();
+            System.out.println("setBa1ckground");System.out.println("setBac3kground");System.out.println("setBackg5round");System.out.println("setBackg7round");System.out.println("setBack8ground");
+            System.out.println("setBa2ckground");System.out.println("setBac4kground");System.out.println("setBackg6round");System.out.println("setBackg8round");System.out.println("setBac9kground");
+            printList();
+            ConstraintLayout layout = itemView.findViewById(R.id.restaurant_list_layout);
+            if (isRestaurantInFavourites(trackingNumber)) {
+                Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.red_hearts, null);
+                drawable.setAlpha(70);
+                layout.setBackground(drawable);
+                System.out.println("SET");System.out.println("SET");System.out.println("SET");System.out.println("SET");
+                System.out.println("Here :  SET BACKGROUND IMAGE TO HEARTS");
+            }
+            else {
+                layout.setBackgroundResource(0);
+                System.out.println("REMOVED");System.out.println("REMOVED");System.out.println("REMOVED");
+                System.out.println("Here :  REMOVED BACKGROUND IMAGE TO HEARTS");
+            }
         }
 
         private void inspectionsIsNull(ArrayList<InspectionDetail> inspections, View itemView) {
