@@ -1,9 +1,12 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +22,9 @@ import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import static com.carbon.restaurantinspection.model.Favourites.setFavouriteList;
+import static com.carbon.restaurantinspection.model.Favourites.stringToArrayList;
+
 /** Set up the map view and ensure services from google maps API**/
 public class MainActivity extends AppCompatActivity {
     // reference code from Youtuber: CodingWithMitch Playlist: Google Maps & Google Places Android Course
@@ -29,19 +35,34 @@ public class MainActivity extends AppCompatActivity {
     private Button cancelButton;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private Dialog myDialog;
+    private static Context contextOfApplication;
+    private static final String FAVOURITE_PREFS = "FavouriteList";
 
-    Button btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        contextOfApplication = getApplicationContext();
         myDialog = new Dialog(this);
+
+        getDataFromPrefs();
+
         if (isServicesOK()) {
             Log.d("main", "sup");
             updateDownloader = new UpdateDownloader(this);
             startLoadingScreen();
             checkForUpdates();
         }
+    }
+
+    private void getDataFromPrefs() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String favouriteString = preferences.getString(FAVOURITE_PREFS, "");
+        setFavouriteList(stringToArrayList(favouriteString));
+    }
+
+    public static Context getContextOfApplication() {
+        return contextOfApplication;
     }
 
     private void setUpDownloadButton() {
