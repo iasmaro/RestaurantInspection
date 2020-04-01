@@ -72,7 +72,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private String trackingNum;
     List<InspectionDetail> inspections;
-    public static double longatude = 0;
+    public static double longitude = 0;
     public static double latitude = 0;
 //    private ArrayList<String> favouriteList = new ArrayList<>();
 
@@ -95,6 +95,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
         setUpCheckBox();
         setUpCheckBoxClick();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, RestaurantListActivity.class));
     }
 
     private void setUpCheckBox() {
@@ -148,9 +153,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.back:
-                startActivity(new Intent(this, RestaurantListActivity.class));
+        if (item.getItemId() == R.id.back) {
+            startActivity(new Intent(this, RestaurantListActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

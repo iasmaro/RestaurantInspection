@@ -179,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            if(RestaurantDetailsActivity.latitude == 0 && RestaurantDetailsActivity.longatude == 0){
+            if(RestaurantDetailsActivity.latitude == 0 && RestaurantDetailsActivity.longitude == 0){
                 getCurrentLocation();
             }
 

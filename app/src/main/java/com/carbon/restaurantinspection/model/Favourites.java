@@ -11,6 +11,7 @@ import java.util.Collections;
 
 public class Favourites {
     private static ArrayList<String> favouriteList = new ArrayList<>();
+    private static ArrayList<String> dateList = new ArrayList<>();
     private static Context contextOfApplication = MainActivity.getContextOfApplication();
     private static SharedPreferences preferences = PreferenceManager
             .getDefaultSharedPreferences(contextOfApplication);
