@@ -71,6 +71,12 @@ public class InspectionDetail {
         return dateOfInspection;
     }
 
+    public boolean isLessThanYearAgo() {
+        Calendar inspectionDate = getInspecDate();
+        Calendar yearAgo = getYearAgo();
+        return yearAgo.before(inspectionDate);
+    }
+
     private Calendar getInspecDate(){
         Calendar inspecDate = new GregorianCalendar();
         try {

@@ -21,6 +21,9 @@ public class RestaurantManager implements Iterable<Restaurant>{
     private Hashtable<String, Restaurant> restaurantHashtable = new Hashtable<>();
     private ArrayList<Restaurant> restaurantList = new ArrayList<>();
     private ArrayList<Restaurant> searchList = new ArrayList<>();
+    private ArrayList<Restaurant> filterList = new ArrayList<>();
+    private String searchTerm;
+    private ArrayList<Restaurant> searchFilterList = new ArrayList<>();
 
     private static RestaurantManager instance;
 
@@ -38,19 +41,6 @@ public class RestaurantManager implements Iterable<Restaurant>{
         }
         parseFile(file);
         sortRestaurants();
-    }
-
-    public ArrayList<Restaurant> searchRestaurants(String search) {
-        for (Restaurant restaurant : restaurantList) {
-            if (restaurant.getName().contains(search)) {
-                searchList.add(restaurant);
-            }
-        }
-        return searchList;
-    }
-
-    public void clearSearch() {
-        searchList.clear();
     }
 
     private void sortRestaurants() {
@@ -130,21 +120,59 @@ public class RestaurantManager implements Iterable<Restaurant>{
         return restaurantList;
     }
 
-    public void setRestaurantList(ArrayList <Restaurant> restaurantList) {
-        this.restaurantList = restaurantList;
+    public ArrayList<Restaurant> searchRestaurants(String search) {
+        searchTerm = search;
+        ArrayList<Restaurant> searched = searchList;
+        if (filterList.size() > 0) {
+            searchFiltered();
+            searched = searchFilterList;
+        }
+        searchList.clear();
+        for (Restaurant restaurant : restaurantList) {
+            if (restaurant.getName().contains(search)) {
+                searchList.add(restaurant);
+            }
+        }
+        return searched;
+    }
+
+    public ArrayList<Restaurant> clearSearch() {
+        searchList.clear();
+        if (filterList.size() > 0) {
+            return filterList;
+        } else {
+            return restaurantList;
+        }
     }
 
     public ArrayList<Restaurant> getFiltered (ArrayList<String> trackingNumbers) {
-        ArrayList<Restaurant> filtered = new ArrayList<>();
+        ArrayList<Restaurant> filtered = filterList;
         for (String trackingNumber: trackingNumbers) {
-            filtered.add(restaurantHashtable.get(trackingNumber));
+            filterList.add(restaurantHashtable.get(trackingNumber));
+        }
+        if (searchList.size() > 0) {
+            searchFilterList.clear();
+            searchFiltered();
+            filtered = searchFilterList;
         }
         return filtered;
     }
 
-    // Supports adding restaurants
-    public void add(Restaurant restaurant) {
-        restaurantList.add(restaurant);
+    public ArrayList<Restaurant> clearFilter() {
+        filterList.clear();
+        if (searchList.size() > 0) {
+            return searchList;
+        } else {
+            return restaurantList;
+        }
+    }
+
+    private void searchFiltered() {
+        for (Restaurant restaurant : filterList) {
+            if (restaurant.getName().contains(searchTerm)) {
+                searchFilterList.add(restaurant);
+            }
+        }
     }
 
     @Override
