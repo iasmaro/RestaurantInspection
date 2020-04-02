@@ -225,13 +225,13 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
                 TextView numCriticalIssues = itemView.findViewById(R.id.numCritical);
                 String numCritical = Integer.toString(currentInspection.getNumCritical());
-                String criticalIssuesDisplay = getString(R.string.itemViewCriticalIssues) + " "
+                String criticalIssuesDisplay = getString(R.string.criticalIssues) + " "
                         + numCritical;
                 numCriticalIssues.setText(criticalIssuesDisplay);
 
                 TextView numNonCriticalIssues = itemView.findViewById(R.id.numNonCritical);
                 String numNonCritical = Integer.toString(currentInspection.getNumNonCritical());
-                String nonCriticalIssuesDisplay = getString(R.string.itemViewNonCriticalIssues)
+                String nonCriticalIssuesDisplay = getString(R.string.nonCriticalIssues)
                         + " " + numNonCritical;
                 numNonCriticalIssues.setText(nonCriticalIssuesDisplay);
             }

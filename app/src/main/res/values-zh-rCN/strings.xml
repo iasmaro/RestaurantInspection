@@ -8,11 +8,6 @@
     <string name="latitude">纬度:</string>
     <string name="latitudeValue">纬度</string>
     <string name="inspection">检查</string>
-    <string name="date_inspection_test">日期：2019年5月3日</string>
-    <string name="type_inspection_test">类型：常规</string>
-    <string name="critical_issues__inspection_test">关键问题：4</string>
-    <string name="non_critical_issues_inspection_test">非关键问题：2</string>
-    <string name="hazard_level__inspection_test">危险等级：高</string>
     <string name="loadingMessage">载入中</string>
     <string name="updatesAvailable">一些更新可用。 您要下载吗？</string>
     <string name="downloading">正在下载 请稍候</string>
@@ -34,14 +29,15 @@
     <string name="address">地址:</string>
     <string name="coordinates">座标:</string>
     <string name="ifNoInspection">暂无检查</string>
-    <string name="itemViewCriticalIssues">关键问题:</string>
-    <string name="itemViewNonCriticalIssues">" 非关键问题:"</string>
-
-
-
-
+    <string name="criticalIssues">关键问题:</string>
+    <string name="nonCriticalIssues">" 非关键问题:"</string>
 
     <string name="inspectionDetails">餐厅详情</string>
+    <string name="date">日期：</string>
+    <string name="type">类型：</string>
+    <string name="violation">违反</string>
+    <string name="violationcode">违反代码:</string>
+
 
 
     <string name="map">地图</string>

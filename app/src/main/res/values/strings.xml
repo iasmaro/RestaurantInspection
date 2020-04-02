@@ -7,11 +7,6 @@
     <string name="inspection">Inspection</string>
     <string name="longitudeValue">Longitude</string>
     <string name="latitudeValue">Latitude</string>
-    <string name="date_inspection_test">Date: May 3rd, 2019</string>
-    <string name="type_inspection_test">Type: Routine</string>
-    <string name="critical_issues__inspection_test">Critical issues: 4</string>
-    <string name="non_critical_issues_inspection_test">Non-Critical issues: 2</string>
-    <string name="hazard_level__inspection_test">Hazard Level: High</string>
     <string name="loadingMessage">Loading</string>
     <string name="loading" translatable="false">.</string>
     <string name="updatesAvailable">Some updates are available.\nWould you like to download them?</string>
@@ -25,7 +20,6 @@
     <string name="back">Back</string>
 
 
-
     <string name="restaurantList">Restaurant List</string>
     <string name="unavailable">unavailable</string>
     <string name="issues"># Issues:</string>
@@ -36,17 +30,17 @@
     <string name="address">Address:</string>
     <string name="coordinates">Coordinates:</string>
     <string name="ifNoInspection">No inspections yet</string>
-    <string name="itemViewCriticalIssues">critical issues:</string>
-    <string name="itemViewNonCriticalIssues">non-critical issues:</string>
-
-
+    <string name="criticalIssues">Critical Issues:</string>
+    <string name="nonCriticalIssues">Non-critical Issues:</string>
 
     <string name="inspectionDetails">Inspection Details</string>
+    <string name="date">Date:</string>
+    <string name="type">Type:</string>
+    <string name="violation">violation</string>
+    <string name="violationcode">violationCode: </string>
+
 
     <string name="map">Map</string>
-
-
-
 
 
 </resources>
