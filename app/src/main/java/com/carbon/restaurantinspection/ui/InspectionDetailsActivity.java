@@ -120,7 +120,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
     private void updateViews(){
 
         TextView textView = findViewById(R.id.inspection_dateText);
-        String inspectionDate = inspectionList.get(inspectionPosition).getFullDate();
+        String inspectionDate = inspectionList.get(inspectionPosition).getFullDate(InspectionDetailsActivity.this);
         String dateDisplay = getString(R.string.date) + " " + inspectionDate;
         textView.setText(dateDisplay);
 

@@ -38,4 +38,17 @@
     <string name="violationcode">违反代码:</string>
 
     <string name="map">地图</string>
+
+    <string name="january">一月</string>
+    <string name="february">二月</string>
+    <string name="march">三月</string>
+    <string name="april">四月</string>
+    <string name="may">五月</string>
+    <string name="june">六月</string>
+    <string name="july">七月</string>
+    <string name="august">八月</string>
+    <string name="september">九月</string>
+    <string name="october">十月</string>
+    <string name="november">十一月</string>
+    <string name="december">十二月</string>
 </resources>

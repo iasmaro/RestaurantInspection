@@ -43,7 +43,7 @@ class InspectionDetailHolder {
     }
 
 
-    String getDate() {
+    String getDate(Context context) {
         return inspectionDetail.getInspectionDate(context);
     }
 
@@ -223,7 +223,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 imageView.setImageResource(currentInspection.getIconId());
 
                 TextView currentInspectionDate = itemView.findViewById(R.id.Text);
-                currentInspectionDate.setText(currentInspection.getDate());
+                currentInspectionDate.setText(currentInspection.getDate(getContext()));
 
                 TextView numCriticalIssues = itemView.findViewById(R.id.numCritical);
                 String numCritical = Integer.toString(currentInspection.getNumCritical());
