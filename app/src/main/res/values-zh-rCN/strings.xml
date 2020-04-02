@@ -13,7 +13,6 @@
     <string name="finishDownload">下载完成</string>
     <string name="downloadFailed">下载失败</string>
     <string name="finishButton">完</string>
-    <string name="item_view_date">日期</string>
     <string name="loadingMessage">载入中</string>
     <string name="downloadButton">下载</string>
     <string name="cancelButton">取消</string>
@@ -23,6 +22,7 @@
     <string name="issues">#问题:</string>
     <string name="recentInspectionDate">最近检查日期:</string>
     <string name="hazardLevel">危害等级:</string>
+    <string name="daysAgo">天前</string>
 
     <string name="restaurantDetails">餐厅详情</string>
     <string name="address">地址:</string>

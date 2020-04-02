@@ -24,7 +24,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
         android:lineSpacingExtra="3dp"
-        android:text="@string/item_view_date"
+        android:text="@string/date"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/icon"

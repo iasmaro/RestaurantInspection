@@ -1,6 +1,11 @@
 package com.carbon.restaurantinspection.model;
 
 
+import android.content.Context;
+import android.util.Log;
+
+import com.carbon.restaurantinspection.R;
+
 import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -37,7 +42,6 @@ public class InspectionDetail {
         if (violations != null) {
             addViolations(violations);
         }
-
     }
 
     private void addViolations(String[] strViolations) {
@@ -49,7 +53,7 @@ public class InspectionDetail {
         }
     }
 
-    public String getInspectionDate() {
+    public String getInspectionDate(Context context) {
         Calendar inspecDate = getInspecDate();
         Calendar monthAgo = getMonthAgo();
         Calendar yearAgo = getYearAgo();
@@ -57,7 +61,9 @@ public class InspectionDetail {
         String dateOfInspection = "";
         if (monthAgo.before(inspecDate)) {
             int days = daysBetween(inspecDate);
-            dateOfInspection = days + " days ago.";
+            String daysAgo = context.getString(R.string.daysAgo);
+            dateOfInspection = days + " " + daysAgo;
+            //dateOfInspection = days + " days ago";
         }
         else if (yearAgo.before(inspecDate)) {
             String month = getMonth(inspectionDate.substring(4, 6));
@@ -190,8 +196,8 @@ public class InspectionDetail {
         addViolations(violations);
     }
 
-    public String returnInsDetails() {
-        String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
-        return str;
-    }
+//    public String returnInsDetails() {
+//        String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
+//        return str;
+//    }
 }

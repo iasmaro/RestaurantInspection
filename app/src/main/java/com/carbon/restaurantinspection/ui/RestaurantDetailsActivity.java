@@ -32,6 +32,7 @@ import java.util.List;
 class InspectionDetailHolder {
     private InspectionDetail inspectionDetail;
     private int iconId;
+    Context context;
 
     InspectionDetailHolder(int id, InspectionDetail detail) {
         iconId = id;
@@ -41,8 +42,9 @@ class InspectionDetailHolder {
         return iconId;
     }
 
+
     String getDate() {
-        return inspectionDetail.getInspectionDate();
+        return inspectionDetail.getInspectionDate(context);
     }
 
     int getNumCritical(){

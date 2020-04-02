@@ -1,5 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -135,7 +135,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             numIssuesText.setText(numIssuesDisplay + " " + totalIssues);
             numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
-            String date = inspections.get(0).getInspectionDate();
+            String date = inspections.get(0).getInspectionDate(RestaurantListActivity.this);
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
             String recentInspectionDisplay = getString(R.string.recentInspectionDate);
             dateText.setText(recentInspectionDisplay + " " + date);

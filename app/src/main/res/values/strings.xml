@@ -13,17 +13,17 @@
     <string name="finishDownload">Download Complete</string>
     <string name="downloadFailed">Download Failed</string>
     <string name="finishButton">Finish</string>
-    <string name="item_view_date">Date</string>
     <string name="back">Back</string>
     <string name="loadingMessage">Loading</string>
     <string name="downloadButton">Download</string>
     <string name="cancelButton">Cancel</string>
-    
+
     <string name="restaurantList">Restaurant List</string>
     <string name="unavailable">unavailable</string>
     <string name="issues"># Issues:</string>
     <string name="recentInspectionDate">Recent Inspection:</string>
     <string name="hazardLevel">Hazard Level:</string>
+    <string name="daysAgo">days ago</string>
 
     <string name="restaurantDetails">Restaurant Details</string>
     <string name="address">Address:</string>
