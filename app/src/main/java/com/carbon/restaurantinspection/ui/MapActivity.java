@@ -10,17 +10,23 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -44,6 +50,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -70,6 +77,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private int index = -1;
     public static final String INTENT_NAME = "Map Activity";
 
+    private Toolbar toolbar;
+    ArrayAdapter<String> arrayAdapter;
+
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
         intent.putExtra(INTENT_NAME, index);
@@ -83,11 +93,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         getIntents();
+        restaurantManager = RestaurantManager.getInstance(this);
+        restaurantList = restaurantManager.getRestaurantList();
         markerIcons = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
+        toolbar = findViewById(R.id.toolbar);
         getLocationPermission();
-        toolbarBackButton();
+        toolbarSetUp();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.map_search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_icon);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search Here");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                arrayAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void toolbarSetUp() {
+        toolbarBackButton();
+        List<String> restaurantNames = new ArrayList<>();
+        int size = restaurantList.size();
+
+        for(int i = 0;i < size;i++){
+            String name = restaurantList.get(i).getName();
+            restaurantNames.add(name);
+        }
+
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                restaurantNames);
+    }
+
+
 
     private void getIntents() {
         Intent intent = getIntent();
@@ -95,7 +149,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void toolbarBackButton() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Map");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -286,8 +339,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
     private void setRestaurantMarkers() {
-        restaurantManager = RestaurantManager.getInstance(this);
-        restaurantList = restaurantManager.getRestaurantList();
 
         if(restaurantList != null){
             int numOfRestaurants = restaurantList.size();
