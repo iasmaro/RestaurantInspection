@@ -37,8 +37,7 @@
     <string name="date">Date:</string>
     <string name="type">Type:</string>
     <string name="violation">violation</string>
-    <string name="violationcode">violationCode: </string>
-
+    <string name="violationcode">violationCode:</string>
 
     <string name="map">Map</string>
 
