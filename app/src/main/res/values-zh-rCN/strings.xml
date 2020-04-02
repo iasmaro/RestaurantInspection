@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">餐厅检查</string>
+    <string name="back">后面</string>
+    <string name="inspection_details">餐厅详情</string>
+    <string name="restaurant_list">餐厅清单</string>
+    <string name="restaurant_name">餐厅名称：</string>
+    <string name="issues"># 问题</string>
+    <string name="recent_inspection_date">最近检查日期</string>
+    <string name="hazard_level">危害等级:</string>
+    <string name="address">地址</string>
+    <string name="address1">地址:</string>
+    <string name="longitude">经度:</string>
+    <string name="longitudeValue">经度</string>
+    <string name="latitude">纬度:</string>
+    <string name="latitudeValue">纬度</string>
+    <string name="inspection">检查</string>
+    <string name="coordinates">座标:</string>
+    <string name="date_inspection_test">日期：2019年5月3日</string>
+    <string name="type_inspection_test">类型：常规</string>
+    <string name="critical_issues__inspection_test">关键问题：4</string>
+    <string name="non_critical_issues_inspection_test">非关键问题：2</string>
+    <string name="hazard_level__inspection_test">危险等级：高</string>
+    <string name="ifNoInspection">暂无检查</string>
+    <string name="restaurant_details">餐厅详情</string>
+    <string name="loadingMessage">载入中</string>
+    <string name="updatesAvailable">一些更新可用。 您要下载吗？</string>
+    <string name="downloading">正在下载 请稍候</string>
+    <string name="downloadButton">下载</string>
+    <string name="cancelButton">取消</string>
+    <string name="finishDownload">下载完成</string>
+    <string name="downloadFailed">下载失败</string>
+    <string name="finishButton">完</string>
+    <string name="item_view_date">日期</string>
+    <string name="item_view_critical_issues">关键问题</string>
+    <string name="item_view_non_critical_issues">" 非关键问题"</string>
+    <string name="loading">。</string>
+</resources>
