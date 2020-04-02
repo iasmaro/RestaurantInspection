@@ -2,6 +2,8 @@ package com.carbon.restaurantinspection.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -9,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
@@ -18,7 +22,9 @@ import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
@@ -28,6 +34,8 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
+    private Toolbar toolbar;
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +44,53 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
+        toolbar = findViewById(R.id.toolbar);
 
-        toolbarBackButton();
+        toolbarSetUp();
         populateRestaurantListView();
         setupClickableRestaurants();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.map_search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_icon);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search Here");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                arrayAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void toolbarSetUp() {
+        toolbarBackButton();
+        List<Restaurant> restaurantList = restaurantManager.getRestaurantList();
+        int size = restaurantList.size();
+
+        List<String> restaurantNames = new ArrayList<>();
+        for(int i = 0; i < size; i++){
+            String name = restaurantList.get(i).getName();
+            restaurantNames.add(name);
+        }
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                restaurantNames);
+    }
+
     private void toolbarBackButton() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Restaurant List");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
