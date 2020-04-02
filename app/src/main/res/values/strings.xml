@@ -2,11 +2,7 @@
     <string name="app_name">Restaurant Inspection</string>
     <string name="google_maps_API_key" translatable="false">AIzaSyAQidbNN_t7fS5FOSh4SmPtV5QkdCqhrvY</string>
     <string name="inspection_details">Inspection Details</string>
-    <string name="restaurant_list">Restaurant List</string>
     <string name="restaurant_name">Restaurant Name:</string>
-    <string name="issues"># issues</string>
-    <string name="recent_inspection_date">Recent Inspection Date</string>
-    <string name="hazard_level">Hazard level:</string>
     <string name="address">Address</string>
     <string name="address1">Address:</string>
     <string name="longitude">Longitude:</string>
@@ -23,7 +19,7 @@
     <string name="ifNoInspection">No inspections yet</string>
     <string name="restaurant_details">Restaurant Details</string>
     <string name="loadingMessage">Loading</string>
-    <string name="loading">.</string>
+    <string name="loading" translatable="false">.</string>
     <string name="updatesAvailable">Some updates are available.\nWould you like to download them?</string>
     <string name="downloading">Downloading\nPlease Wait</string>
     <string name="downloadButton">Download</string>
@@ -35,4 +31,21 @@
     <string name="item_view_critical_issues">critical issues</string>
     <string name="item_view_non_critical_issues">non-critical issues</string>
     <string name="back">Back</string>
+
+
+
+    <string name="restaurantList">Restaurant List</string>
+    <string name="unavailable">unavailable</string>
+    <string name="issues"># Issues:</string>
+    <string name="recentInspectionDate">Recent Inspection:</string>
+    <string name="hazardLevel">Hazard Level:</string>
+
+
+
+    <string name="map">Map</string>
+
+
+
+
+
 </resources>

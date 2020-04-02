@@ -97,7 +97,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Map");
+        String activityTitle = getString(R.string.map);
+        getSupportActionBar().setTitle(activityTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
             @Override

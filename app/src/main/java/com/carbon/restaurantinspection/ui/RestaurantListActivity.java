@@ -45,7 +45,8 @@ public class RestaurantListActivity extends AppCompatActivity {
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Restaurant List");
+        String activityTitle = getString(R.string.restaurantList);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(activityTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
             @Override
@@ -103,11 +104,13 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
 
         private void inspectionsIsNull(ArrayList<InspectionDetail> inspections, View itemView) {
-            String unavailable = "Unavailable";
+            //String unavailable = "Unavailable";
+            String unavailable = getString(R.string.unavailable);
 
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-            String numIssuesDisplay = "# Issues: " + unavailable;
-            numIssuesText.setText(numIssuesDisplay);
+            String numIssues = getString(R.string.issues) + unavailable;
+                        //String numIssuesDisplay = "# Issues: " + unavailable;
+            numIssuesText.setText(numIssues);
             numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
@@ -130,20 +133,20 @@ public class RestaurantListActivity extends AppCompatActivity {
             int totalIssues = numCrit + numNonCrit;
 
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-            String numIssuesDisplay = "# Issues: " + totalIssues;
-            numIssuesText.setText(numIssuesDisplay);
+            String numIssues = getString(R.string.issues);
+            numIssuesText.setText(numIssues + " " + totalIssues);
             numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String date = inspections.get(0).getInspectionDate();
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String dateDisplay = "Recent Inspection: " + date;
-            dateText.setText(dateDisplay);
+            String recentInspection = getString(R.string.recentInspectionDate);
+            dateText.setText(recentInspection + " " + date);
             dateText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String hazardLevel = inspections.get(0).getHazardLevel();
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
-            String hazardLevelDisplay = "Hazard Level: " + hazardLevel;
-            hazardLevelText.setText(hazardLevelDisplay);
+            String hazardLevelDisplay = getString(R.string.hazardLevel);
+            hazardLevelText.setText(hazardLevelDisplay + " " + hazardLevel);
             if (hazardLevel.contains("Low")){
                 hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.lowCriticalColour));
             }

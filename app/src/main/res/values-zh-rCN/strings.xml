@@ -3,11 +3,7 @@
     <string name="app_name">餐厅检查</string>
     <string name="back">后面</string>
     <string name="inspection_details">餐厅详情</string>
-    <string name="restaurant_list">餐厅清单</string>
     <string name="restaurant_name">餐厅名称：</string>
-    <string name="issues"># 问题</string>
-    <string name="recent_inspection_date">最近检查日期</string>
-    <string name="hazard_level">危害等级:</string>
     <string name="address">地址</string>
     <string name="address1">地址:</string>
     <string name="longitude">经度:</string>
@@ -34,5 +30,15 @@
     <string name="item_view_date">日期</string>
     <string name="item_view_critical_issues">关键问题</string>
     <string name="item_view_non_critical_issues">" 非关键问题"</string>
-    <string name="loading">。</string>
+
+    <string name="restaurantList">餐厅清单</string>
+    <string name="unavailable">没有</string>
+    <string name="issues">#问题:</string>
+    <string name="recentInspectionDate">最近检查日期:</string>
+    <string name="hazardLevel">危害等级:</string>
+
+
+    <string name="map">地图</string>
+
+
 </resources>
