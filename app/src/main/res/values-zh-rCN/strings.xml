@@ -8,16 +8,15 @@
     <string name="latitude">纬度:</string>
     <string name="latitudeValue">纬度</string>
     <string name="inspection">检查</string>
-    <string name="loadingMessage">载入中</string>
     <string name="updatesAvailable">一些更新可用。 您要下载吗？</string>
     <string name="downloading">正在下载 请稍候</string>
-    <string name="downloadButton">下载</string>
-    <string name="cancelButton">取消</string>
     <string name="finishDownload">下载完成</string>
     <string name="downloadFailed">下载失败</string>
     <string name="finishButton">完</string>
     <string name="item_view_date">日期</string>
-
+    <string name="loadingMessage">载入中</string>
+    <string name="downloadButton">下载</string>
+    <string name="cancelButton">取消</string>
 
     <string name="restaurantList">餐厅清单</string>
     <string name="unavailable">没有</string>
@@ -38,9 +37,5 @@
     <string name="violation">违反</string>
     <string name="violationcode">违反代码:</string>
 
-
-
     <string name="map">地图</string>
-
-
 </resources>

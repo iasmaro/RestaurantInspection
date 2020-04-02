@@ -7,19 +7,18 @@
     <string name="inspection">Inspection</string>
     <string name="longitudeValue">Longitude</string>
     <string name="latitudeValue">Latitude</string>
-    <string name="loadingMessage">Loading</string>
     <string name="loading" translatable="false">.</string>
     <string name="updatesAvailable">Some updates are available.\nWould you like to download them?</string>
     <string name="downloading">Downloading\nPlease Wait</string>
-    <string name="downloadButton">Download</string>
-    <string name="cancelButton">Cancel</string>
     <string name="finishDownload">Download Complete</string>
     <string name="downloadFailed">Download Failed</string>
     <string name="finishButton">Finish</string>
     <string name="item_view_date">Date</string>
     <string name="back">Back</string>
-
-
+    <string name="loadingMessage">Loading</string>
+    <string name="downloadButton">Download</string>
+    <string name="cancelButton">Cancel</string>
+    
     <string name="restaurantList">Restaurant List</string>
     <string name="unavailable">unavailable</string>
     <string name="issues"># Issues:</string>
@@ -40,6 +39,4 @@
     <string name="violationcode">violationCode:</string>
 
     <string name="map">Map</string>
-
-
 </resources>
