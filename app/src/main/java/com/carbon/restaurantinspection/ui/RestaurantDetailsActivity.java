@@ -180,11 +180,14 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private void updateAddress() {
         TextView address = findViewById(R.id.Address);
         TextView latitude1 = findViewById(R.id.Coordinates);
-        String str = restaurant.getPhysicalAddress();
-        address.setText("Address: " + str);
+        String getAddress = restaurant.getPhysicalAddress();
+        String addressDisplay = getString(R.string.address) + " " + getAddress;
+        address.setText(addressDisplay);
+
         String longitude = Double.toString(restaurant.getLongitude());
         String latitude = Double.toString(restaurant.getLatitude());
-        latitude1.setText("Coordinates: " + longitude + ",  " + latitude);
+        String coordinatesDisplay = getString(R.string.coordinates) + " " + latitude + ", " + longitude;
+        latitude1.setText(coordinatesDisplay);
     }
 
     private void getIntents() {
@@ -217,17 +220,20 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 ImageView imageView = itemView.findViewById(R.id.icon);
                 imageView.setImageResource(currentInspection.getIconId());
 
-                TextView makeText = itemView.findViewById(R.id.Text);
-                makeText.setText(currentInspection.getDate());
+                TextView currentInspectionDate = itemView.findViewById(R.id.Text);
+                currentInspectionDate.setText(currentInspection.getDate());
 
-                TextView makeText2 = itemView.findViewById(R.id.numCritical);
-                String numCrit = Integer.toString(currentInspection.getNumCritical());
-                makeText2.setText("Critical issues: "+ numCrit);
+                TextView numCriticalIssues = itemView.findViewById(R.id.numCritical);
+                String numCritical = Integer.toString(currentInspection.getNumCritical());
+                String criticalIssuesDisplay = getString(R.string.itemViewCriticalIssues) + " "
+                        + numCritical;
+                numCriticalIssues.setText(criticalIssuesDisplay);
 
-                String numNonCrit = Integer.toString(currentInspection.getNumNonCritical());
-                TextView makeText3 = itemView.findViewById(R.id.numNonCritical);
-                makeText3.setText("Non-critical issues: "+ numNonCrit);
-
+                TextView numNonCriticalIssues = itemView.findViewById(R.id.numNonCritical);
+                String numNonCritical = Integer.toString(currentInspection.getNumNonCritical());
+                String nonCriticalIssuesDisplay = getString(R.string.itemViewNonCriticalIssues)
+                        + " " + numNonCritical;
+                numNonCriticalIssues.setText(nonCriticalIssuesDisplay);
             }
             return itemView;
         }
