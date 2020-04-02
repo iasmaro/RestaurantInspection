@@ -104,22 +104,20 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
 
         private void inspectionsIsNull(ArrayList<InspectionDetail> inspections, View itemView) {
-            //String unavailable = "Unavailable";
             String unavailable = getString(R.string.unavailable);
 
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-            String numIssues = getString(R.string.issues) + unavailable;
-                        //String numIssuesDisplay = "# Issues: " + unavailable;
-            numIssuesText.setText(numIssues);
+            String numIssuesDisplay = getString(R.string.issues) + " " + unavailable;
+            numIssuesText.setText(numIssuesDisplay);
             numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             TextView inspectionDateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String inspectionDateContent = "Recent Inspection: " + unavailable;
-            inspectionDateText.setText(inspectionDateContent);
+            String inspectionDateDisplay = getString(R.string.recentInspectionDate) + " " + unavailable;
+            inspectionDateText.setText(inspectionDateDisplay);
             inspectionDateText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
-            String hazardLevelDisplay = "Hazard Level: " + unavailable;
+            String hazardLevelDisplay = getString(R.string.hazardLevel) + " " + unavailable;
             hazardLevelText.setText(hazardLevelDisplay);
             hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.unavailableColour));
 
@@ -133,20 +131,21 @@ public class RestaurantListActivity extends AppCompatActivity {
             int totalIssues = numCrit + numNonCrit;
 
             TextView numIssuesText = itemView.findViewById(R.id.num_issues_textview);
-            String numIssues = getString(R.string.issues);
-            numIssuesText.setText(numIssues + " " + totalIssues);
+            String numIssuesDisplay = getString(R.string.issues);
+            numIssuesText.setText(numIssuesDisplay + " " + totalIssues);
             numIssuesText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String date = inspections.get(0).getInspectionDate();
             TextView dateText = itemView.findViewById(R.id.recent_inspection_date_textview);
-            String recentInspection = getString(R.string.recentInspectionDate);
-            dateText.setText(recentInspection + " " + date);
+            String recentInspectionDisplay = getString(R.string.recentInspectionDate);
+            dateText.setText(recentInspectionDisplay + " " + date);
             dateText.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
             String hazardLevel = inspections.get(0).getHazardLevel();
             TextView hazardLevelText = itemView.findViewById(R.id.hazard_level_textview);
             String hazardLevelDisplay = getString(R.string.hazardLevel);
             hazardLevelText.setText(hazardLevelDisplay + " " + hazardLevel);
+
             if (hazardLevel.contains("Low")){
                 hazardLevelText.setTextColor(ContextCompat.getColor(getContext(), R.color.lowCriticalColour));
             }
