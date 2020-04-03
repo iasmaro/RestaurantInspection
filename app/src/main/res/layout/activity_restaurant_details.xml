@@ -30,7 +30,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif"
-            android:text="@string/address1"
+            android:text="@string/address"
             android:textColor="#000000"
             android:textSize="17sp"
             android:typeface="normal"
