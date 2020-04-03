@@ -97,7 +97,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Map");
+        String activityTitle = getString(R.string.map);
+        getSupportActionBar().setTitle(activityTitle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
             @Override
@@ -341,8 +342,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(inspectionDetail != null){
-            String snippet = "Address: " + restaurant.getPhysicalAddress() + "\n\n" +
-                    "Hazard level " + inspectionDetail.getHazardLevel();
+            String addressDisplay = getString(R.string.address);
+            String hazardLevelDisplay = getString(R.string.hazardLevel);
+            String snippet = addressDisplay + " " + restaurant.getPhysicalAddress() + "\n\n" +
+                    hazardLevelDisplay + " " + inspectionDetail.getHazardLevel();
 
             String hazardLevel = inspectionDetail.getHazardLevel();
             int image_id;
