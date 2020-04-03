@@ -37,7 +37,6 @@ import static com.carbon.restaurantinspection.model.Favourites.removeRestaurantT
 class InspectionDetailHolder {
     private InspectionDetail inspectionDetail;
     private int iconId;
-    Context context;
 
     InspectionDetailHolder(int id, InspectionDetail detail) {
         iconId = id;
@@ -76,7 +75,6 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     List<InspectionDetail> inspections;
     public static double longitude = 0;
     public static double latitude = 0;
-//    private ArrayList<String> favouriteList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +117,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    addRestaurantToFavourites(trackingNum);
+                    addRestaurantToFavourites(trackingNum, inspections.get(0).getInspectionDate(getApplicationContext()));
                     favouriteSwitch.setChecked(true);
                 } else {
                     removeRestaurantToFavourites(trackingNum);

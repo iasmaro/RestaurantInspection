@@ -1,6 +1,5 @@
 package com.carbon.restaurantinspection.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -22,6 +22,7 @@ import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -114,23 +115,14 @@ public class RestaurantListActivity extends AppCompatActivity {
         }
 
         private void setBackground(String trackingNumber, View itemView) {
-            System.out.println("list is: ");
-            printList();
-            System.out.println("setBa1ckground");System.out.println("setBac3kground");System.out.println("setBackg5round");System.out.println("setBackg7round");System.out.println("setBack8ground");
-            System.out.println("setBa2ckground");System.out.println("setBac4kground");System.out.println("setBackg6round");System.out.println("setBackg8round");System.out.println("setBac9kground");
-            printList();
             ConstraintLayout layout = itemView.findViewById(R.id.restaurant_list_layout);
             if (isRestaurantInFavourites(trackingNumber)) {
                 Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.red_hearts, null);
                 drawable.setAlpha(70);
                 layout.setBackground(drawable);
-                System.out.println("SET");System.out.println("SET");System.out.println("SET");System.out.println("SET");
-                System.out.println("Here :  SET BACKGROUND IMAGE TO HEARTS");
             }
             else {
                 layout.setBackgroundResource(0);
-                System.out.println("REMOVED");System.out.println("REMOVED");System.out.println("REMOVED");
-                System.out.println("Here :  REMOVED BACKGROUND IMAGE TO HEARTS");
             }
         }
 

@@ -22,6 +22,8 @@ import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import static com.carbon.restaurantinspection.model.Favourites.printList;
+import static com.carbon.restaurantinspection.model.Favourites.setDateList;
 import static com.carbon.restaurantinspection.model.Favourites.setFavouriteList;
 import static com.carbon.restaurantinspection.model.Favourites.stringToArrayList;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Dialog myDialog;
     private static Context contextOfApplication;
     private static final String FAVOURITE_PREFS = "FavouriteList";
+    private static final String DATE_PREFS = "DateList";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         contextOfApplication = getApplicationContext();
         myDialog = new Dialog(this);
 
-        getDataFromPrefs();
+        getDataFromSharedPrefs();
 
         if (isServicesOK()) {
             Log.d("main", "sup");
@@ -55,10 +58,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getDataFromPrefs() {
+    private void getDataFromSharedPrefs() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferences.edit().clear().commit();
         String favouriteString = preferences.getString(FAVOURITE_PREFS, "");
         setFavouriteList(stringToArrayList(favouriteString));
+        String dateString = preferences.getString(DATE_PREFS, "");
+        setDateList(stringToArrayList(dateString));
+        System.out.println("DATE");System.out.println("DATE");System.out.println("DATE");System.out.println("DATE");
+        System.out.println(stringToArrayList(dateString));
+        System.out.println("FAVOURITE");System.out.println("FAVOURITE");System.out.println("FAVOURITE");System.out.println("FAVOURITE");
+        System.out.println(stringToArrayList(favouriteString));
     }
 
     public static Context getContextOfApplication() {
