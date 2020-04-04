@@ -52,9 +52,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import static com.carbon.restaurantinspection.model.Favourites.getDate;
 import static com.carbon.restaurantinspection.model.Favourites.getFavouriteInspectionsList;
-import static com.carbon.restaurantinspection.model.Favourites.getFavouriteList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -536,23 +534,47 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 dialog.dismiss();
             }
         });
+        populateListView();
         dialog.show();
     }
 
     private void updateNewFavouriteRestaurants() {
         newFavouriteInspections = getFavouriteInspectionsList(MapActivity.this);
-
     }
 
-//    private void populateListView() {
-//        ArrayAdapter<FavouriteInspections> adapter = new MapActivity.MyListAdapter();
-//        ListView list = findViewById(R.id.newFavouriteInspectionsList);
-//        list.setAdapter(adapter);
-//    }
-//
-//    private class MyListAdapter extends ArrayAdapter<FavouriteInspections> {
-//        public MyListAdapter(){
-//            super(MapActivity.this, R.layout.fa, violationList);
-//        }
-//    }
+    private void populateListView() {
+        ArrayAdapter<FavouriteInspections> adapter = new MapActivity.MyListAdapter();
+        ListView list = findViewById(R.id.newFavouriteInspectionsList);
+        list.setAdapter(adapter);
+    }
+
+    private class MyListAdapter extends ArrayAdapter<FavouriteInspections> {
+        public MyListAdapter(){
+            super(MapActivity.this, R.layout.new_favourites_inspections, newFavouriteInspections);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View itemView = convertView;
+
+            if (itemView == null){
+                itemView = getLayoutInflater().inflate(R.layout.new_favourites_inspections, parent,
+                        false);
+            }
+
+            FavouriteInspections currentFavourite = newFavouriteInspections.get(position);
+
+            TextView restaurantTitle = itemView.findViewById(R.id.favourite_restaurantTitle);
+            restaurantTitle.setText(currentFavourite.getRestaurantName());
+
+            TextView inspectionDate = itemView.findViewById(R.id.favourite_dateOfInspection);
+            inspectionDate.setText(currentFavourite.getInspectionDate());
+
+            TextView hazardLevel  = itemView.findViewById(R.id.favourite_hazardLevel);
+            hazardLevel.setText(currentFavourite.getHazardLevel());
+
+            return itemView;
+        }
+    }
 }
