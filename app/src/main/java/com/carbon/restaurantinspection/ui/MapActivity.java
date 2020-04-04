@@ -87,6 +87,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         restaurantIndexHolder = new Hashtable<>();
         getLocationPermission();
         toolbarBackButton();
+
+        setUpNewFavouriteInspections();
+    }
+
+    private void setUpNewFavouriteInspections() {
+
     }
 
     private void getIntents() {

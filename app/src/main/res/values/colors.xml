@@ -9,5 +9,7 @@
     <color name="highCriticalColour">#E53935</color>
     <color name="unavailableColour">#777373</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background">#eaede6</color>
 </resources>
 
