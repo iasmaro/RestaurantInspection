@@ -98,9 +98,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         toolbarBackButton();
 
         updateNewFavouriteRestaurants();
+        System.out.println("new list");System.out.println("new list");System.out.println("new list");System.out.println("new list");
+        System.out.println(newFavouriteInspections);
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
-        dialog = new Dialog(this);
-        showNewFavouriteInspectionsDialog();
+        if (!(newFavouriteInspections == null)) {
+            dialog = new Dialog(this);
+            showNewFavouriteInspectionsDialog();
+        }
     }
 
     private void getIntents() {
@@ -535,6 +539,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
         populateListView();
+        ListView list = dialog.findViewById(R.id.newFavouriteInspectionsList);
+        TextView emptyText = dialog.findViewById(R.id.emptyListView);
+        list.setEmptyView(emptyText);
+
         dialog.show();
     }
 
@@ -543,8 +551,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void populateListView() {
-        ArrayAdapter<FavouriteInspections> adapter = new MapActivity.MyListAdapter();
-        ListView list = findViewById(R.id.newFavouriteInspectionsList);
+//        updateNewFavouriteRestaurants();
+        ArrayAdapter<FavouriteInspections> adapter = new MyListAdapter();
+        ListView list = dialog.findViewById(R.id.newFavouriteInspectionsList);
         list.setAdapter(adapter);
     }
 

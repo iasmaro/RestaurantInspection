@@ -22,4 +22,13 @@ public class FavouriteInspections {
     public String getHazardLevel() {
         return hazardLevel;
     }
+
+    @Override
+    public String toString() {
+        return "FavouriteInspections{" +
+                "restaurantName='" + restaurantName + '\'' +
+                ", inspectionDate='" + inspectionDate + '\'' +
+                ", hazardLevel='" + hazardLevel + '\'' +
+                '}';
+    }
 }
