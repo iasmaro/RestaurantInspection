@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="41dp"
         android:text="@string/new_inspections_for_favourites"
+        android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
         android:typeface="sans"

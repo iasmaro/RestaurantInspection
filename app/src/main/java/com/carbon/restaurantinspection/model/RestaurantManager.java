@@ -116,7 +116,7 @@ public class RestaurantManager implements Iterable<Restaurant>{
 
 
     // gets the entire list of restaurants
-    public ArrayList getRestaurantList(){
+    public ArrayList<Restaurant> getRestaurantList(){
         return restaurantList;
     }
 

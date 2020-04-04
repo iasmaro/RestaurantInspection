@@ -1,6 +1,7 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +13,9 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.carbon.restaurantinspection.R;
+import com.carbon.restaurantinspection.model.FavouriteInspections;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
@@ -48,6 +52,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import static com.carbon.restaurantinspection.model.Favourites.getDate;
+import static com.carbon.restaurantinspection.model.Favourites.getFavouriteInspectionsList;
+import static com.carbon.restaurantinspection.model.Favourites.getFavouriteList;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
@@ -69,6 +77,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MarkerClusterRenderer renderer;
     private int index = -1;
     public static final String INTENT_NAME = "Map Activity";
+    private Dialog dialog;
+    private ArrayList<FavouriteInspections> newFavouriteInspections;
+
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -88,11 +99,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationPermission();
         toolbarBackButton();
 
-        setUpNewFavouriteInspections();
-    }
-
-    private void setUpNewFavouriteInspections() {
-
+        updateNewFavouriteRestaurants();
+        //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
+        dialog = new Dialog(this);
+        showNewFavouriteInspectionsDialog();
     }
 
     private void getIntents() {
@@ -292,6 +302,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
+
     private void setRestaurantMarkers() {
         restaurantManager = RestaurantManager.getInstance(this);
         restaurantList = restaurantManager.getRestaurantList();
@@ -323,7 +334,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
@@ -428,17 +438,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             rendowWindowText(marker, view);
             return null;
         }
-    }
 
+    }
     /**
      * Renderer is required for ClusterManager. Particularly to change the marker icon.
      */
     public class MarkerClusterRenderer extends DefaultClusterRenderer<MyMarkerClass> {
 
         private static final int MARKER_DIMENSION = 90;
+
         private final IconGenerator iconGenerator;
         private final ImageView markerImageView;
-
         MarkerClusterRenderer(Context context, GoogleMap map,
                               ClusterManager<MyMarkerClass> clusterManager) {
             super(context, map, clusterManager);
@@ -516,4 +526,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
     }
+
+    private void showNewFavouriteInspectionsDialog() {
+        dialog.setContentView(R.layout.new_favourites_inspections);
+        TextView close = dialog.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void updateNewFavouriteRestaurants() {
+        newFavouriteInspections = getFavouriteInspectionsList(MapActivity.this);
+
+    }
+
+//    private void populateListView() {
+//        ArrayAdapter<FavouriteInspections> adapter = new MapActivity.MyListAdapter();
+//        ListView list = findViewById(R.id.newFavouriteInspectionsList);
+//        list.setAdapter(adapter);
+//    }
+//
+//    private class MyListAdapter extends ArrayAdapter<FavouriteInspections> {
+//        public MyListAdapter(){
+//            super(MapActivity.this, R.layout.fa, violationList);
+//        }
+//    }
 }

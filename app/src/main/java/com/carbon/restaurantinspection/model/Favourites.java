@@ -26,13 +26,6 @@ public class Favourites {
         favouriteList.add(trackingNumber);
         dateList.add(date);
 
-        if (favouriteList.get(0) == null) {
-            favouriteList.remove(0);
-        }
-
-        if (dateList.get(0) == null) {
-            dateList.remove(0);
-        }
 //        System.out.println("addRes1taurantToFavourites");System.out.println("addRestau6rantToFavourites");System.out.println("addRestaurantToFavouri9tes");System.out.println("addR78estaurantToFavourites");System.out.println("a21ddRestaurantToFavourites");
 //        System.out.println("addRest4aurantToFavourites");System.out.println("addRestau8rantToFavourites");System.out.println("addRestaurantToFavouri9es");System.out.println("addRe89staurantToFavourites");System.out.println("a23ddRestaurantToFavourites");
 //        printList(favouriteList);
@@ -41,6 +34,8 @@ public class Favourites {
         editor.putString(DATE_PREFS, arrayListToString(dateList));
         editor.apply();
     }
+
+
 
     public static void printList(ArrayList<String> list) {
         for (String restaurant : list) {
@@ -55,18 +50,16 @@ public class Favourites {
         favouriteList.remove(trackingNumber);
         dateList.remove(index);
 
-        if (favouriteList.get(0) == null) {
-            favouriteList.remove(0);
-        }
-
-        if (dateList.get(0) == null) {
-            dateList.remove(0);
-        }
 //        printList(favouriteList);
 //        printList(dateList);
         editor.putString(FAVOURITE_PREFS, arrayListToString(favouriteList));
         editor.putString(DATE_PREFS, arrayListToString(dateList));
         editor.apply();
+    }
+
+    public static String getDate(String trackingNumber) {
+        int index = favouriteList.indexOf(trackingNumber);
+        return dateList.get(index);
     }
 
     public static boolean isRestaurantInFavourites(String trackingNumber) {
@@ -104,5 +97,54 @@ public class Favourites {
 
     public static void setDateList(ArrayList<String> dateList) {
         Favourites.dateList = dateList;
+    }
+
+    private static ArrayList<String> getRecentInspections(Context context) {
+        InspectionManager inspectionManager = InspectionManager.getInstance(context);
+        ArrayList<String> recentInspections = new ArrayList<>();
+        for (String trackingNumber : favouriteList) {
+            ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
+            String newInspection = inspections.get(0).getInspectionDate(context);
+            recentInspections.add(newInspection);
+        }
+
+        return recentInspections;
+    }
+
+    private static ArrayList<String> getRecentHazardLevels(Context context) {
+        InspectionManager inspectionManager = InspectionManager.getInstance(context);
+        ArrayList<String> recentHazardLevel = new ArrayList<>();
+        for (String trackingNumber : favouriteList) {
+            ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
+            String newInspection = inspections.get(0).getHazardLevel();
+            recentHazardLevel.add(newInspection);
+        }
+
+        return recentHazardLevel;
+    }
+
+    private static ArrayList<String> getRestaurantNames(Context context) {
+        RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
+        ArrayList<Restaurant> restaurants = restaurantManager.getFiltered(favouriteList);
+        ArrayList<String> restaurantNames = new ArrayList<>();
+        for (Restaurant restaurant : restaurants) {
+            restaurantNames.add(restaurant.getName());
+        }
+
+        return restaurantNames;
+    }
+
+    public static ArrayList<FavouriteInspections> getFavouriteInspectionsList(Context context) {
+        ArrayList<String> restaurantNames = getRestaurantNames(context);
+        ArrayList<String> recentHazardLevel = getRecentHazardLevels(context);
+        ArrayList<String> recentInspections = getRecentInspections(context);
+
+        ArrayList<FavouriteInspections> favouriteInspections = new ArrayList<>();
+        for (int i = 0; i < restaurantNames.size(); i++) {
+            favouriteInspections.add(new FavouriteInspections(restaurantNames.get(i),
+                    recentInspections.get(i), recentHazardLevel.get(i)));
+        }
+
+        return favouriteInspections;
     }
 }
