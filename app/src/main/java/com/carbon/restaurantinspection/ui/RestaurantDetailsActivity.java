@@ -99,7 +99,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, RestaurantListActivity.class));
+        finish();
     }
 
     private void setUpCheckBox() {
@@ -117,7 +117,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    String date = " ";
+                    String date = "e";
                     if (inspections != null) {
                         date = inspections.get(0).getInspectionDate(getApplicationContext());
                     }
@@ -158,7 +158,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.back) {
-            startActivity(new Intent(this, RestaurantListActivity.class));
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

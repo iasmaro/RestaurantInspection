@@ -90,8 +90,12 @@ public class Favourites {
         ArrayList<String> recentInspections = new ArrayList<>();
         for (String trackingNumber : list) {
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
-            String newInspection = inspections.get(0).getInspectionDate(context);
-            recentInspections.add(newInspection);
+            if (inspections != null) {
+                String newInspection = inspections.get(0).getInspectionDate(context);
+                recentInspections.add(newInspection);
+            } else {
+                recentInspections.add(" ");
+            }
         }
 
         return recentInspections;
@@ -103,8 +107,12 @@ public class Favourites {
 
         for (String trackingNumber : favouritesNewInspections) {
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
-            String newInspection = inspections.get(0).getHazardLevel();
-            recentHazardLevel.add(newInspection);
+            if (inspections != null) {
+                String newInspection = inspections.get(0).getHazardLevel();
+                recentHazardLevel.add(newInspection);
+            } else {
+                recentHazardLevel.add(" ");
+            }
         }
 
         return recentHazardLevel;
@@ -128,7 +136,11 @@ public class Favourites {
 
     public static ArrayList<String> getFavouriteInspectionsList(Context context) {
         ArrayList<String> favouriteInspections = new ArrayList<>();
+
+        System.out.println(favouriteList);
+
         if (favouriteList.size() == 0) {
+            System.out.println("empty");
             return favouriteInspections;
         } else {
             findNewInspections(context);
@@ -142,6 +154,9 @@ public class Favourites {
                         recentHazardLevel.get(i) + " on " + recentInspections.get(i);
                 favouriteInspections.add(message);
             }
+
+            System.out.println(favouriteInspections);
+
             return favouriteInspections;
         }
     }

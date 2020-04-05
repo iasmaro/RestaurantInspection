@@ -106,6 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             builderSingle = new AlertDialog.Builder(contextThemeWrapper);
             showNewFavouriteInspectionsDialog();
         }
+        isFirstTime = false;
     }
 
     private void getIntents() {
