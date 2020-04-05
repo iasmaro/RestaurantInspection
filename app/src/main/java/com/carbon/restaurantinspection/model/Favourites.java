@@ -149,10 +149,10 @@ public class Favourites {
 
 
     public static ArrayList<String> getFavouriteInspectionsList(Context context) {
+        ArrayList<String> favouriteInspections = new ArrayList<>();
         if (favouriteList.size() == 0) {
-            return null;
+            return favouriteInspections;
         } else {
-            ArrayList<String> favouriteInspections = new ArrayList<>();
             findNewInspections(context);
 
             ArrayList<String> restaurantNames = getRestaurantNames(context);
@@ -169,11 +169,14 @@ public class Favourites {
     }
 
     private static void findNewInspections(Context context) {
-        ArrayList<String> recentInspections = getRecentInspections(context, favouriteList);
 
-        for (int i = 0; i < recentInspections.size(); i++) {
-            if (!recentInspections.get(i).equals(dateList.get(i))) {
-                favouritesNewInspections.add(favouriteList.get(i));
+        if (favouriteList != null) {
+            ArrayList<String> recentInspections = getRecentInspections(context, favouriteList);
+
+            for (int i = 0; i < recentInspections.size(); i++) {
+                if (!recentInspections.get(i).equals(dateList.get(i))) {
+                    favouritesNewInspections.add(favouriteList.get(i));
+                }
             }
         }
     }
