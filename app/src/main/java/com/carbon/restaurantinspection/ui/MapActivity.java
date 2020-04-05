@@ -2,7 +2,6 @@ package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,15 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -50,6 +50,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -534,12 +535,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    //Dialog tutorial: https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
+    //Dialog tutorial:
+    //https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
     private void showNewFavouriteInspectionsDialog() {
         builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
-                android.R.layout.select_dialog_singlechoice, newFavouriteInspections);
+                android.R.layout.simple_list_item_1, newFavouriteInspections);
 
         builderSingle.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             @Override
@@ -548,21 +550,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-//        String[] temp = (String[]) newFavouriteInspections.toArray();
-//        builderSingle.setItems((CharSequence[]) temp, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        });
-
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                String message = arrayAdapter.getItem(which);
-//                AlertDialog.Builder builderInner = new AlertDialog.Builder(MapActivity.this);
-//                builderInner.setMessage(message);
-//                builderInner.show();
             }
         });
         AlertDialog alert = builderSingle.create();
@@ -572,6 +562,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void updateNewFavouriteRestaurants() {
         newFavouriteInspections = getFavouriteInspectionsList(MapActivity.this);
     }
-
-
 }
