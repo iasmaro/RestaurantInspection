@@ -14,6 +14,7 @@ import java.util.Collections;
  */
 public class Favourites {
     private static ArrayList<String> favouriteList = new ArrayList<>();
+    private static ArrayList<String> favouritesNewInspections = new ArrayList<>();
     private static ArrayList<String> dateList = new ArrayList<>();
     private static Context contextOfApplication = MainActivity.getContextOfApplication();
     private static SharedPreferences preferences = PreferenceManager
@@ -38,8 +39,6 @@ public class Favourites {
             dateList.remove(0);
         }
     }
-
-
 
     public static void printList(ArrayList<String> list) {
         for (String restaurant : list) {
@@ -106,10 +105,10 @@ public class Favourites {
         removeEmptySpaces();
     }
 
-    private static ArrayList<String> getRecentInspections(Context context) {
+    private static ArrayList<String> getRecentInspections(Context context, ArrayList<String> list) {
         InspectionManager inspectionManager = InspectionManager.getInstance(context);
         ArrayList<String> recentInspections = new ArrayList<>();
-        for (String trackingNumber : favouriteList) {
+        for (String trackingNumber : list) {
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
             String newInspection = inspections.get(0).getInspectionDate(context);
             recentInspections.add(newInspection);
@@ -122,7 +121,7 @@ public class Favourites {
         InspectionManager inspectionManager = InspectionManager.getInstance(context);
         ArrayList<String> recentHazardLevel = new ArrayList<>();
 
-        for (String trackingNumber : favouriteList) {
+        for (String trackingNumber : favouritesNewInspections) {
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
             String newInspection = inspections.get(0).getHazardLevel();
             recentHazardLevel.add(newInspection);
@@ -133,7 +132,7 @@ public class Favourites {
 
     private static ArrayList<String> getRestaurantNames(Context context) {
         RestaurantManager restaurantManager = RestaurantManager.getInstance(context);
-        ArrayList<Restaurant> restaurants = restaurantManager.getFiltered(favouriteList);
+        ArrayList<Restaurant> restaurants = restaurantManager.getFiltered(favouritesNewInspections);
         ArrayList<String> restaurantNames = new ArrayList<>();
         if (restaurants.isEmpty()) {
             return restaurantNames;
@@ -143,31 +142,39 @@ public class Favourites {
                     restaurantNames.add(restaurant.getName());
                 }
             }
-
             return restaurantNames;
         }
     }
 
-    public static ArrayList<String> getFavouriteInspectionsList(Context context) {
-        ArrayList<String> favouriteInspections = new ArrayList<>();
-        if (favouriteList.size() == 0) {
 
+
+    public static ArrayList<String> getFavouriteInspectionsList(Context context) {
+        if (favouriteList.size() == 0) {
             return null;
         } else {
-            System.out.println("in if");System.out.println("in if");System.out.println("in if");System.out.println("in if");System.out.println(favouriteList.size());
-            System.out.println("check");System.out.println("check");System.out.println("check");
-            System.out.println(favouriteList.get(0) == null);System.out.println(favouriteList.get(0).equals(" "));
-            System.out.println(favouriteList.get(0).equals(""));
+            ArrayList<String> favouriteInspections = new ArrayList<>();
+            findNewInspections(context);
+
             ArrayList<String> restaurantNames = getRestaurantNames(context);
             ArrayList<String> recentHazardLevel = getRecentHazardLevels(context);
-            ArrayList<String> recentInspections = getRecentInspections(context);
+            ArrayList<String> recentInspections = getRecentInspections(context, favouritesNewInspections);
 
-            for (int i = 0; i < favouriteList.size(); i++) {
+            for (int i = 0; i < favouritesNewInspections.size(); i++) {
                 String message = "" + restaurantNames.get(i) + " was rated  " +
                         recentHazardLevel.get(i) + " on " + recentInspections.get(i);
                 favouriteInspections.add(message);
             }
             return favouriteInspections;
+        }
+    }
+
+    private static void findNewInspections(Context context) {
+        ArrayList<String> recentInspections = getRecentInspections(context, favouriteList);
+
+        for (int i = 0; i < recentInspections.size(); i++) {
+            if (!recentInspections.get(i).equals(dateList.get(i))) {
+                favouritesNewInspections.add(favouriteList.get(i));
+            }
         }
     }
 }

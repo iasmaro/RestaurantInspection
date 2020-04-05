@@ -104,8 +104,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         System.out.println("new list");System.out.println("new list");System.out.println("new list");System.out.println("new list");
         System.out.println(newFavouriteInspections);
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
-
-        if (!(newFavouriteInspections == null) && isFirstTime) {
+        if (!(newFavouriteInspections.isEmpty()) && isFirstTime) {
             isFirstTime = false;
             ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.AlertDialogTheme);
             builderSingle = new AlertDialog.Builder(contextThemeWrapper);
