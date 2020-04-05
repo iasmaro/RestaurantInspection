@@ -148,8 +148,8 @@ public class Favourites {
         }
     }
 
-    public static ArrayList<FavouriteInspections> getFavouriteInspectionsList(Context context) {
-        ArrayList<FavouriteInspections> favouriteInspections = new ArrayList<>();
+    public static ArrayList<String> getFavouriteInspectionsList(Context context) {
+        ArrayList<String> favouriteInspections = new ArrayList<>();
         if (favouriteList.size() == 0) {
 
             return null;
@@ -163,8 +163,9 @@ public class Favourites {
             ArrayList<String> recentInspections = getRecentInspections(context);
 
             for (int i = 0; i < favouriteList.size(); i++) {
-                favouriteInspections.add(new FavouriteInspections(restaurantNames.get(i),
-                        recentInspections.get(i), recentHazardLevel.get(i)));
+                String message = "" + restaurantNames.get(i) + " was rated  " +
+                        recentHazardLevel.get(i) + " on " + recentInspections.get(i);
+                favouriteInspections.add(message);
             }
             return favouriteInspections;
         }

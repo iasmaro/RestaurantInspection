@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static Context contextOfApplication;
     private static final String FAVOURITE_PREFS = "FavouriteList";
     private static final String DATE_PREFS = "DateList";
+    public static boolean isFirstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,8 +1,10 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +28,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.carbon.restaurantinspection.R;
-import com.carbon.restaurantinspection.model.FavouriteInspections;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
 import com.carbon.restaurantinspection.model.Restaurant;
@@ -53,6 +55,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import static com.carbon.restaurantinspection.model.Favourites.getFavouriteInspectionsList;
+import static com.carbon.restaurantinspection.ui.MainActivity.isFirstTime;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -75,9 +78,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MarkerClusterRenderer renderer;
     private int index = -1;
     public static final String INTENT_NAME = "Map Activity";
-    private Dialog dialog;
-    private ArrayList<FavouriteInspections> newFavouriteInspections;
-
+    AlertDialog.Builder builderSingle;
+    private ArrayList<String> newFavouriteInspections;
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -101,8 +103,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         System.out.println("new list");System.out.println("new list");System.out.println("new list");System.out.println("new list");
         System.out.println(newFavouriteInspections);
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
-        if (!(newFavouriteInspections == null)) {
-            dialog = new Dialog(this);
+
+        if (!(newFavouriteInspections == null) && isFirstTime) {
+            isFirstTime = false;
+            ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.AlertDialogTheme);
+            builderSingle = new AlertDialog.Builder(contextThemeWrapper);
             showNewFavouriteInspectionsDialog();
         }
     }
@@ -529,61 +534,44 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    //Dialog tutorial: https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
     private void showNewFavouriteInspectionsDialog() {
-        dialog.setContentView(R.layout.new_favourites_inspections);
-        TextView close = dialog.findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
+        builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.select_dialog_singlechoice, newFavouriteInspections);
+
+        builderSingle.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        populateListView();
-        ListView list = dialog.findViewById(R.id.newFavouriteInspectionsList);
-        TextView emptyText = dialog.findViewById(R.id.emptyListView);
-        list.setEmptyView(emptyText);
 
-        dialog.show();
+//        String[] temp = (String[]) newFavouriteInspections.toArray();
+//        builderSingle.setItems((CharSequence[]) temp, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                String message = arrayAdapter.getItem(which);
+//                AlertDialog.Builder builderInner = new AlertDialog.Builder(MapActivity.this);
+//                builderInner.setMessage(message);
+//                builderInner.show();
+            }
+        });
+        AlertDialog alert = builderSingle.create();
+        alert.show();
     }
 
     private void updateNewFavouriteRestaurants() {
         newFavouriteInspections = getFavouriteInspectionsList(MapActivity.this);
     }
 
-    private void populateListView() {
-//        updateNewFavouriteRestaurants();
-        ArrayAdapter<FavouriteInspections> adapter = new MyListAdapter();
-        ListView list = dialog.findViewById(R.id.newFavouriteInspectionsList);
-        list.setAdapter(adapter);
-    }
 
-    private class MyListAdapter extends ArrayAdapter<FavouriteInspections> {
-        public MyListAdapter(){
-            super(MapActivity.this, R.layout.new_favourites_inspections, newFavouriteInspections);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View itemView = convertView;
-
-            if (itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.new_favourites_inspections, parent,
-                        false);
-            }
-
-            FavouriteInspections currentFavourite = newFavouriteInspections.get(position);
-
-            TextView restaurantTitle = itemView.findViewById(R.id.favourite_restaurantTitle);
-            restaurantTitle.setText(currentFavourite.getRestaurantName());
-
-            TextView inspectionDate = itemView.findViewById(R.id.favourite_dateOfInspection);
-            inspectionDate.setText(currentFavourite.getInspectionDate());
-
-            TextView hazardLevel  = itemView.findViewById(R.id.favourite_hazardLevel);
-            hazardLevel.setText(currentFavourite.getHazardLevel());
-
-            return itemView;
-        }
-    }
 }
