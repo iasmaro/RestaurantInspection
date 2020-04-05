@@ -160,4 +160,8 @@ public class Favourites {
             editor.apply();
         }
     }
+
+    public static ArrayList<String> getFavouriteList() {
+        return favouriteList;
+    }
 }

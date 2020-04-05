@@ -117,7 +117,11 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    addRestaurantToFavourites(trackingNum, inspections.get(0).getInspectionDate(getApplicationContext()));
+                    String date = " ";
+                    if (inspections != null) {
+                        date = inspections.get(0).getInspectionDate(getApplicationContext());
+                    }
+                    addRestaurantToFavourites(trackingNum, date);
                     favouriteSwitch.setChecked(true);
                 } else {
                     removeRestaurantToFavourites(trackingNum);
