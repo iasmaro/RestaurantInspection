@@ -60,11 +60,9 @@ import static com.carbon.restaurantinspection.ui.MainActivity.isFirstTime;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -101,8 +99,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         toolbarBackButton();
 
         updateNewFavouriteRestaurants();
-        System.out.println("new list");System.out.println("new list");System.out.println("new list");System.out.println("new list");
-        System.out.println(newFavouriteInspections);
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
         if (!(newFavouriteInspections.isEmpty()) && isFirstTime) {
             isFirstTime = false;

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
-import static com.carbon.restaurantinspection.model.Favourites.printList;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
  * For each restaurant, it shows the inspection information which includes

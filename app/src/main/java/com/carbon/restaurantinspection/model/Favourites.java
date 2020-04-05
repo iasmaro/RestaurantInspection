@@ -40,30 +40,15 @@ public class Favourites {
         }
     }
 
-    public static void printList(ArrayList<String> list) {
-        for (String restaurant : list) {
-            System.out.println(restaurant);
-        }
-    }
-
     public static void removeRestaurantToFavourites(String trackingNumber) {
-//        System.out.println("removeRestaurantToFavourites1");System.out.println("removeRestaurantT2oFavourites");System.out.println("removeRestauran4tToFavourites");System.out.println("remo6veRestaurantToFavourites");System.out.println("removeRestaura8ntToFavourites");
-//        System.out.println("removeRestaurantToFavouri4tes");System.out.println("removeRestauran3tToFavourites");System.out.println("removeRestaura5ntToFavourites");System.out.println("remo7veRestaurantToFavourites");System.out.println("removeRestauran7tToFavourites");
         int index = favouriteList.indexOf(trackingNumber);
         favouriteList.remove(trackingNumber);
         dateList.remove(index);
         removeEmptySpaces();
 
-//        printList(favouriteList);
-//        printList(dateList);
         editor.putString(FAVOURITE_PREFS, arrayListToString(favouriteList));
         editor.putString(DATE_PREFS, arrayListToString(dateList));
         editor.apply();
-    }
-
-    public static String getDate(String trackingNumber) {
-        int index = favouriteList.indexOf(trackingNumber);
-        return dateList.get(index);
     }
 
     public static boolean isRestaurantInFavourites(String trackingNumber) {
@@ -93,11 +78,6 @@ public class Favourites {
 
     public static void setFavouriteList(ArrayList<String> favouriteList) {
         Favourites.favouriteList = favouriteList;
-//        removeEmptySpaces();
-    }
-
-    public static ArrayList<String> getFavouriteList() {
-        return favouriteList;
     }
 
     public static void setDateList(ArrayList<String> dateList) {
@@ -146,8 +126,6 @@ public class Favourites {
         }
     }
 
-
-
     public static ArrayList<String> getFavouriteInspectionsList(Context context) {
         ArrayList<String> favouriteInspections = new ArrayList<>();
         if (favouriteList.size() == 0) {
@@ -169,15 +147,17 @@ public class Favourites {
     }
 
     private static void findNewInspections(Context context) {
-
         if (favouriteList != null) {
             ArrayList<String> recentInspections = getRecentInspections(context, favouriteList);
 
             for (int i = 0; i < recentInspections.size(); i++) {
                 if (!recentInspections.get(i).equals(dateList.get(i))) {
                     favouritesNewInspections.add(favouriteList.get(i));
+                    dateList.set(i, recentInspections.get(i));
                 }
             }
+            editor.putString(DATE_PREFS, arrayListToString(dateList));
+            editor.apply();
         }
     }
 }
