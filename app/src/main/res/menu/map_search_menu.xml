@@ -8,6 +8,7 @@
         android:id="@+id/filter"
         android:title="filter"
         android:icon="@drawable/ic_filter_list_24dp"
+
         app:showAsAction="ifRoom"/>
 
     <item

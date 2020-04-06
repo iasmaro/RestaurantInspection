@@ -152,19 +152,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.filter){
-           item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-               @Override
-               public boolean onMenuItemClick(MenuItem menuItem) {
                    Intent intent = new Intent(MapActivity.this, filterFragment.class);
                    startActivityForResult(intent, FILTER_REQUEST_CODE);
                    return true;
-               }
-           });
         }
         else {
             return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     @Override
