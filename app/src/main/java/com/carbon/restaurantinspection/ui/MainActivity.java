@@ -1,10 +1,12 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,11 +15,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import static com.carbon.restaurantinspection.model.Favourites.setDateList;
+import static com.carbon.restaurantinspection.model.Favourites.setFavouriteList;
+import static com.carbon.restaurantinspection.model.Favourites.stringToArrayList;
 
 /** Set up the map view and ensure services from google maps API**/
 public class MainActivity extends AppCompatActivity {
@@ -29,19 +37,38 @@ public class MainActivity extends AppCompatActivity {
     private Button cancelButton;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private Dialog myDialog;
+    private static Context contextOfApplication;
+    private static final String FAVOURITE_PREFS = "FavouriteList";
+    private static final String DATE_PREFS = "DateList";
+    public static boolean isFirstTime = true;
 
-    Button btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        contextOfApplication = getApplicationContext();
         myDialog = new Dialog(this);
+
+        getDataFromSharedPrefs();
+
         if (isServicesOK()) {
-            Log.d("main", "sup");
             updateDownloader = new UpdateDownloader(this);
             startLoadingScreen();
             checkForUpdates();
         }
+    }
+
+    private void getDataFromSharedPrefs() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().clear().commit();
+        String favouriteString = preferences.getString(FAVOURITE_PREFS, "");
+        setFavouriteList(stringToArrayList(favouriteString));
+        String dateString = preferences.getString(DATE_PREFS, "");
+        setDateList(stringToArrayList(dateString));
+    }
+
+    public static Context getContextOfApplication() {
+        return contextOfApplication;
     }
 
     private void setUpDownloadButton() {

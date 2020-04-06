@@ -1,7 +1,9 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,18 +11,22 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -44,17 +50,19 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import static com.carbon.restaurantinspection.model.Favourites.getFavouriteInspectionsList;
+import static com.carbon.restaurantinspection.ui.MainActivity.isFirstTime;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "MapActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private Boolean mLocationPermissionsGranted = false;
     private static final float DEFAULT_ZOOM = 15f;
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
@@ -69,6 +77,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private MarkerClusterRenderer renderer;
     private int index = -1;
     public static final String INTENT_NAME = "Map Activity";
+    AlertDialog.Builder builderSingle;
+    private ArrayList<String> newFavouriteInspections;
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -87,6 +97,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         restaurantIndexHolder = new Hashtable<>();
         getLocationPermission();
         toolbarBackButton();
+
+        updateNewFavouriteRestaurants();
+        //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
+        if (!(newFavouriteInspections.isEmpty()) && isFirstTime) {
+            isFirstTime = false;
+            ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.AlertDialogTheme);
+            builderSingle = new AlertDialog.Builder(contextThemeWrapper);
+            builderSingle.setView(LayoutInflater.from(this).inflate(R.layout.scrollable_dialog, null));
+            showNewFavouriteInspectionsDialog();
+        }
+        isFirstTime = false;
     }
 
     private void getIntents() {
@@ -180,7 +201,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            if(RestaurantDetailsActivity.latitude == 0 && RestaurantDetailsActivity.longatude == 0){
+            if(RestaurantDetailsActivity.latitude == 0 && RestaurantDetailsActivity.longitude == 0){
                 getCurrentLocation();
             }
 
@@ -286,6 +307,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     // gets the Restaurant and Inspection Lists and helps set markers where appropriate
+
     private void setRestaurantMarkers() {
         restaurantManager = RestaurantManager.getInstance(this);
         restaurantList = restaurantManager.getRestaurantList();
@@ -317,7 +339,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
@@ -422,17 +443,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             rendowWindowText(marker, view);
             return null;
         }
-    }
 
+    }
     /**
      * Renderer is required for ClusterManager. Particularly to change the marker icon.
      */
     public class MarkerClusterRenderer extends DefaultClusterRenderer<MyMarkerClass> {
 
         private static final int MARKER_DIMENSION = 90;
+
         private final IconGenerator iconGenerator;
         private final ImageView markerImageView;
-
         MarkerClusterRenderer(Context context, GoogleMap map,
                               ClusterManager<MyMarkerClass> clusterManager) {
             super(context, map, clusterManager);
@@ -509,5 +530,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return restaurant_index;
         }
 
+    }
+
+    //Dialog tutorial:
+    //https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
+    private void showNewFavouriteInspectionsDialog() {
+        builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, newFavouriteInspections);
+
+        builderSingle.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog alert = builderSingle.create();
+        alert.show();
+    }
+
+    private void updateNewFavouriteRestaurants() {
+        newFavouriteInspections = getFavouriteInspectionsList(MapActivity.this);
     }
 }

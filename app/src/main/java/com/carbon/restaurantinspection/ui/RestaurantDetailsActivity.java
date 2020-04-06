@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,13 +27,16 @@ import com.carbon.restaurantinspection.model.RestaurantManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.carbon.restaurantinspection.model.Favourites.addRestaurantToFavourites;
+import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
+import static com.carbon.restaurantinspection.model.Favourites.removeRestaurantToFavourites;
+
 /**
  * Class makes it easier to display an icon beside the inspections
  */
 class InspectionDetailHolder {
     private InspectionDetail inspectionDetail;
     private int iconId;
-    Context context;
 
     InspectionDetailHolder(int id, InspectionDetail detail) {
         iconId = id;
@@ -69,18 +73,18 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
     private Restaurant restaurant;
     private String trackingNum;
     List<InspectionDetail> inspections;
-    public static double longatude = 0;
+    public static double longitude = 0;
     public static double latitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_restaurant_details);
 
         getIntents();
         RestaurantManager restManager = RestaurantManager.getInstance(this);
         myInspectionManager =  InspectionManager.getInstance(this);
         restaurant = restManager.getRestaurant(index);
-        setContentView(R.layout.activity_restaurant_details);
 
         toolbarBackButton();
         clickCoordsToMap();
@@ -88,6 +92,43 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
         populateStringList();
         populateListView();
         onInspectionClick();
+
+        setUpCheckBox();
+        setUpCheckBoxClick();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    private void setUpCheckBox() {
+        final Switch favouriteSwitch = findViewById(R.id.favouriteSwitch);
+        if(isRestaurantInFavourites(trackingNum)){
+            favouriteSwitch.setChecked(true);
+        } else {
+            favouriteSwitch.setChecked(false);
+        }
+    }
+
+    private void setUpCheckBoxClick() {
+        final Switch favouriteSwitch = findViewById(R.id.favouriteSwitch);
+        favouriteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    String date = "empty";
+                    if (inspections != null) {
+                        date = inspections.get(0).getInspectionDate(getApplicationContext());
+                    }
+                    addRestaurantToFavourites(trackingNum, date);
+                    favouriteSwitch.setChecked(true);
+                } else {
+                    removeRestaurantToFavourites(trackingNum);
+                    favouriteSwitch.setChecked(false);
+                }
+            }
+        });
     }
 
     private void clickCoordsToMap() {
@@ -116,9 +157,8 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.back:
-                startActivity(new Intent(this, RestaurantListActivity.class));
+        if (item.getItemId() == R.id.back) {
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
