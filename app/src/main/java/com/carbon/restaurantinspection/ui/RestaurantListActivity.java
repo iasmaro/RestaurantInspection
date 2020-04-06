@@ -1,6 +1,6 @@
 package com.carbon.restaurantinspection.ui;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.InspectionDetail;
 import com.carbon.restaurantinspection.model.InspectionManager;
@@ -35,7 +36,11 @@ public class RestaurantListActivity extends AppCompatActivity {
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
     private Toolbar toolbar;
+    private static int FILTER_REQUEST_CODE = 555;
     ArrayAdapter<String> arrayAdapter;
+    private int numOfCriticalVioaltionsfromFilter;
+    private String hazardLevelFromFilter;
+    private boolean favouritesChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,40 @@ public class RestaurantListActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.filter){
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    Intent intent = new Intent(RestaurantListActivity.this, filterFragment.class);
+                    startActivityForResult(intent, FILTER_REQUEST_CODE);
+                    return true;
+                }
+            });
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILTER_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                numOfCriticalVioaltionsfromFilter = data.getIntExtra(
+                        "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit", 0);
+                hazardLevelFromFilter = data.getStringExtra(
+                        "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel");
+                favouritesChecked = data.getBooleanExtra(
+                        "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked",
+                        false);
+            }
+        }
     }
 
     private void toolbarSetUp() {
