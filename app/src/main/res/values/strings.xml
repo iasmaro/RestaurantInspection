@@ -64,4 +64,6 @@
 
     <string name="favourite" translatable="false">Favourite</string>
     <string name="new_inspections_for_favourites" translatable="false">New Inspections For Favourites</string>
+    <string name="clear">clear</string>
+    <string name="filter">filter</string>
 </resources>
