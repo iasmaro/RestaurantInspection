@@ -109,7 +109,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         restaurantIndexHolder = new Hashtable<>();
         toolbar = findViewById(R.id.toolbar);
         getLocationPermission();
-
+        toolbarSetUp();
         updateNewFavouriteRestaurants();
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
         if (!(newFavouriteInspections.isEmpty()) && isFirstTime) {
@@ -121,8 +121,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         isFirstTime = false;
     }
-        toolbarSetUp();
-    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
