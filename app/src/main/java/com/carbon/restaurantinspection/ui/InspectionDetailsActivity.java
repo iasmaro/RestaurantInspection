@@ -62,7 +62,8 @@ public class InspectionDetailsActivity extends AppCompatActivity {
     private void toolbarBackButton() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Inspection Details");
+        String activityTitle = getString(R.string.inspectionDetails);
+        getSupportActionBar().setTitle(activityTitle);
     }
 
     @Override
@@ -119,22 +120,31 @@ public class InspectionDetailsActivity extends AppCompatActivity {
     private void updateViews(){
 
         TextView textView = findViewById(R.id.inspection_dateText);
-        textView.setText("Date: " + inspectionList.get(inspectionPosition).getFullDate());
+        String inspectionDate = inspectionList.get(inspectionPosition).getFullDate(InspectionDetailsActivity.this);
+        String dateDisplay = getString(R.string.date) + " " + inspectionDate;
+        textView.setText(dateDisplay);
 
         textView = findViewById(R.id.inspection_typeText);
-        textView.setText("Type: " + inspectionList.get(inspectionPosition).getInspectionType());
+        String inspectionType = inspectionList.get(inspectionPosition).getInspectionType();
+        String inspectionTypeDisplay = getString(R.string.type) + " " + inspectionType;
+        textView.setText(inspectionTypeDisplay);
 
         textView = findViewById(R.id.inspection_criticalText);
-        textView.setText("Critical Issues: " + inspectionList.get(inspectionPosition).getNumCritical());
+        int numCritical = inspectionList.get(inspectionPosition).getNumCritical();
+        String criticalDisplay = getString(R.string.criticalIssues) + " " + numCritical;
+        textView.setText(criticalDisplay);
 
         textView = findViewById(R.id.inspection_nonCriticalText);
-        textView.setText("Non-Critical Issues: " + inspectionList.get(inspectionPosition).getNumNonCritical());
+        int numNonCritical = inspectionList.get(inspectionPosition).getNumNonCritical();
+        String nonCriticalDisplay = getString(R.string.nonCriticalIssues) + " " + numNonCritical;
+        textView.setText(nonCriticalDisplay);
 
         textView = findViewById(R.id.inspection_hazardText);
         String hazardLevel = inspectionList.get(inspectionPosition).getHazardLevel();
-        textView.setText("Hazard Level: " + hazardLevel);
-        ImageView imageView = findViewById(R.id.inspection_hazardImage);
+        String hazardDisplay = getString(R.string.hazardLevel) + " " + hazardLevel;
+        textView.setText(hazardDisplay);
 
+        ImageView imageView = findViewById(R.id.inspection_hazardImage);
         if(hazardLevel.equals("High")){
             imageView.setImageResource(R.drawable.red_skull_crossbones);
             textView.setTextColor(ContextCompat.getColor(this, R.color.highCriticalColour));
@@ -171,10 +181,14 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             violationView.setImageResource(iconID);
 
             TextView titleText = itemView.findViewById(R.id.item_violationTitle);
-            titleText.setText(currentViolation.getType() + " Violation");
+            String violationType = currentViolation.getType();
+            String violationDisplay = violationType + " " + getString(R.string.violation);
+            titleText.setText(violationDisplay);
 
             TextView descriptionText = itemView.findViewById(R.id.item_violationDescription);
-            descriptionText.setText("Code: " + currentViolation.getCode() + ", " + currentViolation.getStatus());
+            String violationCodeStatus = currentViolation.getCode() + ", " + currentViolation.getStatus();
+            String violationCodeDisplay = getString(R.string.violationcode) + " " + violationCodeStatus;
+            descriptionText.setText(violationCodeDisplay);
 
             ImageView hazardView = itemView.findViewById(R.id.item_hazardStatus);
             if (currentViolation.getStatus().equals("Not Critical")){

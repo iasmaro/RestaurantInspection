@@ -1,6 +1,11 @@
 package com.carbon.restaurantinspection.model;
 
 
+import android.content.Context;
+import android.util.Log;
+
+import com.carbon.restaurantinspection.R;
+
 import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -25,6 +30,7 @@ public class InspectionDetail {
     private String hazardLevel;
     private ArrayList<Violation> violations= new ArrayList<>();
     private final int MILISEC_TO_DAYS = 1000*3600*24;
+    Context context;
 
     public InspectionDetail(String trackingNumber, String inspectionDate, String inspectionType,
                             int numCritical, int numNonCritical, String hazardLevel, String[] violations) {
@@ -37,7 +43,6 @@ public class InspectionDetail {
         if (violations != null) {
             addViolations(violations);
         }
-
     }
 
     private void addViolations(String[] strViolations) {
@@ -49,7 +54,7 @@ public class InspectionDetail {
         }
     }
 
-    public String getInspectionDate() {
+    public String getInspectionDate(Context context) {
         Calendar inspecDate = getInspecDate();
         Calendar monthAgo = getMonthAgo();
         Calendar yearAgo = getYearAgo();
@@ -57,18 +62,25 @@ public class InspectionDetail {
         String dateOfInspection = "";
         if (monthAgo.before(inspecDate)) {
             int days = daysBetween(inspecDate);
-            dateOfInspection = days + " days ago.";
+            String daysAgo = context.getResources().getString(R.string.daysAgo);
+            dateOfInspection = days + " " + daysAgo;
         }
         else if (yearAgo.before(inspecDate)) {
-            String month = getMonth(inspectionDate.substring(4, 6));
+            String month = getMonth(inspectionDate.substring(4, 6), context);
             dateOfInspection = month + " " + inspecDate.get(inspecDate.DAY_OF_MONTH);
         }
         else {
-            String month = getMonth(inspectionDate.substring(4, 6));
+            String month = getMonth(inspectionDate.substring(4, 6),context);
             int year = inspecDate.get(Calendar.YEAR);
             dateOfInspection = month + " " + year;
         }
         return dateOfInspection;
+    }
+
+    public boolean isLessThanYearAgo() {
+        Calendar inspectionDate = getInspecDate();
+        Calendar yearAgo = getYearAgo();
+        return yearAgo.before(inspectionDate);
     }
 
     private Calendar getInspecDate(){
@@ -102,27 +114,39 @@ public class InspectionDetail {
         return days;
     }
 
-    public String getFullDate() {
-        String fullDate = getMonth(inspectionDate.substring(4, 6)) + " "
+    public String getFullDate(Context context) {
+        String fullDate = getMonth(inspectionDate.substring(4, 6), context) + " "
                 + inspectionDate.substring(6) + ", "
                 + inspectionDate.substring(0, 4);
         return fullDate;
     }
 
-    private String getMonth(String month) {
+    private String getMonth(String month, Context context) {
         Hashtable<String, String> months = new Hashtable<>();
-        months.put("01", "January");
-        months.put("02", "February");
-        months.put("03", "March");
-        months.put("04", "April");
-        months.put("05", "May");
-        months.put("06", "June");
-        months.put("07", "July");
-        months.put("08", "August");
-        months.put("09", "September");
-        months.put("10", "October");
-        months.put("11", "November");
-        months.put("12", "December");
+        String january = context.getResources().getString(R.string.january);
+        months.put("01", january);
+        String february = context.getResources().getString(R.string.february);
+        months.put("02", february);
+        String march = context.getResources().getString(R.string.march);
+        months.put("03", march);
+        String april = context.getResources().getString(R.string.april);
+        months.put("04", april);
+        String may = context.getResources().getString(R.string.may);
+        months.put("05", may);
+        String june = context.getResources().getString(R.string.june);
+        months.put("06", june);
+        String july = context.getResources().getString(R.string.july);
+        months.put("07", july);
+        String august = context.getResources().getString(R.string.august);
+        months.put("08", august);
+        String september = context.getResources().getString(R.string.september);
+        months.put("09", september);
+        String october = context.getResources().getString(R.string.october);
+        months.put("10", october);
+        String november = context.getResources().getString(R.string.november);
+        months.put("11", november);
+        String december = context.getResources().getString(R.string.december);
+        months.put("12", december);
         return months.get(month);
     }
 
@@ -185,7 +209,7 @@ public class InspectionDetail {
     }
 
     public String returnInsDetails() {
-        String str = getInspectionDate()+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
+        String str = getInspectionDate(context)+":\n"+numCritical+" critical issues\n"+numNonCritical+" non critical issues";
         return str;
     }
 }
