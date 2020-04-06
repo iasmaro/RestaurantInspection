@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDataFromSharedPrefs() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().clear().commit();
         String favouriteString = preferences.getString(FAVOURITE_PREFS, "");
         setFavouriteList(stringToArrayList(favouriteString));
         String dateString = preferences.getString(DATE_PREFS, "");

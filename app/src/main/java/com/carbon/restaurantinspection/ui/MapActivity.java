@@ -104,6 +104,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             isFirstTime = false;
             ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.AlertDialogTheme);
             builderSingle = new AlertDialog.Builder(contextThemeWrapper);
+            builderSingle.setView(LayoutInflater.from(this).inflate(R.layout.scrollable_dialog, null));
             showNewFavouriteInspectionsDialog();
         }
         isFirstTime = false;
