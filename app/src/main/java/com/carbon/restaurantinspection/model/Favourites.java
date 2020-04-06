@@ -94,7 +94,7 @@ public class Favourites {
                 String newInspection = inspections.get(0).getInspectionDate(context);
                 recentInspections.add(newInspection);
             } else {
-                recentInspections.add(" ");
+                recentInspections.add("empty");
             }
         }
 
@@ -111,7 +111,7 @@ public class Favourites {
                 String newInspection = inspections.get(0).getHazardLevel();
                 recentHazardLevel.add(newInspection);
             } else {
-                recentHazardLevel.add(" ");
+                recentHazardLevel.add("empty");
             }
         }
 
@@ -166,7 +166,8 @@ public class Favourites {
             ArrayList<String> recentInspections = getRecentInspections(context, favouriteList);
 
             for (int i = 0; i < recentInspections.size(); i++) {
-                if (!recentInspections.get(i).equals(dateList.get(i))) {
+                if ((!recentInspections.get(i).equals(dateList.get(i)) &&
+                        (!recentInspections.get(i).equals("empty")))) {
                     favouritesNewInspections.add(favouriteList.get(i));
                     dateList.set(i, recentInspections.get(i));
                 }

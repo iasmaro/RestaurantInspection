@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,7 +15,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.model.UpdateDownloader;
 import com.google.android.gms.common.ConnectionResult;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         getDataFromSharedPrefs();
 
         if (isServicesOK()) {
-            Log.d("main", "sup");
             updateDownloader = new UpdateDownloader(this);
             startLoadingScreen();
             checkForUpdates();

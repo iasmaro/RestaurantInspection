@@ -117,7 +117,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    String date = "e";
+                    String date = "empty";
                     if (inspections != null) {
                         date = inspections.get(0).getInspectionDate(getApplicationContext());
                     }

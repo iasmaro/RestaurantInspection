@@ -45,6 +45,11 @@ public class RestaurantListActivity extends AppCompatActivity {
         inspectionManager = InspectionManager.getInstance(this);
 
         toolbarBackButton();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         populateRestaurantListView();
         setupClickableRestaurants();
     }
