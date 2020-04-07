@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Restaurant Inspection</string>
-    <string name="google_maps_API_key" translatable="false">AIzaSyAQidbNN_t7fS5FOSh4SmPtV5QkdCqhrvY</string>
-    <string name="restaurant_name">Restaurant Name:</string>
+    <string name="appName">Restaurant Inspection</string>
+    <string name="googleMapsAPIKey" translatable="false">AIzaSyAQidbNN_t7fS5FOSh4SmPtV5QkdCqhrvY</string>
+    <string name="restaurantName">Restaurant Name:</string>
     <string name="longitude">Longitude:</string>
     <string name="latitude">Latitude:</string>
     <string name="inspection">Inspection</string>
@@ -62,17 +62,18 @@
     <string name="december">December</string>
 
     <string name="favourite">Favourites</string>
-    <string name="new_inspections_for_favourites">New Inspections For Favourites</string>
     <string name="lessOrEqual" translatable="false"><![CDATA[<=]]></string>
     <string name="or">or</string>
     <string name="greaterOrEqual" translatable="false"><![CDATA[>=]]></string>
-    <string name="filter_based_on">Filter based on:</string>
+    <string name="filterBasedOn">Filter based on:</string>
     <string name="low">low</string>
     <string name="medium">medium</string>
     <string name="high">high</string>
     <string name="clear">clear</string>
     <string name="filter">filter</string>
-    <string name="search_map_search">Search</string>
+    <string name="mapSearch">Search</string>
     <string name="dialogueTitle">Your Favourite Restaurants With New Inspections</string>
+    <string name="searchHere">Search Here</string>
+
 
 </resources>

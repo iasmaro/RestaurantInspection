@@ -75,7 +75,8 @@ public class RestaurantListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.map_search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.search_icon);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search Here");
+        String searchHere = getString(R.string.searchHere);
+        searchView.setQueryHint(searchHere);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

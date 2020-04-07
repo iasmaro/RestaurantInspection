@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">餐厅检查</string>
+    <string name="appName">餐厅检查</string>
     <string name="back">后面</string>
-    <string name="restaurant_name">餐厅名称：</string>
+    <string name="restaurantName">餐厅名称：</string>
     <string name="longitude">经度:</string>
     <string name="longitudeValue">经度</string>
     <string name="latitude">纬度:</string>
@@ -62,15 +62,16 @@
     <string name="december">十二月</string>
 
     <string name="favourite">喜爱</string>
-    <string name="new_inspections_for_favourites">新的收藏夹检查</string>
     <string name="or">或者</string>
-    <string name="filter_based_on">过滤依据:</string>
+    <string name="filterBasedOn">过滤依据:</string>
     <string name="low">低</string>
     <string name="medium">介质</string>
     <string name="high">高</string>
     <string name="filter">过滤</string>
     <string name="clear">清除</string>
-    <string name="search_map_search">搜索</string>
+    <string name="mapSearch">搜索</string>
     <string name="dialogueTitle">您最喜欢的新检查餐厅</string>
+    <string name="searchHere">在这里搜寻</string>
+
 
 </resources>
