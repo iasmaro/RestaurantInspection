@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.carbon.restaurantinspection.R;
 import com.carbon.restaurantinspection.ui.MainActivity;
 
 import java.util.ArrayList;
@@ -150,8 +151,13 @@ public class Favourites {
             ArrayList<String> recentInspections = getRecentInspections(context, favouritesNewInspections);
 
             for (int i = 0; i < favouritesNewInspections.size(); i++) {
-                String message = "" + restaurantNames.get(i) + " was rated  " +
-                        recentHazardLevel.get(i) + " on " + recentInspections.get(i);
+
+                String wasRated = context.getString(R.string.wasRated);
+                String on = context.getString(R.string.on);
+
+                String message = "" + restaurantNames.get(i) + " " + wasRated + " " +
+                        recentHazardLevel.get(i) + " " + on + " " + recentInspections.get(i);
+
                 favouriteInspections.add(message);
             }
 

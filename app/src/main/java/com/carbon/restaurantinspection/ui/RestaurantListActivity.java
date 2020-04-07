@@ -82,12 +82,15 @@ public class RestaurantListActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.map_search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.search_icon);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search Here");
+        String searchHere = getString(R.string.searchHere);
+        searchView.setQueryHint(searchHere);
         if (restaurantManager.getSearchTerm() != null) {
             searchView.setQuery(restaurantManager.getSearchTerm(), false);
             searchView.setIconified(false);
             searchView.clearFocus();
         }
+        searchView.setQueryHint(searchHere);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -106,7 +109,6 @@ public class RestaurantListActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-
                 return true;
             }
         });

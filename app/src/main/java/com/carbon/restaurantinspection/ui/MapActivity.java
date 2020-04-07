@@ -190,12 +190,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getMenuInflater().inflate(R.menu.map_search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.search_icon);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search Here");
+        String searchHere = getString(R.string.searchHere);
+        searchView.setQueryHint(searchHere);
         if (restaurantManager.getSearchTerm() != null) {
             searchView.setQuery(restaurantManager.getSearchTerm(), false);
             searchView.setIconified(false);
             searchView.clearFocus();
         }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -498,6 +500,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         if(restaurantList != null){
             int numOfRestaurants = restaurantList.size();
+
             for(int i = 0; i < numOfRestaurants; i++) {
                 Restaurant restaurant = restaurantList.get(i);
                 String trackingNum = restaurant.getTrackingNumber();
@@ -522,7 +525,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
@@ -719,12 +721,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Dialog tutorial:
     //https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
     private void showNewFavouriteInspectionsDialog() {
-        builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
+        String dialogueTitle = getString(R.string.dialogueTitle);
+        builderSingle.setTitle(dialogueTitle);
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, newFavouriteInspections);
-
-        builderSingle.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        String close = getString(R.string.close);
+        builderSingle.setNegativeButton(close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

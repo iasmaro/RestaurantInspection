@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Restaurant Inspection</string>
-    <string name="google_maps_API_key" translatable="false">AIzaSyAQidbNN_t7fS5FOSh4SmPtV5QkdCqhrvY</string>
-    <string name="restaurant_name">Restaurant Name:</string>
+    <string name="appName">Restaurant Inspection</string>
+    <string name="googleMapsAPIKey" translatable="false">AIzaSyAQidbNN_t7fS5FOSh4SmPtV5QkdCqhrvY</string>
+    <string name="restaurantName">Restaurant Name:</string>
     <string name="longitude">Longitude:</string>
     <string name="latitude">Latitude:</string>
     <string name="inspection">Inspection</string>
@@ -14,7 +14,6 @@
     <string name="downloadFailed">Download Failed</string>
     <string name="finishButton">Finish</string>
     <string name="back">Back</string>
-    <string name="search_map_search">Search</string>
     <string name="loadingMessage">Loading</string>
     <string name="downloadButton">Download</string>
     <string name="cancelButton">Cancel</string>
@@ -37,7 +36,15 @@
     <string name="date">Date:</string>
     <string name="type">Type:</string>
     <string name="violation">violation</string>
-    <string name="violationcode">violationCode:</string>
+    <string name="violationcode">Code:</string>
+    <string name="permit">Permit</string>
+    <string name="food">Food</string>
+    <string name="foodSafe">Foodsafe</string>
+    <string name="pest">Pest</string>
+    <string name="hygiene">Hygiene</string>
+    <string name="equipment">Equipment</string>
+    <string name="critical">Critical</string>
+    <string name="notCritical">Not Critical</string>
 
     <string name="map">Map</string>
 
@@ -53,17 +60,23 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
-    <string name="lessOrEqual"><![CDATA[<=]]></string>
+
+    <string name="favourite">Favourites</string>
+    <string name="lessOrEqual" translatable="false"><![CDATA[<=]]></string>
     <string name="or">or</string>
-    <string name="greaterOrEqual"><![CDATA[>=]]></string>
-    <string name="filter_based_on">Filter based on:</string>
+    <string name="greaterOrEqual" translatable="false"><![CDATA[>=]]></string>
+    <string name="filterBasedOn">Filter based on:</string>
     <string name="low">low</string>
     <string name="medium">medium</string>
     <string name="high">high</string>
-
-
-    <string name="favourite" translatable="false">Favourite</string>
-    <string name="new_inspections_for_favourites" translatable="false">New Inspections For Favourites</string>
     <string name="clear">clear</string>
     <string name="filter">filter</string>
+    <string name="mapSearch">Search</string>
+    <string name="dialogueTitle">Your Favourite Restaurants With New Inspections</string>
+    <string name="searchHere">Search Here</string>
+    <string name="close">Close</string>
+    <string name="wasRated">was rated</string>
+    <string name="on">on</string>
+
+
 </resources>
