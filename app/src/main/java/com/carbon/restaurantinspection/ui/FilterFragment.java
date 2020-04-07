@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.carbon.restaurantinspection.R;
 
-public class filterFragment extends Activity {
+public class FilterFragment extends Activity {
+    public static final String FAVOURITES_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
+    public static final String HAZARD_LEVEL = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
+    public static final String NUM_OF_CRIT = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
     Button ok;
     RadioButton low, medium, high;
     Boolean greater = true;
@@ -88,11 +91,11 @@ public class filterFragment extends Activity {
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked",
+                intent.putExtra(FAVOURITES_CHECKED,
                         favouriteChecked);
-                intent.putExtra("com.carbon.restaurantinspection.ui.filterFragment.hazardLevel",
+                intent.putExtra(HAZARD_LEVEL,
                         hazardLevel);
-                intent.putExtra("com.carbon.restaurantinspection.ui.filterFragment.numOfCrit",
+                intent.putExtra(NUM_OF_CRIT,
                         numOfCrit);
                 setResult(Activity.RESULT_OK, intent);
                 finish();

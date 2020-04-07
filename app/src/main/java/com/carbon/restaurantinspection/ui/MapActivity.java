@@ -68,6 +68,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
+    public static final String FAVOURITES_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
+    public static final String HAZARD_LEVEL_FROM_FILTER = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
+    public static final String NUM_OF_CRITICAL_VIOLATIONS = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -152,7 +155,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.filter){
-                   Intent intent = new Intent(MapActivity.this, filterFragment.class);
+                   Intent intent = new Intent(MapActivity.this, FilterFragment.class);
                    startActivityForResult(intent, FILTER_REQUEST_CODE);
                    return true;
         }
@@ -167,11 +170,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (requestCode == FILTER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 numOfCriticalVioaltionsfromFilter = data.getIntExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit", 0);
+                        NUM_OF_CRITICAL_VIOLATIONS, 0);
                 hazardLevelFromFilter = data.getStringExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel");
+                        HAZARD_LEVEL_FROM_FILTER);
                 favouritesChecked = data.getBooleanExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked",
+                        FAVOURITES_CHECKED,
                         false);
             }
         }

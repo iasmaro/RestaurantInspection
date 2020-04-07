@@ -38,6 +38,9 @@ import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFav
  * the # of issues, hazard level, and latest inspection date.**/
 public class RestaurantListActivity extends AppCompatActivity {
 
+    public static final String NUM_OF_CRIT = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
+    public static final String HAZARD_LEVEL = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
+    public static final String FAVOURITE_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
     private Toolbar toolbar;
@@ -94,7 +97,7 @@ public class RestaurantListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.filter){
-                    Intent intent = new Intent(RestaurantListActivity.this, filterFragment.class);
+                    Intent intent = new Intent(RestaurantListActivity.this, FilterFragment.class);
                     startActivityForResult(intent, FILTER_REQUEST_CODE);
                     return true;
         }
@@ -109,11 +112,11 @@ public class RestaurantListActivity extends AppCompatActivity {
         if (requestCode == FILTER_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 numOfCriticalVioaltionsfromFilter = data.getIntExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit", 0);
+                        NUM_OF_CRIT, 0);
                 hazardLevelFromFilter = data.getStringExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel");
+                        HAZARD_LEVEL);
                 favouritesChecked = data.getBooleanExtra(
-                        "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked",
+                        FAVOURITE_CHECKED,
                         false);
             }
         }
