@@ -41,6 +41,7 @@ public class InspectionDetailsActivity extends AppCompatActivity {
     ArrayList<InspectionDetail> inspectionList = new ArrayList<>();
     private ArrayList<Violation> violationList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

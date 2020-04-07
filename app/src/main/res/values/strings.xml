@@ -14,6 +14,7 @@
     <string name="downloadFailed">Download Failed</string>
     <string name="finishButton">Finish</string>
     <string name="back">Back</string>
+    <string name="search_map_search">Search</string>
     <string name="loadingMessage">Loading</string>
     <string name="downloadButton">Download</string>
     <string name="cancelButton">Cancel</string>
@@ -57,5 +58,17 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
+    <string name="lessOrEqual"><![CDATA[<=]]></string>
+    <string name="or">or</string>
+    <string name="greaterOrEqual"><![CDATA[>=]]></string>
+    <string name="filter_based_on">Filter based on:</string>
+    <string name="low">low</string>
+    <string name="medium">medium</string>
+    <string name="high">high</string>
 
+
+    <string name="favourite" translatable="false">Favourite</string>
+    <string name="new_inspections_for_favourites" translatable="false">New Inspections For Favourites</string>
+    <string name="clear">clear</string>
+    <string name="filter">filter</string>
 </resources>
