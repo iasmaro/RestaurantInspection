@@ -210,33 +210,33 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             String violationType = currentViolation.getType();
             if(violationType.equals("Permit")) {
                 String permit = getString(R.string.permit);
-                String violationDisplay1 = permit + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay1);
+                String violationDisplay = permit + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
             else if(violationType.equals("Food")) {
                 String food = getString(R.string.food);
-                String violationDisplay2 = food + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay2);
+                String violationDisplay = food + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
             else if(violationType.equals("Foodsafe")) {
                 String foodSafe = getString(R.string.foodSafe);
-                String violationDisplay3 = foodSafe + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay3);
+                String violationDisplay = foodSafe + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
             else if(violationType.equals("Pest")) {
                 String pest = getString(R.string.pest);
-                String violationDisplay4 = pest + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay4);
+                String violationDisplay = pest + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
             else if(violationType.equals("Hygiene")) {
                 String hygiene = getString(R.string.hygiene);
-                String violationDisplay5 = hygiene + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay5);
+                String violationDisplay = hygiene + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
             else {
                 String equipment = getString(R.string.equipment);
-                String violationDisplay6 = equipment + " " + getString(R.string.violation);
-                titleText.setText(violationDisplay6);
+                String violationDisplay = equipment + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay);
             }
         }
         private int findResourceID(Violation currentViolation){
