@@ -1,6 +1,7 @@
 package com.carbon.restaurantinspection.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -64,6 +68,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
+    public static final String FAVOURITES_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
+    public static final String HAZARD_LEVEL_FROM_FILTER = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
+    public static final String NUM_OF_CRITICAL_VIOLATIONS = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -79,6 +86,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public static final String INTENT_NAME = "Map Activity";
     AlertDialog.Builder builderSingle;
     private ArrayList<String> newFavouriteInspections;
+    private Toolbar toolbar;
+    private ArrayAdapter<String> arrayAdapter;
+    private final int FILTER_REQUEST_CODE = 619;
+    private boolean favouritesChecked;
+    private int numOfCriticalVioaltionsfromFilter;
+    private String hazardLevelFromFilter;
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -93,11 +106,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         getIntents();
+        restaurantManager = RestaurantManager.getInstance(this);
+        restaurantList = restaurantManager.getRestaurantList();
         markerIcons = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
+        toolbar = findViewById(R.id.toolbar);
         getLocationPermission();
-        toolbarBackButton();
-
+        toolbarSetUp();
         updateNewFavouriteRestaurants();
         //Dialog tutorial: https://www.youtube.com/watch?v=0DH2tZjJtm0
         if (!(newFavouriteInspections.isEmpty()) && isFirstTime) {
@@ -110,26 +125,95 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         isFirstTime = false;
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.map_search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_icon);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search Here");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                arrayAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.filter){
+                   Intent intent = new Intent(MapActivity.this, FilterFragment.class);
+                   startActivityForResult(intent, FILTER_REQUEST_CODE);
+                   return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILTER_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                numOfCriticalVioaltionsfromFilter = data.getIntExtra(
+                        NUM_OF_CRITICAL_VIOLATIONS, 0);
+                hazardLevelFromFilter = data.getStringExtra(
+                        HAZARD_LEVEL_FROM_FILTER);
+                favouritesChecked = data.getBooleanExtra(
+                        FAVOURITES_CHECKED,
+                        false);
+            }
+        }
+    }
+
+        private void toolbarSetUp () {
+            toolbarBackButton();
+            List<String> restaurantNames = new ArrayList<>();
+            int size = restaurantList.size();
+
+            for (int i = 0; i < size; i++) {
+                String name = restaurantList.get(i).getName();
+                restaurantNames.add(name);
+            }
+
+            arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                    restaurantNames);
+        }
+
+
     private void getIntents() {
         Intent intent = getIntent();
         index = intent.getIntExtra(INTENT_NAME, -1);
     }
 
-    private void toolbarBackButton() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        String activityTitle = getString(R.string.map);
-        getSupportActionBar().setTitle(activityTitle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
-                finish();
-                startActivity(intent);
-            }
-        });
-    }
+        private void toolbarBackButton () {
+            setSupportActionBar(toolbar);
+            String activityTitle = getString(R.string.map);
+            getSupportActionBar().setTitle(activityTitle);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
+                    finish();
+                    startActivity(intent);
+                }
+            });
+        }
 
     private void getLocationPermission() {
         // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course

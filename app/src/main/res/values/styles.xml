@@ -11,4 +11,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="AppTheme.CustomTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
 </resources>

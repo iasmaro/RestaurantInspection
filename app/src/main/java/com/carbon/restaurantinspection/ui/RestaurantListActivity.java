@@ -1,8 +1,11 @@
 package com.carbon.restaurantinspection.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -24,6 +28,7 @@ import com.carbon.restaurantinspection.model.Restaurant;
 import com.carbon.restaurantinspection.model.RestaurantManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
@@ -33,8 +38,17 @@ import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFav
  * the # of issues, hazard level, and latest inspection date.**/
 public class RestaurantListActivity extends AppCompatActivity {
 
+    public static final String NUM_OF_CRIT = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
+    public static final String HAZARD_LEVEL = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
+    public static final String FAVOURITE_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
+    private Toolbar toolbar;
+    private static int FILTER_REQUEST_CODE = 555;
+    ArrayAdapter<String> arrayAdapter;
+    private int numOfCriticalVioaltionsfromFilter;
+    private String hazardLevelFromFilter;
+    private boolean favouritesChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +57,9 @@ public class RestaurantListActivity extends AppCompatActivity {
 
         restaurantManager = RestaurantManager.getInstance(this);
         inspectionManager = InspectionManager.getInstance(this);
+        toolbar = findViewById(R.id.toolbar);
 
-        toolbarBackButton();
+        toolbarSetUp();
     }
 
     @Override
@@ -54,8 +69,74 @@ public class RestaurantListActivity extends AppCompatActivity {
         setupClickableRestaurants();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.map_search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_icon);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search Here");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                arrayAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.filter){
+                    Intent intent = new Intent(RestaurantListActivity.this, FilterFragment.class);
+                    startActivityForResult(intent, FILTER_REQUEST_CODE);
+                    return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILTER_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                numOfCriticalVioaltionsfromFilter = data.getIntExtra(
+                        NUM_OF_CRIT, 0);
+                hazardLevelFromFilter = data.getStringExtra(
+                        HAZARD_LEVEL);
+                favouritesChecked = data.getBooleanExtra(
+                        FAVOURITE_CHECKED,
+                        false);
+            }
+        }
+    }
+
+    private void toolbarSetUp() {
+        toolbarBackButton();
+        List<Restaurant> restaurantList = restaurantManager.getRestaurantList();
+        int size = restaurantList.size();
+
+        List<String> restaurantNames = new ArrayList<>();
+        for(int i = 0; i < size; i++){
+            String name = restaurantList.get(i).getName();
+            restaurantNames.add(name);
+        }
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                restaurantNames);
+    }
+
     private void toolbarBackButton() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         String activityTitle = getString(R.string.restaurantList);
         Objects.requireNonNull(getSupportActionBar()).setTitle(activityTitle);
