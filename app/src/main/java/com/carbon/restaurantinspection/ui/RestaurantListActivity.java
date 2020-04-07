@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.AtomicFile;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.carbon.restaurantinspection.model.Favourites.getFavouriteList;
 import static com.carbon.restaurantinspection.model.Favourites.isRestaurantInFavourites;
 
 /** Displays list of restaurants in alphabetical order, along with icons that represent each icon.
@@ -41,6 +44,7 @@ public class RestaurantListActivity extends AppCompatActivity {
     public static final String NUM_OF_CRIT = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
     public static final String HAZARD_LEVEL = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
     public static final String FAVOURITE_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
+    public static final String GREATER_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.greaterChecked";
     private RestaurantManager restaurantManager;
     private InspectionManager inspectionManager;
     private Toolbar toolbar;
@@ -49,6 +53,7 @@ public class RestaurantListActivity extends AppCompatActivity {
     private int numOfCriticalVioaltionsfromFilter;
     private String hazardLevelFromFilter;
     private boolean favouritesChecked;
+    private boolean greaterChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,10 @@ public class RestaurantListActivity extends AppCompatActivity {
         super.onPostResume();
         populateRestaurantListView();
         setupClickableRestaurants();
+        if (favouritesChecked || hazardLevelFromFilter != null
+                || numOfCriticalVioaltionsfromFilter > 0) {
+            filterRestaurants();
+        }
     }
 
     @Override
@@ -80,14 +89,33 @@ public class RestaurantListActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
+                if (!s.isEmpty()) {
+                    ArrayList<Restaurant> searched = restaurantManager.searchRestaurants(s);
+                    if (searched.isEmpty()) {
+                        ListView list = findViewById(R.id.restaurant_list_view);
+                        list.setAdapter(null);
+                    } else {
+                        populateRestaurantListView();
+                        setupClickableRestaurants();
+                    }
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                arrayAdapter.getFilter().filter(s);
+
                 return true;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                restaurantManager.clearSearch();
+                populateRestaurantListView();
+                setupClickableRestaurants();
+                return false;
             }
         });
 
@@ -100,6 +128,11 @@ public class RestaurantListActivity extends AppCompatActivity {
                     Intent intent = new Intent(RestaurantListActivity.this, FilterFragment.class);
                     startActivityForResult(intent, FILTER_REQUEST_CODE);
                     return true;
+        } else if (item.getItemId() == R.id.clear_text_icon) {
+            restaurantManager.clearFilter();
+            populateRestaurantListView();
+            setupClickableRestaurants();
+            return true;
         }
         else {
             return super.onOptionsItemSelected(item);
@@ -118,7 +151,43 @@ public class RestaurantListActivity extends AppCompatActivity {
                 favouritesChecked = data.getBooleanExtra(
                         FAVOURITE_CHECKED,
                         false);
+                greaterChecked = data.getBooleanExtra(GREATER_CHECKED, false);
             }
+        }
+    }
+
+    private void filterRestaurants() {
+        ArrayList<String> filtered;
+        if (favouritesChecked && hazardLevelFromFilter != null
+                && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    hazardLevelFromFilter, numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else if (favouritesChecked && hazardLevelFromFilter != null) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    hazardLevelFromFilter);
+        } else if (hazardLevelFromFilter != null && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(hazardLevelFromFilter,
+                    numOfCriticalVioaltionsfromFilter, greaterChecked);
+
+        } else if (favouritesChecked && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else if (favouritesChecked) {
+            filtered = getFavouriteList();
+        } else if (hazardLevelFromFilter != null) {
+            filtered = inspectionManager.filter(hazardLevelFromFilter);
+        } else if (numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else {
+            filtered = new ArrayList<>();
+        }
+        ArrayList<Restaurant> filteredList = restaurantManager.getFiltered(filtered);
+        if (filteredList.isEmpty()) {
+            ListView list = findViewById(R.id.restaurant_list_view);
+            list.setAdapter(null);
+        } else {
+            populateRestaurantListView();
+            setupClickableRestaurants();
         }
     }
 
@@ -152,7 +221,7 @@ public class RestaurantListActivity extends AppCompatActivity {
     }
 
     private void populateRestaurantListView() {
-        ArrayAdapter<Restaurant> adapter = new listAdapter();
+        ArrayAdapter<Restaurant> adapter = new listAdapter(restaurantManager.getRestaurantList());
         ListView list = findViewById(R.id.restaurant_list_view);
         list.setAdapter(adapter);
     }
@@ -170,9 +239,9 @@ public class RestaurantListActivity extends AppCompatActivity {
 
     /** Use adapter to fill images and text views **/
     private class listAdapter extends ArrayAdapter<Restaurant> {
-        public listAdapter(){
+        public listAdapter(ArrayList<Restaurant> restaurants){
             super(RestaurantListActivity.this, R.layout.display_restaurant_list_activity,
-                    restaurantManager.getRestaurantList());
+                    restaurants);
         }
 
         @Override

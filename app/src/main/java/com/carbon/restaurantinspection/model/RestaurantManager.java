@@ -1,6 +1,7 @@
 package com.carbon.restaurantinspection.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.carbon.restaurantinspection.R;
 
@@ -111,13 +112,29 @@ public class RestaurantManager implements Iterable<Restaurant>{
     }
 
     public Restaurant getRestaurant(int index) {
-        return restaurantList.get(index);
+        if (searchFilterList.size() > 0) {
+            return searchFilterList.get(index);
+        } else if (searchList.size() > 0) {
+            return searchList.get(index);
+        } else if (filterList.size() > 0) {
+            return filterList.get(index);
+        } else {
+            return restaurantList.get(index);
+        }
     }
 
 
     // gets the entire list of restaurants
     public ArrayList<Restaurant> getRestaurantList(){
-        return restaurantList;
+        if (searchFilterList.size() > 0) {
+            return searchFilterList;
+        } else if (searchList.size() > 0) {
+            return searchList;
+        } else if (filterList.size() > 0) {
+            return filterList;
+        } else {
+            return restaurantList;
+        }
     }
 
     public ArrayList<Restaurant> searchRestaurants(String search) {
@@ -129,47 +146,44 @@ public class RestaurantManager implements Iterable<Restaurant>{
         }
         searchList.clear();
         for (Restaurant restaurant : restaurantList) {
-            if (restaurant.getName().contains(search)) {
+            if (restaurant.getName().toLowerCase().contains(search)) {
                 searchList.add(restaurant);
             }
         }
         return searched;
     }
 
-    public ArrayList<Restaurant> clearSearch() {
+
+    public void clearSearch() {
+        searchTerm = "";
         searchList.clear();
-        if (filterList.size() > 0) {
-            return filterList;
-        } else {
-            return restaurantList;
-        }
+        searchFilterList.clear();
     }
 
+
+
     public ArrayList<Restaurant> getFiltered (ArrayList<String> trackingNumbers) {
+        filterList.clear();
         ArrayList<Restaurant> filtered = filterList;
         for (String trackingNumber: trackingNumbers) {
             filterList.add(restaurantHashtable.get(trackingNumber));
         }
         if (searchList.size() > 0) {
-            searchFilterList.clear();
             searchFiltered();
             filtered = searchFilterList;
         }
         return filtered;
     }
 
-    public ArrayList<Restaurant> clearFilter() {
+    public void clearFilter() {
         filterList.clear();
-        if (searchList.size() > 0) {
-            return searchList;
-        } else {
-            return restaurantList;
-        }
+        searchFilterList.clear();
     }
 
     private void searchFiltered() {
+        searchFilterList.clear();
         for (Restaurant restaurant : filterList) {
-            if (restaurant.getName().contains(searchTerm)) {
+            if (restaurant.getName().toLowerCase().contains(searchTerm)) {
                 searchFilterList.add(restaurant);
             }
         }
