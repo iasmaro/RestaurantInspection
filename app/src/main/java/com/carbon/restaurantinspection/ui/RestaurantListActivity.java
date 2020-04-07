@@ -109,7 +109,6 @@ public class RestaurantListActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                //arrayAdapter.getFilter().filter(s);
                 return true;
             }
         });

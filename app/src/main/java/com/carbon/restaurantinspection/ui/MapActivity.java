@@ -721,7 +721,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Dialog tutorial:
     //https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
     private void showNewFavouriteInspectionsDialog() {
-        builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
+        String dialogueTitle = getString(R.string.dialogueTitle);
+        builderSingle.setTitle(dialogueTitle);
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, newFavouriteInspections);
