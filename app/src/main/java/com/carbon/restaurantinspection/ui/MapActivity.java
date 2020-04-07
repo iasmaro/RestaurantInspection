@@ -60,6 +60,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import static com.carbon.restaurantinspection.model.Favourites.getFavouriteInspectionsList;
+import static com.carbon.restaurantinspection.model.Favourites.getFavouriteList;
 import static com.carbon.restaurantinspection.ui.MainActivity.isFirstTime;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -71,6 +72,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public static final String FAVOURITES_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
     public static final String HAZARD_LEVEL_FROM_FILTER = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
     public static final String NUM_OF_CRITICAL_VIOLATIONS = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
+    public static final String GREATER_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.greaterChecked";
     private Boolean locationPermissionsGranted = false;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -90,8 +92,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ArrayAdapter<String> arrayAdapter;
     private final int FILTER_REQUEST_CODE = 619;
     private boolean favouritesChecked;
+    private boolean greaterChecked;
     private int numOfCriticalVioaltionsfromFilter;
     private String hazardLevelFromFilter;
+    private InspectionManager inspectionManager;
 
     public static Intent makeIntent(Context context, int index) {
         Intent intent = new Intent(context, MapActivity.class);
@@ -107,6 +111,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
         getIntents();
         restaurantManager = RestaurantManager.getInstance(this);
+        inspectionManager = InspectionManager.getInstance(this);
         restaurantList = restaurantManager.getRestaurantList();
         markerIcons = new Hashtable<>();
         restaurantIndexHolder = new Hashtable<>();
@@ -125,7 +130,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         isFirstTime = false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (favouritesChecked || hazardLevelFromFilter != null
+                || numOfCriticalVioaltionsfromFilter > 0) {
+            filterRestaurants();
+        }
+    }
 
+    private void filterRestaurants() {
+        ArrayList<String> filtered;
+        if (favouritesChecked && hazardLevelFromFilter != null
+                && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    hazardLevelFromFilter, numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else if (favouritesChecked && hazardLevelFromFilter != null) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    hazardLevelFromFilter);
+        } else if (hazardLevelFromFilter != null && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(hazardLevelFromFilter,
+                    numOfCriticalVioaltionsfromFilter, greaterChecked);
+
+        } else if (favouritesChecked && numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(getFavouriteList(),
+                    numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else if (favouritesChecked) {
+            filtered = getFavouriteList();
+        } else if (hazardLevelFromFilter != null) {
+            filtered = inspectionManager.filter(hazardLevelFromFilter);
+        } else if (numOfCriticalVioaltionsfromFilter > 0) {
+            filtered = inspectionManager.filter(numOfCriticalVioaltionsfromFilter, greaterChecked);
+        } else {
+            filtered = new ArrayList<>();
+        }
+        ArrayList<Restaurant> filteredList = restaurantManager.filter(filtered);
+        CLUSTER_MANAGER.clearItems();
+        if (!filteredList.isEmpty()) {
+            myMarkerClassList.clear();
+            restaurantIndexHolder.clear();
+            restaurantIndex = 0;
+            clickCluster();
+            clickClusterItem();
+            setRestaurantMarkers();
+            CLUSTER_MANAGER.addItems(myMarkerClassList);
+            CLUSTER_MANAGER.cluster();
+            CLUSTER_MANAGER.getMarkerCollection().setInfoWindowAdapter(
+                    new ExtraInfoWindowAdapter(this));
+        }
+        CLUSTER_MANAGER.cluster();
+        favouritesChecked = false;
+        hazardLevelFromFilter = null;
+        numOfCriticalVioaltionsfromFilter = 0;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,21 +192,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SearchView searchView = (SearchView) menuItem.getActionView();
         String searchHere = getString(R.string.searchHere);
         searchView.setQueryHint(searchHere);
+        if (restaurantManager.getSearchTerm() != null) {
+            searchView.setQuery(restaurantManager.getSearchTerm(), false);
+            searchView.setIconified(false);
+            searchView.clearFocus();
+        }
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-
+                if (!s.isEmpty()) {
+                    ArrayList<Restaurant> searched = restaurantManager.searchRestaurants(s);
+                    CLUSTER_MANAGER.clearItems();
+                    if (!searched.isEmpty()) {
+                        restaurantIndex = 0;
+                        restaurantIndexHolder.clear();
+                        myMarkerClassList.clear();
+                        setRestaurantMarkers();
+                        CLUSTER_MANAGER.addItems(myMarkerClassList);
+                        clickCluster();
+                        clickClusterItem();
+                    }
+                    CLUSTER_MANAGER.cluster();
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                arrayAdapter.getFilter().filter(s);
+
                 return true;
             }
         });
 
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                restaurantIndex = 0;
+                restaurantManager.clearSearch();
+                CLUSTER_MANAGER.clearItems();
+                myMarkerClassList.clear();
+                restaurantIndexHolder.clear();
+                setRestaurantMarkers();
+                CLUSTER_MANAGER.addItems(myMarkerClassList);
+                clickCluster();
+                clickClusterItem();
+                CLUSTER_MANAGER.cluster();
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -159,8 +250,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                    Intent intent = new Intent(MapActivity.this, FilterFragment.class);
                    startActivityForResult(intent, FILTER_REQUEST_CODE);
                    return true;
-        }
-        else {
+        } else if (item.getItemId() == R.id.clear_text_icon) {
+            restaurantIndex = 0;
+            restaurantManager.clearFilter();
+            CLUSTER_MANAGER.clearItems();
+            myMarkerClassList.clear();
+            restaurantIndexHolder.clear();
+            setRestaurantMarkers();
+            CLUSTER_MANAGER.addItems(myMarkerClassList);
+            CLUSTER_MANAGER.cluster();
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -177,23 +277,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 favouritesChecked = data.getBooleanExtra(
                         FAVOURITES_CHECKED,
                         false);
+                greaterChecked = data.getBooleanExtra(GREATER_CHECKED, false);
             }
         }
     }
 
-        private void toolbarSetUp () {
-            toolbarBackButton();
-            List<String> restaurantNames = new ArrayList<>();
-            int size = restaurantList.size();
+    private void toolbarSetUp () {
+        toolbarBackButton();
+        List<String> restaurantNames = new ArrayList<>();
+        int size = restaurantList.size();
 
-            for (int i = 0; i < size; i++) {
-                String name = restaurantList.get(i).getName();
-                restaurantNames.add(name);
-            }
-
-            arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
-                    restaurantNames);
+        for (int i = 0; i < size; i++) {
+            String name = restaurantList.get(i).getName();
+            restaurantNames.add(name);
         }
+
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                restaurantNames);
+    }
 
 
     private void getIntents() {
@@ -201,20 +302,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         index = intent.getIntExtra(INTENT_NAME, -1);
     }
 
-        private void toolbarBackButton () {
-            setSupportActionBar(toolbar);
-            String activityTitle = getString(R.string.map);
-            getSupportActionBar().setTitle(activityTitle);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
-                    finish();
-                    startActivity(intent);
-                }
-            });
-        }
+    private void toolbarBackButton () {
+        setSupportActionBar(toolbar);
+        String activityTitle = getString(R.string.map);
+        getSupportActionBar().setTitle(activityTitle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivity.this, RestaurantListActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+    }
 
     private void getLocationPermission() {
         // reference Youtuber: CodingWithMitch, Playlist: Google Maps & Google Places Android Course
@@ -404,7 +505,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Restaurant restaurant = restaurantList.get(i);
                 String trackingNum = restaurant.getTrackingNumber();
 
-                List<InspectionDetail> inspectionDetailList = InspectionManager.getInstance(this)
+                List<InspectionDetail> inspectionDetailList = inspectionManager
                         .getInspections(trackingNum);
 
                 float latitude = (float) restaurant.getLatitude();
@@ -427,7 +528,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     /**moves the camera to the location of the chosen restaurant given the restaurant HAS NO
      inspections**/
     private void placeMarker(LatLng latLng, float zoom, String title, String address, int index){
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(!title.equals("Current location")) {
             final LatLng latLng1 = new LatLng(latLng.latitude, latLng.longitude);
@@ -445,7 +546,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void placeMarker(LatLng latLng, float zoom, InspectionDetail inspectionDetail,
                              Restaurant restaurant, int index){
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if(inspectionDetail != null){
             String addressDisplay = getString(R.string.address);
@@ -620,8 +721,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //Dialog tutorial:
     //https://stackoverflow.com/questions/15762905/how-can-i-display-a-list-view-in-an-android-alert-dialog
     private void showNewFavouriteInspectionsDialog() {
-        String title = getString(R.string.dialogueTitle);
-        builderSingle.setTitle(title);
+        builderSingle.setTitle("Your Favourite Restaurants With New Inspections");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, newFavouriteInspections);

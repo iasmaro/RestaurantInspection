@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,9 +15,10 @@ import android.widget.TextView;
 import com.carbon.restaurantinspection.R;
 
 public class FilterFragment extends Activity {
-    public static final String FAVOURITES_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
+    public static final String FAVOURITE_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.favouriteChecked";
     public static final String HAZARD_LEVEL = "com.carbon.restaurantinspection.ui.filterFragment.hazardLevel";
     public static final String NUM_OF_CRIT = "com.carbon.restaurantinspection.ui.filterFragment.numOfCrit";
+    public static final String GREATER_CHECKED = "com.carbon.restaurantinspection.ui.filterFragment.greaterChecked";
     Button ok;
     RadioButton low, medium, high;
     Boolean greater = true;
@@ -91,12 +93,13 @@ public class FilterFragment extends Activity {
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra(FAVOURITES_CHECKED,
+                intent.putExtra(FAVOURITE_CHECKED,
                         favouriteChecked);
                 intent.putExtra(HAZARD_LEVEL,
                         hazardLevel);
                 intent.putExtra(NUM_OF_CRIT,
                         numOfCrit);
+                intent.putExtra(GREATER_CHECKED, greater);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
@@ -105,25 +108,42 @@ public class FilterFragment extends Activity {
 
     private void setUpFavourites() {
         favourites = findViewById(R.id.favourites);
-        if(favourites.isChecked()){
-            favouriteChecked = true;
-        }
+        favourites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(favourites.isChecked()) {
+                    favouriteChecked = true;
+                } else {
+                    favouriteChecked = false;
+                }
+            }
+        });
     }
 
     private void setUpRadioBtns() {
         low = findViewById(R.id.lowRadioBtn);
         medium = findViewById(R.id.medRadioBtn);
         high = findViewById(R.id.highRadioBtn);
+        low.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hazardLevel = "low";
+            }
+        });
 
-        if(low.isChecked()){
-            hazardLevel = "low";
-        }
-        else if(high.isChecked()){
-            hazardLevel = "high";
-        }
-        else{
-            hazardLevel = "medium";
-        }
+        medium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hazardLevel = "moderate";
+            }
+        });
+
+        high.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hazardLevel = "high";
+            }
+        });
     }
 
     private void popUpConfiguration() {

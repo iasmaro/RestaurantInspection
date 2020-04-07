@@ -139,17 +139,17 @@ public class InspectionManager {
         return inspections.get(trackingNumber);
     }
 
-    public ArrayList<String> filter(int max, boolean maximum) {
+    public ArrayList<String> filter(int max, boolean minimum) {
         ArrayList<String> restaurants = new ArrayList<>();
-        if (maximum) {
+        if (minimum) {
             for (String key : inspections.keySet()) {
-                if (criticalViolationsWithinYear.get(key) <= max) {
+                if (criticalViolationsWithinYear.get(key) >= max) {
                     restaurants.add(key);
                 }
             }
         } else {
             for (String key : inspections.keySet()) {
-                if (criticalViolationsWithinYear.get(key) >= max) {
+                if (criticalViolationsWithinYear.get(key) <= max) {
                     restaurants.add(key);
                 }
             }
@@ -160,26 +160,26 @@ public class InspectionManager {
     public ArrayList<String> filter(String hazard) {
         ArrayList<String> restaurants = new ArrayList<>();
         for (String key : inspections.keySet()) {
-            if (inspections.get(key).get(0).getHazardLevel().equals(hazard)) {
+            if (inspections.get(key).get(0).getHazardLevel().toLowerCase().equals(hazard)) {
                 restaurants.add(key);
             }
         }
         return restaurants;
     }
 
-    public ArrayList<String> filter(String hazard, int max, boolean maximum) {
+    public ArrayList<String> filter(String hazard, int max, boolean minimum) {
         ArrayList<String> restaurants = new ArrayList<>();
-        if (maximum) {
+        if (minimum) {
             for (String key : inspections.keySet()) {
-                String hazardLevel =  inspections.get(key).get(0).getHazardLevel();
-                if (criticalViolationsWithinYear.get(key) <= max && hazardLevel.equals(hazard)) {
+                String hazardLevel =  inspections.get(key).get(0).getHazardLevel().toLowerCase();
+                if (criticalViolationsWithinYear.get(key) >= max  && hazardLevel.equals(hazard)) {
                     restaurants.add(key);
                 }
             }
         } else {
             for (String key : inspections.keySet()) {
-                String hazardLevel =  inspections.get(key).get(0).getHazardLevel();
-                if (criticalViolationsWithinYear.get(key) >= max  && hazardLevel.equals(hazard)) {
+                String hazardLevel =  inspections.get(key).get(0).getHazardLevel().toLowerCase();
+                if (criticalViolationsWithinYear.get(key) <= max && hazardLevel.equals(hazard)) {
                     restaurants.add(key);
                 }
             }
@@ -190,7 +190,7 @@ public class InspectionManager {
     public ArrayList<String> filter(ArrayList<String> favourites, String hazard) {
         ArrayList<String> restaurants = new ArrayList<>();
         for (String favourite : favourites) {
-            String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel();
+            String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel().toLowerCase();
             if (hazardLevel.equals(hazard)) {
                 restaurants.add(favourite);
             }
@@ -198,17 +198,17 @@ public class InspectionManager {
         return restaurants;
     }
 
-    public ArrayList<String> filter(ArrayList<String> favourites, int max, boolean maximum) {
+    public ArrayList<String> filter(ArrayList<String> favourites, int max, boolean minimum) {
         ArrayList<String> restaurants = new ArrayList<>();
-        if (maximum) {
+        if (minimum) {
             for (String favourite : favourites)  {
-                if (criticalViolationsWithinYear.get(favourite) <= max) {
+                if (criticalViolationsWithinYear.get(favourite) >= max) {
                     restaurants.add(favourite);
                 }
             }
         } else {
             for (String favourite : favourites)  {
-                if (criticalViolationsWithinYear.get(favourite) >= max) {
+                if (criticalViolationsWithinYear.get(favourite) <= max) {
                     restaurants.add(favourite);
                 }
             }
@@ -217,21 +217,21 @@ public class InspectionManager {
     }
 
     public ArrayList<String> filter(ArrayList<String> favourites, String hazard,
-                                    int max, boolean maximum) {
+                                    int max, boolean minimum) {
         ArrayList<String> restaurants = new ArrayList<>();
-        if (maximum) {
+        if (minimum) {
             for (String favourite : favourites)  {
-                String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel();
+                String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel().toLowerCase();
                 int violations = criticalViolationsWithinYear.get(favourite);
-                if ( violations <= max && hazardLevel.equals(hazard)) {
+                if (violations >= max && hazardLevel.equals(hazard)) {
                     restaurants.add(favourite);
                 }
             }
         } else {
             for (String favourite : favourites)  {
-                String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel();
+                String hazardLevel =  inspections.get(favourite).get(0).getHazardLevel().toLowerCase();
                 int violations = criticalViolationsWithinYear.get(favourite);
-                if (violations >= max && hazardLevel.equals(hazard)) {
+                if ( violations <= max && hazardLevel.equals(hazard)) {
                     restaurants.add(favourite);
                 }
             }
