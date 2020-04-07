@@ -726,8 +726,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, newFavouriteInspections);
-
-        builderSingle.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        String close = getString(R.string.close);
+        builderSingle.setNegativeButton(close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

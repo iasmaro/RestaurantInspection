@@ -74,6 +74,9 @@
     <string name="mapSearch">Search</string>
     <string name="dialogueTitle">Your Favourite Restaurants With New Inspections</string>
     <string name="searchHere">Search Here</string>
+    <string name="close">Close</string>
+    <string name="wasRated">was rated</string>
+    <string name="on">on</string>
 
 
 </resources>

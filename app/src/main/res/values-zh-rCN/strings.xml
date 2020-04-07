@@ -72,6 +72,8 @@
     <string name="mapSearch">搜索</string>
     <string name="dialogueTitle">您最喜欢的新检查餐厅</string>
     <string name="searchHere">在这里搜寻</string>
-
+    <string name="close">关</string>
+    <string name="wasRated">被评为</string>
+    <string name="on">在</string>
 
 </resources>
