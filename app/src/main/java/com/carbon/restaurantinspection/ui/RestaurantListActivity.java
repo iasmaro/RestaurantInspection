@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.AtomicFile;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,7 +83,11 @@ public class RestaurantListActivity extends AppCompatActivity {
         MenuItem menuItem = menu.findItem(R.id.search_icon);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint("Search Here");
-
+        if (restaurantManager.getSearchTerm() != null) {
+            searchView.setQuery(restaurantManager.getSearchTerm(), false);
+            searchView.setIconified(false);
+            searchView.clearFocus();
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -133,8 +135,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             populateRestaurantListView();
             setupClickableRestaurants();
             return true;
-        }
-        else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -181,7 +182,7 @@ public class RestaurantListActivity extends AppCompatActivity {
         } else {
             filtered = new ArrayList<>();
         }
-        ArrayList<Restaurant> filteredList = restaurantManager.getFiltered(filtered);
+        ArrayList<Restaurant> filteredList = restaurantManager.filter(filtered);
         if (filteredList.isEmpty()) {
             ListView list = findViewById(R.id.restaurant_list_view);
             list.setAdapter(null);

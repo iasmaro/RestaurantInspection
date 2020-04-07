@@ -1,7 +1,6 @@
 package com.carbon.restaurantinspection.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.carbon.restaurantinspection.R;
 
@@ -155,14 +154,26 @@ public class RestaurantManager implements Iterable<Restaurant>{
 
 
     public void clearSearch() {
-        searchTerm = "";
+        searchTerm = null;
         searchList.clear();
         searchFilterList.clear();
+    }
+
+    public String getSearchTerm() {
+        return searchTerm;
     }
 
 
 
     public ArrayList<Restaurant> getFiltered (ArrayList<String> trackingNumbers) {
+        ArrayList<Restaurant> filtered = new ArrayList<>();
+        for (String trackingNumber: trackingNumbers) {
+            filtered.add(restaurantHashtable.get(trackingNumber));
+        }
+        return filtered;
+    }
+
+    public ArrayList<Restaurant> filter(ArrayList<String> trackingNumbers) {
         filterList.clear();
         ArrayList<Restaurant> filtered = filterList;
         for (String trackingNumber: trackingNumbers) {
