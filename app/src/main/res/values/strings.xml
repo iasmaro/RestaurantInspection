@@ -36,7 +36,12 @@
     <string name="date">Date:</string>
     <string name="type">Type:</string>
     <string name="violation">violation</string>
-    <string name="violationcode">violationCode:</string>
+    <string name="violationcode">Code:</string>
+    <string name="permit">Permit</string>
+    <string name="food">Food</string>
+    <string name="foodSafe">Foodsafe</string>
+    <string name="pest">Pest</string>
+    <string name="hygiene">Hygiene</string>
 
     <string name="map">Map</string>
 
