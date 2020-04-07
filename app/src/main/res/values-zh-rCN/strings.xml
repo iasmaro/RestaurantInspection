@@ -41,6 +41,10 @@
     <string name="foodSafe">食品安全</string>
     <string name="pest">害虫</string>
     <string name="hygiene">卫生</string>
+    <string name="equipment">设备</string>
+    <string name="critical">危急</string>
+    <string name="notCritical">不重要</string>
+
 
     <string name="map">地图</string>
 

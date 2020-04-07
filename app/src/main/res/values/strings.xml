@@ -42,6 +42,10 @@
     <string name="foodSafe">Foodsafe</string>
     <string name="pest">Pest</string>
     <string name="hygiene">Hygiene</string>
+    <string name="equipment">Equipment</string>
+    <string name="critical">Critical</string>
+    <string name="notCritical">Not Critical</string>
+
 
     <string name="map">Map</string>
 

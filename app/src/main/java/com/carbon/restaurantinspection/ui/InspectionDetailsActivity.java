@@ -181,15 +181,20 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             int iconID = findResourceID(currentViolation);
             violationView.setImageResource(iconID);
 
-            TextView titleText = itemView.findViewById(R.id.item_violationTitle);
-            String violationType = currentViolation.getType();
-            String violationDisplay = violationType + " " + getString(R.string.violation);
-            titleText.setText(violationDisplay);
+            violationType(itemView, currentViolation);
 
             TextView descriptionText = itemView.findViewById(R.id.item_violationDescription);
-            String violationCodeStatus = currentViolation.getCode() + ", " + currentViolation.getStatus();
-            String violationCodeDisplay = getString(R.string.violationcode) + " " + violationCodeStatus;
-            descriptionText.setText(violationCodeDisplay);
+            if(currentViolation.getStatus().equals("Critical")) {
+                String critical = getString(R.string.critical);
+                String violationCodeStatus = currentViolation.getCode() + ", " + critical;
+                String violationCodeDisplay = getString(R.string.violationcode) + " " + violationCodeStatus;
+                descriptionText.setText(violationCodeDisplay);
+            } else {
+                String notCritical = getString(R.string.notCritical);
+                String violationCodeStatus = currentViolation.getCode() + ", " + notCritical;
+                String violationCodeDisplay = getString(R.string.violationcode) + " " + violationCodeStatus;
+                descriptionText.setText(violationCodeDisplay);
+            }
 
             ImageView hazardView = itemView.findViewById(R.id.item_hazardStatus);
             if (currentViolation.getStatus().equals("Not Critical")){
@@ -200,6 +205,40 @@ public class InspectionDetailsActivity extends AppCompatActivity {
             return itemView;
         }
 
+        private void violationType(View itemView, Violation currentViolation) {
+            TextView titleText = itemView.findViewById(R.id.item_violationTitle);
+            String violationType = currentViolation.getType();
+            if(violationType.equals("Permit")) {
+                String permit = getString(R.string.permit);
+                String violationDisplay1 = permit + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay1);
+            }
+            else if(violationType.equals("Food")) {
+                String food = getString(R.string.food);
+                String violationDisplay2 = food + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay2);
+            }
+            else if(violationType.equals("Foodsafe")) {
+                String foodSafe = getString(R.string.foodSafe);
+                String violationDisplay3 = foodSafe + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay3);
+            }
+            else if(violationType.equals("Pest")) {
+                String pest = getString(R.string.pest);
+                String violationDisplay4 = pest + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay4);
+            }
+            else if(violationType.equals("Hygiene")) {
+                String hygiene = getString(R.string.hygiene);
+                String violationDisplay5 = hygiene + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay5);
+            }
+            else {
+                String equipment = getString(R.string.equipment);
+                String violationDisplay6 = equipment + " " + getString(R.string.violation);
+                titleText.setText(violationDisplay6);
+            }
+        }
         private int findResourceID(Violation currentViolation){
             String type = currentViolation.getType();
             if (type.equals("Permit")){

@@ -1,6 +1,9 @@
 package com.carbon.restaurantinspection.model;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.carbon.restaurantinspection.R;
 
 import java.util.Hashtable;
 
@@ -13,6 +16,7 @@ public class Violation {
     private String status;
     private String description;
     private String type;
+    Context context;
 
     public Violation(String violation) {
         String[] violationArray = violation.split(",");
