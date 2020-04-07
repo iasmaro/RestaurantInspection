@@ -71,4 +71,6 @@
     <string name="clear">clear</string>
     <string name="filter">filter</string>
     <string name="search_map_search">Search</string>
+    <string name="dialogueTitle">Your Favourite Restaurants With New Inspections</string>
+
 </resources>

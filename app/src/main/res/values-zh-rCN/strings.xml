@@ -67,5 +67,6 @@
     <string name="filter">过滤</string>
     <string name="clear">清除</string>
     <string name="search_map_search">搜索</string>
+    <string name="dialogueTitle">您最喜欢的新检查餐厅</string>
 
 </resources>
