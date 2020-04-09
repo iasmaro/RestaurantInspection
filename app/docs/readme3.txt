@@ -1,4 +1,4 @@
 Supported languages: 
 
     English (default)
-    Chinese simplified
+    Chinese simplified   (China)
