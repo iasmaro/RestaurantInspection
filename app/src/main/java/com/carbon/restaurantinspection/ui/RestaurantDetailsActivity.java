@@ -119,7 +119,7 @@ public class RestaurantDetailsActivity extends AppCompatActivity {
                 if (isChecked) {
                     String date = "empty";
                     if (inspections != null) {
-                        date = inspections.get(0).getInspectionDate(getApplicationContext());
+                        date = inspections.get(0).getStrInspectionDate();
                     }
                     addRestaurantToFavourites(trackingNum, date);
                     favouriteSwitch.setChecked(true);

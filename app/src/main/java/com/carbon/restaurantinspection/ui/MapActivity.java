@@ -724,6 +724,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         String dialogueTitle = getString(R.string.dialogueTitle);
         builderSingle.setTitle(dialogueTitle);
 
+
+
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, newFavouriteInspections);
         String close = getString(R.string.close);

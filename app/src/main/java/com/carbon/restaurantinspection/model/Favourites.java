@@ -92,7 +92,7 @@ public class Favourites {
         for (String trackingNumber : list) {
             ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
             if (inspections != null) {
-                String newInspection = inspections.get(0).getInspectionDate(context);
+                String newInspection = inspections.get(0).getStrInspectionDate();
                 recentInspections.add(newInspection);
             } else {
                 recentInspections.add("empty");
@@ -135,34 +135,40 @@ public class Favourites {
         }
     }
 
+    private static ArrayList<String> getDisplayDate(Context context, ArrayList<String> list) {
+        InspectionManager inspectionManager = InspectionManager.getInstance(context);
+        ArrayList<String> recentInspections = new ArrayList<>();
+        for (String trackingNumber : list) {
+            ArrayList<InspectionDetail> inspections = inspectionManager.getInspections(trackingNumber);
+            if (inspections != null) {
+                String newInspection = inspections.get(0).getInspectionDate(context);
+                recentInspections.add(newInspection);
+            } else {
+                recentInspections.add("empty");
+            }
+        }
+        return recentInspections;
+    }
+
     public static ArrayList<String> getFavouriteInspectionsList(Context context) {
         ArrayList<String> favouriteInspections = new ArrayList<>();
 
-        System.out.println(favouriteList);
-
         if (favouriteList.size() == 0) {
-            System.out.println("empty");
             return favouriteInspections;
         } else {
             findNewInspections(context);
 
             ArrayList<String> restaurantNames = getRestaurantNames(context);
             ArrayList<String> recentHazardLevel = getRecentHazardLevels(context);
-            ArrayList<String> recentInspections = getRecentInspections(context, favouritesNewInspections);
+            ArrayList<String> recentInspections = getDisplayDate(context, favouritesNewInspections);
 
             for (int i = 0; i < favouritesNewInspections.size(); i++) {
-
                 String wasRated = context.getString(R.string.wasRated);
                 String on = context.getString(R.string.on);
-
                 String message = "" + restaurantNames.get(i) + " " + wasRated + " " +
                         recentHazardLevel.get(i) + " " + on + " " + recentInspections.get(i);
-
                 favouriteInspections.add(message);
             }
-
-            System.out.println(favouriteInspections);
-
             return favouriteInspections;
         }
     }
