@@ -177,7 +177,10 @@ public class RestaurantManager implements Iterable<Restaurant>{
         filterList.clear();
         ArrayList<Restaurant> filtered = filterList;
         for (String trackingNumber: trackingNumbers) {
-            filterList.add(restaurantHashtable.get(trackingNumber));
+            Restaurant restaurant = restaurantHashtable.get(trackingNumber);
+            if (restaurant != null) {
+                filterList.add(restaurant);
+            }
         }
         if (searchList.size() > 0) {
             searchFiltered();
