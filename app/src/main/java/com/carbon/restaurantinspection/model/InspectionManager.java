@@ -143,13 +143,13 @@ public class InspectionManager {
         ArrayList<String> restaurants = new ArrayList<>();
         if (minimum) {
             for (String key : inspections.keySet()) {
-                if (criticalViolationsWithinYear.get(key) >= max) {
+                if (criticalViolationsWithinYear.get(key) != null && criticalViolationsWithinYear.get(key) >= max) {
                     restaurants.add(key);
                 }
             }
         } else {
             for (String key : inspections.keySet()) {
-                if (criticalViolationsWithinYear.get(key) <= max) {
+                if (criticalViolationsWithinYear.get(key) != null && criticalViolationsWithinYear.get(key) <= max) {
                     restaurants.add(key);
                 }
             }
@@ -172,14 +172,14 @@ public class InspectionManager {
         if (minimum) {
             for (String key : inspections.keySet()) {
                 String hazardLevel =  inspections.get(key).get(0).getHazardLevel().toLowerCase();
-                if (criticalViolationsWithinYear.get(key) >= max  && hazardLevel.equals(hazard)) {
+                if (criticalViolationsWithinYear.get(key) != null && criticalViolationsWithinYear.get(key) >= max  && hazardLevel.equals(hazard)) {
                     restaurants.add(key);
                 }
             }
         } else {
             for (String key : inspections.keySet()) {
                 String hazardLevel =  inspections.get(key).get(0).getHazardLevel().toLowerCase();
-                if (criticalViolationsWithinYear.get(key) <= max && hazardLevel.equals(hazard)) {
+                if (criticalViolationsWithinYear.get(key) != null && criticalViolationsWithinYear.get(key) <= max && hazardLevel.equals(hazard)) {
                     restaurants.add(key);
                 }
             }
@@ -202,13 +202,13 @@ public class InspectionManager {
         ArrayList<String> restaurants = new ArrayList<>();
         if (minimum) {
             for (String favourite : favourites)  {
-                if (criticalViolationsWithinYear.get(favourite) >= max) {
+                if (criticalViolationsWithinYear.get(favourite) != null && criticalViolationsWithinYear.get(favourite) >= max) {
                     restaurants.add(favourite);
                 }
             }
         } else {
             for (String favourite : favourites)  {
-                if (criticalViolationsWithinYear.get(favourite) <= max) {
+                if (criticalViolationsWithinYear.get(favourite) != null && criticalViolationsWithinYear.get(favourite) <= max) {
                     restaurants.add(favourite);
                 }
             }

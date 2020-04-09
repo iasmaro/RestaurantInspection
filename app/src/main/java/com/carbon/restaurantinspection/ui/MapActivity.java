@@ -179,9 +179,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     new ExtraInfoWindowAdapter(this));
         }
         CLUSTER_MANAGER.cluster();
-        favouritesChecked = false;
-        hazardLevelFromFilter = null;
-        numOfCriticalVioaltionsfromFilter = 0;
     }
 
     @Override
